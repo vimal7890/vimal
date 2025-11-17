@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vimal - International Politics Graduate</title>
+    <title>Vimal - Aspiring Data Scientist</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
@@ -18,34 +13,10 @@
             background: white;
             min-height: 100vh;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 60px 0;
-            color: #333;
-        }
-
-        .header h1 {
-            font-size: 3.5em;
-            font-weight: 300;
-            margin-bottom: 10px;
-            text-shadow: none;
-        }
-
-        .header .subtitle {
-            font-size: 1.3em;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        /* Main content area */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 60px 0; color: #333; }
+        .header h1 { font-size: 3.5em; font-weight: 300; margin-bottom: 10px; }
+        .header .subtitle { font-size: 1.3em; opacity: 0.9; font-weight: 300; }
         .content {
             background: white;
             border-radius: 20px;
@@ -53,22 +24,16 @@
             margin: 0 auto 40px;
             overflow: hidden;
         }
-
-        /* Section styling */
         .section {
             padding: 50px 60px;
             border-bottom: 1px solid #f0f0f0;
             transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
         }
-
-        .section:last-child {
-            border-bottom: none;
-        }
-
-        .section:hover {
-            background: rgba(102, 126, 234, 0.02);
-        }
-
+        .section:last-child { border-bottom: none; }
+        .section:hover { background: rgba(102, 126, 234, 0.02); }
         .section h2 {
             font-size: 2.2em;
             margin-bottom: 30px;
@@ -76,7 +41,6 @@
             position: relative;
             font-weight: 300;
         }
-
         .section h2::after {
             content: '';
             position: absolute;
@@ -85,239 +49,56 @@
             width: 60px;
             height: 3px;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 2px;
         }
-
-        /* Bio section */
-        .bio-content {
-            font-size: 1.1em;
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .interests {
-            margin-top: 30px;
-        }
-
-        .interest-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 15px;
-        }
-
+        .bio-content { font-size: 1.1em; line-height: 1.8; color: #555; }
+        .interests { margin-top: 30px; }
+        .interest-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
         .tag {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9em;
-            font-weight: 500;
+            color: white; padding: 8px 20px; border-radius: 25px;
+            font-size: 0.9em; font-weight: 500;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        /* FAQ section */
-        .faq-item {
-            margin-bottom: 25px;
-            background: #f8f9ff;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .faq-item:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .faq-question {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-        }
-
-        .faq-question:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-        }
-
-        .faq-answer {
-            padding: 20px;
-            color: #555;
-            line-height: 1.7;
-        }
-
-        /* Work section */
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
+        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
         .work-item {
             background: linear-gradient(145deg, #f8f9ff, #ffffff);
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 15px; padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            border: 1px solid rgba(102, 126, 234, 0.1);
         }
-
-        .work-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
-        }
-
-        .work-item h3 {
-            color: #5a67d8;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .work-item p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .work-link {
-            display: inline-block;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-
-        .work-link:hover {
-            border-bottom-color: #667eea;
-        }
-
-        /* Resume section */
-        .resume-section {
-            text-align: left;
-            background: linear-gradient(135deg, #f8f9ff, #ffffff);
-        }
-
+        .work-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2); }
+        .work-item h3 { color: #5a67d8; margin-bottom: 15px; font-size: 1.3em; }
+        .work-item p { color: #666; line-height: 1.6; margin-bottom: 15px; }
+        .work-link { color: #667eea; text-decoration: none; font-weight: 500; }
+        .resume-section { background: linear-gradient(135deg, #f8f9ff, #ffffff); }
         .download-btn {
             display: inline-block;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 40px;
+            color: white; padding: 15px 40px;
             border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1em;
+            text-decoration: none; font-weight: 600;
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
             margin: 20px auto 0;
-            display: block;
-            width: fit-content;
         }
-
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-        }
-
-        /* Contact */
-        .contact-info {
-            text-align: center;
-            font-size: 1.1em;
-            color: #555;
-        }
-
-        .email-link {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 10px 20px;
-            border: 2px solid #667eea;
-            border-radius: 25px;
-            display: inline-block;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .email-link:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .section {
-                padding: 30px 30px;
-            }
-            
-            .header h1 {
-                font-size: 2.5em;
-            }
-            
-            .work-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Fade in animation */
-        .section {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .section:nth-child(1) { animation-delay: 0.1s; }
-        .section:nth-child(2) { animation-delay: 0.2s; }
-        .section:nth-child(3) { animation-delay: 0.3s; }
-        .section:nth-child(4) { animation-delay: 0.4s; }
-
+        .contact-info { text-align: center; font-size: 1.1em; color: #555; }
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>Vimal Vivegananda</h1>
             <div class="subtitle">International Politics Graduate • Data Enthusiast</div>
         </div>
 
-        <!-- Main Content -->
         <div class="content">
-            <!-- Bio Section -->
             <section class="section">
                 <h2>About Me</h2>
                 <div class="bio-content">
                     <p>Hi, I'm Vimal! I'm an International Politics graduate with a passion for data-driven research and transparency. My work focuses on tracking censorship patterns, analysing political trends, and exploring how information flows (or is restricted) across different political systems.</p>
-                    
                     <p>I believe in the power of data to illuminate important stories about press freedom, government transparency, and democratic accountability. Through my research and projects, I aim to make complex political dynamics more accessible and understandable.</p>
-                    
                     <div class="interests">
                         <p><strong>My interests span across:</strong></p>
                         <div class="interest-tags">
@@ -331,32 +112,6 @@
                 </div>
             </section>
 
-            <!-- FAQ Section -->
-            <section class="section">
-                <h2>Frequently Asked Questions</h2>
-                
-                <div class="faq-item">
-                    <div class="faq-question">What's your background in International Politics?</div>
-                    <div class="faq-answer">I hold a degree in International Politics where I developed a deep understanding of global political systems, diplomatic relations, and policy analysis. My academic focus included contemporary geopolitical issues, international law, and comparative government systems.</div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">How do you combine politics with data visualisation?</div>
-                    <div class="faq-answer">I believe data tells powerful stories about political trends, voting patterns, and policy impacts. I use visualisation tools to make complex political data accessible and engaging, helping people understand everything from election results to policy effectiveness.</div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">What type of roles are you looking for?</div>
-                    <div class="faq-answer">I'm interested in positions that blend analytical thinking with political insight - whether that's in policy research, data analysis for government or NGOs, political consulting, or roles that involve researching and presenting complex information in accessible ways.</div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">What makes you passionate about history?</div>
-                    <div class="faq-answer">History provides the context for understanding today's political landscape. I'm fascinated by how historical events shape current policies and international relations. It's like having a roadmap for understanding why the world works the way it does.</div>
-                </div>
-            </section>
-
-            <!-- Work Showcase -->
             <section class="section">
                 <h2>My Work</h2>
                 <div class="work-grid">
@@ -365,7 +120,7 @@
                         <p>Created a simple tracker looking at the censorship of Social Media around the world.</p>
                         <a href="https://censorship.my" class="work-link" target="_blank">View Project →</a>
                     </div>
-                    
+
                     <div class="work-item">
                         <h3>Inside Croydon Journalism</h3>
                         <p>Explore the work that I did with Inside Croydon below.</p>
@@ -374,42 +129,17 @@
                 </div>
             </section>
 
-            <!-- Resume Download -->
             <section class="section resume-section">
                 <h2>Resume</h2>
                 <p>Interested in learning more about my experience and qualifications?</p>
                 <a href="./resume.pdf" class="download-btn" download="Vimal_Resume.pdf">Download Resume</a>
                 <div class="contact-info">
                     <p>Or feel free to reach out directly:</p>
-                    <a href="mailto:vimal134@pm.me" class="email-link">vimal134@pm.me</a>
+                    <a href="mailto:vimal134@pm.me">vimal134@pm.me</a>
                 </div>
             </section>
         </div>
     </div>
-
-    <script>
-        // Add smooth interactions for FAQ items
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const isVisible = answer.style.display === 'block';
-                
-                // Hide all answers first
-                document.querySelectorAll('.faq-answer').forEach(ans => {
-                    ans.style.display = 'none';
-                });
-                
-                // Show clicked answer if it wasn't visible
-                if (!isVisible) {
-                    answer.style.display = 'block';
-                }
-            });
-        });
-
-        // Initially hide all FAQ answers
-        document.querySelectorAll('.faq-answer').forEach(answer => {
-            answer.style.display = 'none';
-        });
-    </script>
 </body>
 </html>
+
