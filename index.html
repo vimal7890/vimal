@@ -86,6 +86,22 @@
             margin: 20px auto 0;
         }
         .contact-info { text-align: center; font-size: 1.1em; color: #555; }
+        .archive-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none; font-weight: 500;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .archive-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .song-description { color: #666; margin-top: 15px; font-size: 1em; }
+        .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
+        .footer a { color: #667eea; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
@@ -112,10 +128,14 @@
                     <p>I believe in the power of data to illuminate important stories about press freedom, government transparency, and democratic accountability. Through my research and projects, I aim to make complex political dynamics more accessible and understandable.</p>
                 </div>
             </section>
-        </div>
-            
-            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            <p>The Song of the Month is Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p> 
+
+            <section class="section">
+                <h2>Song of the Month</h2>
+                <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
+                <a href="song-archive.html" class="archive-btn">Archive</a>
+            </section>
+
             <section class="section">
                 <h2>My Work</h2>
                 <div class="work-grid">
@@ -141,6 +161,10 @@
                 </div>
             </section>
         </div>
+
+        <footer class="footer">
+            <a href="song-archive.html">Song of the Month Archive</a>
+        </footer>
     </div>
     <script>
         const names = ['Vimal Vivegananda', 'விமல்'];
