@@ -40,6 +40,21 @@
             text-align: center;
             color: #666;
         }
+        .song-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .song-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .song-description {
+            color: #666;
+            margin-top: 15px;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +65,10 @@
         </div>
 
         <div class="content">
-            <p>Archive coming soon...</p>
+            <div class="song-item">
+                <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
+            </div>
         </div>
     </div>
 </body>
