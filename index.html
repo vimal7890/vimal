@@ -19,8 +19,8 @@
         .header h1.fade { opacity: 0; }
         .header .subtitle { font-size: 1.3em; opacity: 0.9; font-weight: 300; }
         .social-links { margin-top: 20px; }
-        .social-link { display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-size: 1em; font-weight: 500; transition: color 0.3s ease; }
-        .social-link:hover { color: #764ba2; }
+        .social-link { display: inline-flex; align-items: center; gap: 8px; color: #ff6600; text-decoration: none; font-size: 1em; font-weight: 500; transition: color 0.3s ease; }
+        .social-link:hover { color: #cc5200; }
         .social-link svg { width: 20px; height: 20px; }
         .content {
             background: white;
@@ -38,11 +38,11 @@
             animation: fadeInUp 0.8s ease forwards;
         }
         .section:last-child { border-bottom: none; }
-        .section:hover { background: rgba(102, 126, 234, 0.02); }
+        .section:hover { background: rgba(0, 0, 0, 0.01); }
         .section h2 {
             font-size: 2.2em;
             margin-bottom: 30px;
-            color: #5a67d8;
+            color: #333;
             position: relative;
             font-weight: 300;
         }
@@ -53,54 +53,54 @@
             left: 0;
             width: 60px;
             height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: #333;
         }
         .bio-content { font-size: 1.1em; line-height: 1.8; color: #555; }
         .interests { margin-top: 30px; }
         .interest-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
         .tag {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #333;
             color: white; padding: 8px 20px; border-radius: 25px;
             font-size: 0.9em; font-weight: 500;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
         .work-item {
-            background: linear-gradient(145deg, #f8f9ff, #ffffff);
+            background: #f8f8f8;
             border-radius: 15px; padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
-        .work-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2); }
-        .work-item h3 { color: #5a67d8; margin-bottom: 15px; font-size: 1.3em; }
+        .work-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
+        .work-item h3 { color: #333; margin-bottom: 15px; font-size: 1.3em; }
         .work-item p { color: #666; line-height: 1.6; margin-bottom: 15px; }
-        .work-link { color: #667eea; text-decoration: none; font-weight: 500; }
-        .resume-section { background: linear-gradient(135deg, #f8f9ff, #ffffff); }
+        .work-link { color: #333; text-decoration: none; font-weight: 500; }
+        .resume-section { background: #f8f8f8; }
         .download-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #333;
             color: white; padding: 15px 40px;
             border-radius: 50px;
             text-decoration: none; font-weight: 600;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             margin: 20px auto 0;
         }
         .contact-info { text-align: center; font-size: 1.1em; color: #555; }
         .archive-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #333;
             color: white; padding: 10px 25px;
             border-radius: 25px;
             text-decoration: none; font-weight: 500;
             font-size: 0.9em;
             margin-top: 15px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        .archive-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .archive-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
         .song-description { color: #666; margin-top: 15px; font-size: 1em; }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
-        .footer a { color: #667eea; text-decoration: none; }
+        .footer a { color: #333; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
@@ -178,7 +178,7 @@
                 titleEl.textContent = names[currentIndex];
                 titleEl.classList.remove('fade');
             }, 500);
-        }, 3000);
+        }, 2000);
     </script>
 </body>
 </html>
