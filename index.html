@@ -15,8 +15,13 @@
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; padding: 60px 0; color: #333; }
-        .header h1 { font-size: 3.5em; font-weight: 300; margin-bottom: 10px; }
+        .header h1 { font-size: 3.5em; font-weight: 300; margin-bottom: 10px; transition: opacity 0.5s ease; }
+        .header h1.fade { opacity: 0; }
         .header .subtitle { font-size: 1.3em; opacity: 0.9; font-weight: 300; }
+        .social-links { margin-top: 20px; }
+        .social-link { display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-size: 1em; font-weight: 500; transition: color 0.3s ease; }
+        .social-link:hover { color: #764ba2; }
+        .social-link svg { width: 20px; height: 20px; }
         .content {
             background: white;
             border-radius: 20px;
@@ -89,8 +94,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Vimal Vivegananda</h1>
+            <h1 id="name-title">Vimal Vivegananda</h1>
             <div class="subtitle">International Politics Graduate • Data Enthusiast</div>
+            <div class="social-links">
+                <a href="https://substack.com/@vimal0?" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                    Substack
+                </a>
+            </div>
         </div>
 
         <div class="content">
@@ -99,16 +110,6 @@
                 <div class="bio-content">
                     <p>Hi, I'm Vimal! I'm an International Politics graduate with a passion for data-driven research and transparency. My work focuses on tracking censorship patterns, analysing political trends, and exploring how information flows (or is restricted) across different political systems.</p>
                     <p>I believe in the power of data to illuminate important stories about press freedom, government transparency, and democratic accountability. Through my research and projects, I aim to make complex political dynamics more accessible and understandable.</p>
-                    <div class="interests">
-                        <p><strong>My interests span across:</strong></p>
-                        <div class="interest-tags">
-                            <span class="tag">Data Visualisation</span>
-                            <span class="tag">International Politics</span>
-                            <span class="tag">Financial Data Analytics</span>
-                            <span class="tag">Historical Research</span>
-                            <span class="tag">Policy Analysis</span>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>
@@ -132,16 +133,28 @@
                 </div>
             </section>
 
-            <section class="section resume-section">
-                <h2>Resume</h2>
-                <p>Interested in learning more about my experience and qualifications?</p>
-                <a href="./resume.pdf" class="download-btn" download="Vimal_Resume.pdf">Download Resume</a>
+            <section class="section">
+                <h2>Contact</h2>
                 <div class="contact-info">
-                    <p>Or feel free to reach out directly:</p>
+                    <p>Feel free to reach out directly:</p>
                     <a href="mailto:vimal134@pm.me">vimal134@pm.me</a>
                 </div>
             </section>
         </div>
     </div>
+    <script>
+        const names = ['Vimal Vivegananda', 'விமல்'];
+        let currentIndex = 0;
+        const titleEl = document.getElementById('name-title');
+        
+        setInterval(() => {
+            titleEl.classList.add('fade');
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % names.length;
+                titleEl.textContent = names[currentIndex];
+                titleEl.classList.remove('fade');
+            }, 500);
+        }, 3000);
+    </script>
 </body>
 </html>
