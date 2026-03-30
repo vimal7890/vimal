@@ -27,6 +27,60 @@
             font-size: 1.1em;
             color: #555;
         }
+        .table-section {
+            margin-top: 36px;
+        }
+        .table-title {
+            font-size: 1.35em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 14px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid #b7bcc5;
+            background: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+        th, td {
+            border: 1px solid #b7bcc5;
+            padding: 10px 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background: #eaedf3;
+            color: #333;
+            font-weight: 600;
+        }
+        td {
+            color: #444;
+            background: #fdfdfd;
+        }
+        .status-endemic {
+            color: #d93025;
+            font-weight: 600;
+        }
+        .status-cvdpv {
+            color: #1a4fd6;
+            font-weight: 500;
+        }
+        .type-wpv1 {
+            color: #d93025;
+            font-weight: 600;
+        }
+        .type-cvdpv {
+            color: #1a4fd6;
+            font-weight: 500;
+        }
+        .total-row td {
+            font-weight: 600;
+            background: #f4f5f7;
+        }
         .back-link {
             display: inline-block;
             margin-top: 30px;
@@ -43,6 +97,80 @@
         <div class="content">
             <p>We are on the path to polio eradication thanks to decades of vaccination efforts and international public health work. Pakistan and Afghanistan are the only two countries where polio remains endemic, which shows how close the world is to ending the disease everywhere.</p>
         </div>
+        <section class="table-section" aria-labelledby="polio-cases-title">
+            <h2 class="table-title" id="polio-cases-title">Confirmed polio cases in 2026</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>Wild cases</th>
+                            <th>Circulating vaccine-derived cases</th>
+                            <th>Transmission status</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pakistan</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td class="status-endemic">endemic</td>
+                            <td class="type-wpv1">WPV1</td>
+                        </tr>
+                        <tr>
+                            <td>Afghanistan</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td class="status-endemic">endemic</td>
+                            <td class="type-wpv1">WPV1</td>
+                        </tr>
+                        <tr>
+                            <td>Nigeria</td>
+                            <td>0</td>
+                            <td>9</td>
+                            <td class="status-cvdpv">cVDPV only</td>
+                            <td class="type-cvdpv">cVDPV2 cVDPV3</td>
+                        </tr>
+                        <tr>
+                            <td>Democratic Republic of Congo</td>
+                            <td>0</td>
+                            <td>2</td>
+                            <td class="status-cvdpv">cVDPV only</td>
+                            <td class="type-cvdpv">cVDPV2</td>
+                        </tr>
+                        <tr>
+                            <td>Somalia</td>
+                            <td>0</td>
+                            <td>2</td>
+                            <td class="status-cvdpv">cVDPV only</td>
+                            <td class="type-cvdpv">cVDPV2</td>
+                        </tr>
+                        <tr>
+                            <td>Togo</td>
+                            <td>0</td>
+                            <td>2</td>
+                            <td class="status-cvdpv">cVDPV only</td>
+                            <td class="type-cvdpv">cVDPV2</td>
+                        </tr>
+                        <tr>
+                            <td>Angola</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td class="status-cvdpv">cVDPV only</td>
+                            <td class="type-cvdpv">cVDPV2</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>Total</td>
+                            <td>1</td>
+                            <td>18</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
         <a href="index.html" class="back-link">← Back to home</a>
     </div>
 </body>
