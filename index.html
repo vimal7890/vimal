@@ -18,10 +18,19 @@
         .header h1 { font-size: 3.5em; font-weight: 300; margin-bottom: 10px; transition: opacity 0.5s ease; }
         .header h1.fade { opacity: 0; }
         .header .subtitle { font-size: 1.3em; opacity: 0.9; font-weight: 300; }
-        .social-links { margin-top: 20px; }
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
         .social-link { display: inline-flex; align-items: center; gap: 8px; color: #ff6600; text-decoration: none; font-size: 1em; font-weight: 500; transition: color 0.3s ease; }
         .social-link:hover { color: #cc5200; }
         .social-link svg { width: 20px; height: 20px; }
+        .linkedin-link { color: #0a66c2; }
+        .linkedin-link:hover { color: #004182; }
         .content {
             margin: 0 auto 40px;
         }
@@ -117,6 +126,12 @@
                 <a href="https://substack.com/@vimal0?" class="social-link" target="_blank">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
                     Substack
+                </a>
+                <a href="https://www.linkedin.com/in/vimal-v-5004751ba/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/>
+                    </svg>
+                    LinkedIn
                 </a>
             </div>
         </div>
