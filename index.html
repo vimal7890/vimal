@@ -90,6 +90,16 @@
         }
         .archive-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
         .song-description { color: #666; margin-top: 15px; font-size: 1em; }
+        .show-more-section {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #e5e5e5;
+        }
+        .show-more-label {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
         .footer a { color: #333; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
@@ -124,7 +134,10 @@
                 <h2>Song of the Month</h2>
                 <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
-                <a href="song-archive.html" class="archive-btn">Archive</a>
+                <div class="show-more-section">
+                    <p class="show-more-label">Show more</p>
+                    <a href="song-archive.html" class="archive-btn">Song Archive</a>
+                </div>
             </section>
 
             <section class="section">
@@ -166,10 +179,6 @@
                 </div>
             </section>
         </div>
-
-        <footer class="footer">
-            <a href="song-archive.html">Song of the Month Archive</a>
-        </footer>
     </div>
     <script>
         const names = ['Vimal', 'விமல்'];
