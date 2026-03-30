@@ -65,7 +65,20 @@
         .work-item:hover { }
         .work-item h3 { color: #333; margin-bottom: 15px; font-size: 1.3em; font-weight: 700; text-decoration: underline; }
         .work-item p { color: #666; line-height: 1.6; margin-bottom: 15px; }
-        .work-link { color: #333; text-decoration: none; font-weight: 500; }
+        .work-link {
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease, transform 0.2s ease;
+            transform-origin: left center;
+        }
+        .work-link:hover,
+        .work-link:focus-visible {
+            color: #d93025;
+            transform: scale(1.04);
+            text-decoration: underline;
+        }
         .resume-section { background: #f8f8f8; }
         .download-btn {
             display: inline-block;
