@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -29,6 +30,47 @@
         }
         .table-section {
             margin-top: 36px;
+        }
+        .map-section {
+            margin-top: 36px;
+        }
+        .map-card {
+            border: 1px solid #b7bcc5;
+            background: #fff;
+            padding: 18px;
+        }
+        .map-caption {
+            margin-bottom: 14px;
+            color: #555;
+        }
+        #polio-map {
+            width: 100%;
+            height: 520px;
+            background: linear-gradient(180deg, #eef3f7 0%, #f8fafc 100%);
+        }
+        .map-legend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            color: #444;
+            font-size: 0.98em;
+        }
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            background: #d93025;
+            border: 1px solid #b3241c;
+        }
+        .jvm-tooltip {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 8px 10px;
+            border: 1px solid #b7bcc5;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
         .table-title {
             font-size: 1.35em;
@@ -107,6 +149,17 @@
         <div class="content">
             <p>We are on the path to polio eradication thanks to decades of vaccination efforts and international public health work. Pakistan <span class="country-flag" aria-hidden="true">🇵🇰</span> and Afghanistan <span class="country-flag" aria-hidden="true">🇦🇫</span> are the only two countries where polio remains endemic, which shows how close the world is to ending the disease everywhere.</p>
         </div>
+        <section class="map-section" aria-labelledby="polio-map-title">
+            <h2 class="table-title" id="polio-map-title">Interactive world map</h2>
+            <div class="map-card">
+                <p class="map-caption">Countries listed in the table are highlighted in red. Hover or zoom to explore the map.</p>
+                <div id="polio-map" aria-label="World map showing countries with reported polio cases in 2026"></div>
+                <div class="map-legend">
+                    <span class="legend-swatch" aria-hidden="true"></span>
+                    <span>Countries with confirmed cases listed in the table</span>
+                </div>
+            </div>
+        </section>
         <section class="table-section" aria-labelledby="polio-cases-title">
             <h2 class="table-title" id="polio-cases-title">Confirmed polio cases in 2026 (Updated March 2026)</h2>
             <div class="table-wrap">
@@ -183,5 +236,76 @@
         </section>
         <a href="index.html" class="back-link">← Back to home</a>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+    <script>
+        const countryCodeMap = {
+            Pakistan: 'PK',
+            Afghanistan: 'AF',
+            Nigeria: 'NG',
+            'Democratic Republic of Congo': 'CD',
+            Somalia: 'SO',
+            Togo: 'TG',
+            Angola: 'AO'
+        };
+
+        const countryRows = Array.from(document.querySelectorAll('tbody tr:not(.total-row)'));
+        const countryDetails = {};
+        const highlightedCountries = [];
+
+        countryRows.forEach((row) => {
+            const cells = row.querySelectorAll('td');
+            const countryName = cells[0].childNodes[0].textContent.trim();
+            const countryCode = countryCodeMap[countryName];
+
+            if (!countryCode) {
+                return;
+            }
+
+            highlightedCountries.push(countryCode);
+            countryDetails[countryCode] = {
+                name: countryName,
+                wildCases: cells[1].textContent.trim(),
+                vaccineDerivedCases: cells[2].textContent.trim(),
+                status: cells[3].textContent.trim(),
+                type: cells[4].textContent.trim()
+            };
+        });
+
+        new jsVectorMap({
+            selector: '#polio-map',
+            map: 'world',
+            zoomButtons: true,
+            selectedRegions: highlightedCountries,
+            regionStyle: {
+                initial: {
+                    fill: '#d8ddc8',
+                    stroke: '#ffffff',
+                    strokeWidth: 0.8
+                },
+                hover: {
+                    fill: '#ef6b63'
+                },
+                selected: {
+                    fill: '#d93025'
+                }
+            },
+            onRegionTooltipShow: function(event, tooltip, code) {
+                const details = countryDetails[code];
+
+                if (!details) {
+                    return;
+                }
+
+                tooltip.text(
+                    details.name +
+                    ' | Wild: ' + details.wildCases +
+                    ' | cVDPV: ' + details.vaccineDerivedCases +
+                    ' | Status: ' + details.status +
+                    ' | Type: ' + details.type
+                );
+            }
+        });
+    </script>
 </body>
 </html>
