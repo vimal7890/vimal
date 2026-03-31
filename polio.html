@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polio</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -44,9 +43,37 @@
             color: #555;
         }
         #polio-map {
+            position: relative;
             width: 100%;
             height: 520px;
             background: linear-gradient(180deg, #eef3f7 0%, #f8fafc 100%);
+            overflow: hidden;
+        }
+        .map-surface {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+            touch-action: none;
+        }
+        .map-surface.is-dragging {
+            cursor: grabbing;
+        }
+        .country-shape {
+            fill: #d8ddc8;
+            stroke: #ffffff;
+            stroke-width: 0.8;
+        }
+        .country-marker {
+            fill: #94a09a;
+            stroke: #ffffff;
+            stroke-width: 1.1;
+        }
+        .country-highlighted {
+            fill: #d93025;
+        }
+        .country-hovered {
+            fill: #ef6b63;
         }
         .map-legend {
             display: flex;
@@ -63,7 +90,14 @@
             background: #d93025;
             border: 1px solid #b3241c;
         }
-        .jvm-tooltip {
+        .map-tooltip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 8px 10px;
             border: 1px solid #b7bcc5;
@@ -71,6 +105,17 @@
             background: #fff;
             color: #333;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .map-status {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: grid;
+            place-items: center;
+            padding: 0 24px;
+            text-align: center;
+            color: #555;
+            background: linear-gradient(180deg, #eef3f7 0%, #f8fafc 100%);
         }
         .table-title {
             font-size: 1.35em;
@@ -152,7 +197,7 @@
         <section class="map-section" aria-labelledby="polio-map-title">
             <h2 class="table-title" id="polio-map-title">Interactive world map</h2>
             <div class="map-card">
-                <p class="map-caption">Countries listed in the table are highlighted in red. Hover or zoom to explore the map.</p>
+                <p class="map-caption">Countries listed in the table are highlighted in red. Drag, scroll, or pinch to zoom, and tiny countries are marked with dots so they stay visible.</p>
                 <div id="polio-map" aria-label="World map showing countries with reported polio cases in 2026"></div>
                 <div class="map-legend">
                     <span class="legend-swatch" aria-hidden="true"></span>
@@ -236,33 +281,40 @@
         </section>
         <a href="index.html" class="back-link">← Back to home</a>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script>
         const countryCodeMap = {
-            Pakistan: 'PK',
-            Afghanistan: 'AF',
-            Nigeria: 'NG',
-            'Democratic Republic of Congo': 'CD',
-            Somalia: 'SO',
-            Togo: 'TG',
-            Angola: 'AO'
+            Pakistan: 'PAK',
+            Afghanistan: 'AFG',
+            Nigeria: 'NGA',
+            'Democratic Republic of Congo': 'COD',
+            Somalia: 'SOM',
+            Togo: 'TGO',
+            Angola: 'AGO'
         };
 
         const countryRows = Array.from(document.querySelectorAll('tbody tr:not(.total-row)'));
         const countryDetails = {};
-        const highlightedCountries = [];
+        const highlightedCountries = new Set();
+        const mapContainer = document.querySelector('#polio-map');
+        const tooltip = document.createElement('div');
+        const statusMessage = document.createElement('div');
+        const worldMapUrl = 'https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json';
+        let worldFeatures = [];
+        let resizeFrame = null;
 
         countryRows.forEach((row) => {
             const cells = row.querySelectorAll('td');
-            const countryName = cells[0].childNodes[0].textContent.trim();
+            const countryName = (cells[0].childNodes[0] && cells[0].childNodes[0].textContent
+                ? cells[0].childNodes[0].textContent
+                : cells[0].textContent).trim();
             const countryCode = countryCodeMap[countryName];
 
             if (!countryCode) {
                 return;
             }
 
-            highlightedCountries.push(countryCode);
+            highlightedCountries.add(countryCode);
             countryDetails[countryCode] = {
                 name: countryName,
                 wildCases: cells[1].textContent.trim(),
@@ -272,40 +324,184 @@
             };
         });
 
-        new jsVectorMap({
-            selector: '#polio-map',
-            map: 'world',
-            zoomButtons: true,
-            selectedRegions: highlightedCountries,
-            regionStyle: {
-                initial: {
-                    fill: '#d8ddc8',
-                    stroke: '#ffffff',
-                    strokeWidth: 0.8
-                },
-                hover: {
-                    fill: '#ef6b63'
-                },
-                selected: {
-                    fill: '#d93025'
-                }
-            },
-            onRegionTooltipShow: function(event, tooltip, code) {
-                const details = countryDetails[code];
+        tooltip.className = 'map-tooltip';
+        statusMessage.className = 'map-status';
+        statusMessage.textContent = 'Loading world map...';
+        mapContainer.appendChild(tooltip);
+        mapContainer.appendChild(statusMessage);
 
-                if (!details) {
-                    return;
-                }
+        function getCountryName(feature) {
+            return feature.properties && feature.properties.name ? feature.properties.name : 'Unknown';
+        }
 
-                tooltip.text(
-                    details.name +
-                    ' | Wild: ' + details.wildCases +
-                    ' | cVDPV: ' + details.vaccineDerivedCases +
-                    ' | Status: ' + details.status +
-                    ' | Type: ' + details.type
-                );
+        function getTooltipContent(feature) {
+            const countryName = getCountryName(feature);
+            const details = countryDetails[feature.id];
+
+            if (!details) {
+                return countryName;
             }
-        });
+
+            return '<strong>' + countryName + '</strong><br>' +
+                'Wild: ' + details.wildCases + '<br>' +
+                'cVDPV: ' + details.vaccineDerivedCases + '<br>' +
+                'Status: ' + details.status + '<br>' +
+                'Type: ' + details.type;
+        }
+
+        function positionTooltip(event) {
+            const bounds = mapContainer.getBoundingClientRect();
+            const tooltipWidth = tooltip.offsetWidth;
+            const tooltipHeight = tooltip.offsetHeight;
+            let left = event.clientX - bounds.left + 12;
+            let top = event.clientY - bounds.top + 12;
+
+            if (left + tooltipWidth > bounds.width - 8) {
+                left = event.clientX - bounds.left - tooltipWidth - 12;
+            }
+
+            if (top + tooltipHeight > bounds.height - 8) {
+                top = event.clientY - bounds.top - tooltipHeight - 12;
+            }
+
+            tooltip.style.left = Math.max(8, left) + 'px';
+            tooltip.style.top = Math.max(8, top) + 'px';
+        }
+
+        function showTooltip(event, feature, element) {
+            tooltip.innerHTML = getTooltipContent(feature);
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = '1';
+            positionTooltip(event);
+            element.classList.add('country-hovered');
+        }
+
+        function moveTooltip(event) {
+            positionTooltip(event);
+        }
+
+        function hideTooltip(element) {
+            tooltip.style.opacity = '0';
+            tooltip.style.visibility = 'hidden';
+            element.classList.remove('country-hovered');
+        }
+
+        function renderMap() {
+            if (!worldFeatures.length) {
+                return;
+            }
+
+            const width = Math.max(mapContainer.clientWidth, 320);
+            const height = 520;
+            const features = worldFeatures.filter((feature) => getCountryName(feature) !== 'Antarctica');
+            const existingSvg = mapContainer.querySelector('svg');
+
+            if (existingSvg) {
+                existingSvg.remove();
+            }
+
+            const svg = d3.select(mapContainer)
+                .append('svg')
+                .attr('class', 'map-surface')
+                .attr('viewBox', '0 0 ' + width + ' ' + height)
+                .attr('role', 'img')
+                .attr('aria-label', 'World map showing countries with reported polio cases in 2026');
+
+            const mapGroup = svg.append('g');
+            const projection = d3.geoNaturalEarth1()
+                .fitExtent([[10, 10], [width - 10, height - 10]], {
+                    type: 'FeatureCollection',
+                    features: features
+                });
+            const path = d3.geoPath(projection);
+            const tinyFeatures = [];
+
+            features.forEach((feature) => {
+                if (path.area(feature) < 18) {
+                    tinyFeatures.push(feature);
+                }
+            });
+
+            mapGroup.selectAll('path')
+                .data(features)
+                .join('path')
+                .attr('class', (feature) => highlightedCountries.has(feature.id)
+                    ? 'country-shape country-highlighted'
+                    : 'country-shape')
+                .attr('d', path)
+                .on('pointerenter', function(event, feature) {
+                    showTooltip(event, feature, this);
+                })
+                .on('pointermove', function(event) {
+                    moveTooltip(event);
+                })
+                .on('pointerleave', function() {
+                    hideTooltip(this);
+                });
+
+            mapGroup.selectAll('circle')
+                .data(tinyFeatures.filter((feature) => {
+                    const centroid = path.centroid(feature);
+                    return Number.isFinite(centroid[0]) && Number.isFinite(centroid[1]);
+                }))
+                .join('circle')
+                .attr('class', (feature) => highlightedCountries.has(feature.id)
+                    ? 'country-marker country-highlighted'
+                    : 'country-marker')
+                .attr('transform', (feature) => {
+                    const centroid = path.centroid(feature);
+                    return 'translate(' + centroid[0] + ',' + centroid[1] + ')';
+                })
+                .attr('r', (feature) => highlightedCountries.has(feature.id) ? 4.5 : 3)
+                .on('pointerenter', function(event, feature) {
+                    showTooltip(event, feature, this);
+                })
+                .on('pointermove', function(event) {
+                    moveTooltip(event);
+                })
+                .on('pointerleave', function() {
+                    hideTooltip(this);
+                });
+
+            svg.call(
+                d3.zoom()
+                    .scaleExtent([1, 8])
+                    .on('start', function() {
+                        svg.classed('is-dragging', true);
+                    })
+                    .on('zoom', function(event) {
+                        mapGroup.attr('transform', event.transform);
+                    })
+                    .on('end', function() {
+                        svg.classed('is-dragging', false);
+                    })
+            );
+        }
+
+        async function loadMap() {
+            try {
+                const response = await fetch(worldMapUrl);
+
+                if (!response.ok) {
+                    throw new Error('Map data request failed');
+                }
+
+                const worldData = await response.json();
+                worldFeatures = Array.isArray(worldData.features) ? worldData.features : [];
+                statusMessage.remove();
+                renderMap();
+
+                new ResizeObserver(() => {
+                    window.cancelAnimationFrame(resizeFrame);
+                    resizeFrame = window.requestAnimationFrame(renderMap);
+                }).observe(mapContainer);
+            } catch (error) {
+                statusMessage.textContent = 'The world map could not be loaded right now.';
+                console.error(error);
+            }
+        }
+
+        loadMap();
     </script>
 </body>
 </html>
