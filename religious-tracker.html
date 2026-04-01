@@ -49,8 +49,19 @@
             font-size: 0.85em;
             letter-spacing: 1px;
         }
+        .clickable-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+        .clickable-header:hover {
+            background-color: #e0e0e0;
+        }
         tr:hover {
             background-color: #fafafa;
+        }
+        tr.christian-row:hover {
+            background-color: #e3f2fd !important; /* Light blue tint */
         }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
     </style>
@@ -72,7 +83,7 @@
                         <th>Denomination</th>
                         <th>Leader</th>
                         <th>Since</th>
-                        <th>Days in Charge</th>
+                        <th id="time-header" class="clickable-header">Days in Charge ↕</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -87,63 +98,115 @@
     </div>
 
     <script>
-        function calculateDays(dateString) {
-            if (!dateString || dateString.toLowerCase() === 'n/a') return 'N/A';
-            const startDate = new Date(dateString);
-            const today = new Date();
-            const diffTime = Math.abs(today - startDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        let currentMode = 'days'; // 'days', 'hours', 'minutes', 'seconds'
+        const modes = ['days', 'hours', 'minutes', 'seconds'];
+        let leadersData = [];
+
+        function formatValue(value, mode) {
+            if (isNaN(value)) return 'N/A';
+            return Math.floor(value).toLocaleString() + (mode === 'days' ? '' : '');
+        }
+
+        function calculateTime(sinceDateStr) {
+            if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a') return NaN;
             
-            // If the date is in the future, return 0 or a negative value if preferred, 
-            // but for a tracker of *current* leaders, we assume they are already in charge.
-            if (startDate > today) return 0;
+            // Set base value as 12:00 UTC
+            const startDate = new Date(sinceDateStr + 'T12:00:00Z');
+            const now = new Date();
+            const diffMs = now - startDate;
             
-            return diffDays.toLocaleString();
+            if (diffMs < 0) return 0;
+
+            switch (currentMode) {
+                case 'days':
+                    return diffMs / (1000 * 60 * 60 * 24);
+                case 'hours':
+                    return diffMs / (1000 * 60 * 60);
+                case 'minutes':
+                    return diffMs / (1000 * 60);
+                case 'seconds':
+                    return diffMs / 1000;
+                default:
+                    return diffMs / (1000 * 60 * 60 * 24);
+            }
+        }
+
+        function updateTableValues() {
+            const rows = document.querySelectorAll('#table-body tr');
+            rows.forEach((row, index) => {
+                const timeCell = row.cells[4];
+                const sinceDate = leadersData[index].since;
+                timeCell.textContent = formatValue(calculateTime(sinceDate), currentMode);
+            });
+            
+            const header = document.getElementById('time-header');
+            const modeLabels = {
+                'days': 'Days in Charge ↕',
+                'hours': 'Hours in Charge ↕',
+                'minutes': 'Minutes in Charge ↕',
+                'seconds': 'Seconds in Charge ↕'
+            };
+            header.textContent = modeLabels[currentMode];
         }
 
         async function loadTable() {
             try {
                 const response = await fetch('leaders.csv');
-                const data = await response.text();
-                const rows = data.split('\n');
-                const tableBody = document.getElementById('table-body');
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
                 
-                // Determine column indices from header
-                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
                 const religionIdx = headers.indexOf('religion');
                 const sinceIdx = headers.indexOf('since');
+                const tableBody = document.getElementById('table-body');
 
-                rows.slice(1).forEach(row => {
-                    if (row.trim() === '') return;
-                    const columns = row.split(',');
-                    const tr = document.createElement('tr');
+                lines.slice(1).forEach(line => {
+                    if (line.trim() === '') return;
+                    const columns = line.split(',');
+                    const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
+                    const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
                     
-                    // Iterate through the first 4 columns from CSV
+                    leadersData.push({ since, religion });
+
+                    const tr = document.createElement('tr');
+                    if (religion.toLowerCase() === 'christianity') {
+                        tr.classList.add('christian-row');
+                    }
+
                     for (let i = 0; i < 4; i++) {
                         const td = document.createElement('td');
                         let content = columns[i] ? columns[i].trim() : '';
-                        
-                        // Add cross to Christianity
                         if (i === religionIdx && content.toLowerCase() === 'christianity') {
                             content += ' ✝';
                         }
-                        
                         td.textContent = content;
                         tr.appendChild(td);
                     }
 
-                    // Calculate and add the "Days in Charge" column
-                    const daysTd = document.createElement('td');
-                    const sinceDate = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
-                    daysTd.textContent = calculateDays(sinceDate);
-                    tr.appendChild(daysTd);
-                    
+                    const timeTd = document.createElement('td');
+                    tr.appendChild(timeTd);
                     tableBody.appendChild(tr);
                 });
+
+                updateTableValues();
+                
+                // Refresh values every second if in seconds/minutes mode
+                setInterval(() => {
+                    if (currentMode === 'seconds' || currentMode === 'minutes' || currentMode === 'hours') {
+                        updateTableValues();
+                    }
+                }, 1000);
+
             } catch (error) {
                 console.error('Error loading CSV:', error);
             }
         }
+
+        document.getElementById('time-header').addEventListener('click', () => {
+            const nextIdx = (modes.indexOf(currentMode) + 1) % modes.length;
+            currentMode = modes[nextIdx];
+            updateTableValues();
+        });
 
         window.onload = loadTable;
     </script>
