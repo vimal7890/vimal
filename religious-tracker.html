@@ -72,6 +72,7 @@
                         <th>Denomination</th>
                         <th>Leader</th>
                         <th>Since</th>
+                        <th>Days in Charge</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -86,23 +87,56 @@
     </div>
 
     <script>
+        function calculateDays(dateString) {
+            if (!dateString || dateString.toLowerCase() === 'n/a') return 'N/A';
+            const startDate = new Date(dateString);
+            const today = new Date();
+            const diffTime = Math.abs(today - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            // If the date is in the future, return 0 or a negative value if preferred, 
+            // but for a tracker of *current* leaders, we assume they are already in charge.
+            if (startDate > today) return 0;
+            
+            return diffDays.toLocaleString();
+        }
+
         async function loadTable() {
             try {
                 const response = await fetch('leaders.csv');
                 const data = await response.text();
-                const rows = data.split('\n').slice(1); // Skip header row
+                const rows = data.split('\n');
                 const tableBody = document.getElementById('table-body');
+                
+                // Determine column indices from header
+                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+                const religionIdx = headers.indexOf('religion');
+                const sinceIdx = headers.indexOf('since');
 
-                rows.forEach(row => {
+                rows.slice(1).forEach(row => {
                     if (row.trim() === '') return;
                     const columns = row.split(',');
                     const tr = document.createElement('tr');
                     
-                    columns.forEach(cell => {
+                    // Iterate through the first 4 columns from CSV
+                    for (let i = 0; i < 4; i++) {
                         const td = document.createElement('td');
-                        td.textContent = cell.trim();
+                        let content = columns[i] ? columns[i].trim() : '';
+                        
+                        // Add cross to Christianity
+                        if (i === religionIdx && content.toLowerCase() === 'christianity') {
+                            content += ' ✝';
+                        }
+                        
+                        td.textContent = content;
                         tr.appendChild(td);
-                    });
+                    }
+
+                    // Calculate and add the "Days in Charge" column
+                    const daysTd = document.createElement('td');
+                    const sinceDate = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
+                    daysTd.textContent = calculateDays(sinceDate);
+                    tr.appendChild(daysTd);
                     
                     tableBody.appendChild(tr);
                 });
