@@ -101,6 +101,19 @@
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
+        .cat-wrapper {
+            position: fixed;
+            right: 5%;
+            top: 10%;
+            z-index: 1000;
+            pointer-events: none;
+            animation: moveCatUpDown 15s ease-in-out infinite;
+        }
+        @keyframes moveCatUpDown {
+            0% { top: 10%; }
+            50% { top: 85%; }
+            100% { top: 10%; }
+        }
     </style>
 </head>
 <body>
@@ -200,5 +213,20 @@
             }, 500);
         }, 2000);
     </script>
+    <div class="cat-wrapper" aria-hidden="true">
+        <svg width="60" height="60" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering: pixelated;">
+            <rect x="2" y="2" width="2" height="2" fill="#333" />
+            <rect x="12" y="2" width="2" height="2" fill="#333" />
+            <rect x="2" y="4" width="12" height="6" fill="#333" />
+            <rect x="3" y="5" width="2" height="2" fill="#FFF" />
+            <rect x="11" y="5" width="2" height="2" fill="#FFF" />
+            <rect x="7" y="7" width="2" height="1" fill="#FFA5C3" />
+            <rect x="3" y="10" width="10" height="4" fill="#333" />
+            <rect x="13" y="8" width="2" height="5" fill="#333" />
+            <rect x="3" y="14" width="2" height="2" fill="#333" />
+            <rect x="7" y="14" width="2" height="2" fill="#333" />
+            <rect x="11" y="14" width="2" height="2" fill="#333" />
+        </svg>
+    </div>
 </body>
 </html>
