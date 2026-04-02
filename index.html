@@ -98,21 +98,214 @@
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
         .footer a { color: #333; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
+        .pet-scene {
+            position: fixed;
+            right: clamp(4px, 1.4vw, 18px);
+            top: 12vh;
+            width: min(170px, 18vw);
+            height: min(72vh, 560px);
+            z-index: 40;
+            pointer-events: none;
+        }
+        .cat-button {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 152px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            pointer-events: auto;
+            appearance: none;
+            transform-origin: 50% 86%;
+            will-change: transform;
+        }
+        .cat-button svg,
+        .yarn-bowl svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+        .cat-button:focus-visible {
+            outline: 2px solid #d9733b;
+            outline-offset: 4px;
+            border-radius: 28px;
+        }
+        .yarn-bowl {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 62px;
+            pointer-events: none;
+            will-change: transform;
+            filter: drop-shadow(0 7px 10px rgba(85, 55, 31, 0.12));
+        }
+        .speech-bubble {
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 8px 12px;
+            border: 2px solid #8b5e3c;
+            border-radius: 999px;
+            background: rgba(255, 251, 245, 0.98);
+            color: #8b5e3c;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            box-shadow: 0 8px 18px rgba(110, 73, 43, 0.14);
+            opacity: 0;
+            transform: translateY(8px) scale(0.9);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            left: 18px;
+            bottom: -9px;
+            width: 14px;
+            height: 14px;
+            background: rgba(255, 251, 245, 0.98);
+            border-right: 2px solid #8b5e3c;
+            border-bottom: 2px solid #8b5e3c;
+            transform: rotate(45deg);
+        }
+        .pet-scene.is-pleading .speech-bubble {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .cat-body {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: catBreath 2.6s ease-in-out infinite;
+        }
+        .head-shell {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: headBob 0.9s ease-in-out infinite alternate;
+        }
+        .tail-swish {
+            transform-box: fill-box;
+            transform-origin: 28% 68%;
+            animation: tailSwish 0.95s ease-in-out infinite alternate;
+        }
+        .leg {
+            transform-box: fill-box;
+            transform-origin: center top;
+            animation: catTrot 0.56s ease-in-out infinite;
+        }
+        .leg.alt-step {
+            animation-delay: -0.28s;
+        }
+        .ear {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: earFlick 4.8s ease-in-out infinite;
+        }
+        .ear.alt-ear {
+            animation-delay: -2.2s;
+        }
+        .blink-lid {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: catBlink 4.8s infinite;
+        }
+        .cat-eye {
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: transform 0.22s ease;
+        }
+        .pupil-shift,
+        .eye-pupil,
+        .eye-sparkle {
+            transition: transform 0.22s ease;
+        }
+        .yarn-swirl {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: yarnSpin 1.9s linear infinite;
+        }
+        .yarn-bob {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: yarnBob 0.9s ease-in-out infinite alternate;
+        }
+        .pet-scene.is-pleading .cat-body,
+        .pet-scene.is-pleading .head-shell,
+        .pet-scene.is-pleading .tail-swish,
+        .pet-scene.is-pleading .leg,
+        .pet-scene.is-pleading .ear,
+        .pet-scene.is-pleading .blink-lid,
+        .pet-scene.is-pleading .yarn-swirl,
+        .pet-scene.is-pleading .yarn-bob {
+            animation-play-state: paused;
+        }
+        .pet-scene.is-pleading .cat-eye {
+            transform: scale(1.22) translateY(-1px);
+        }
+        .pet-scene.is-pleading .eye-pupil {
+            transform: scale(0.82) translateY(-1px);
+        }
+        .pet-scene.is-pleading .eye-sparkle {
+            transform: scale(1.35);
+        }
+        @media (max-width: 900px) {
+            .pet-scene {
+                top: auto;
+                bottom: 14px;
+                right: 2px;
+                width: 132px;
+                height: 310px;
+            }
+            .cat-button {
+                width: 118px;
+            }
+            .yarn-bowl {
+                width: 46px;
+            }
+            .speech-bubble {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+        }
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
-        .cat-wrapper {
-            position: fixed;
-            right: 5%;
-            top: 10%;
-            z-index: 1000;
-            pointer-events: none;
-            animation: moveCatUpDown 15s ease-in-out infinite;
+        @keyframes catBreath {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(1.5px) scaleY(1.02); }
         }
-        @keyframes moveCatUpDown {
-            0% { top: 10%; }
-            50% { top: 85%; }
-            100% { top: 10%; }
+        @keyframes headBob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-1.8px); }
+        }
+        @keyframes tailSwish {
+            0% { transform: rotate(14deg); }
+            50% { transform: rotate(-12deg); }
+            100% { transform: rotate(18deg); }
+        }
+        @keyframes catTrot {
+            0%, 100% { transform: rotate(10deg) translateY(0); }
+            50% { transform: rotate(-10deg) translateY(6px); }
+        }
+        @keyframes earFlick {
+            0%, 88%, 100% { transform: rotate(0); }
+            91% { transform: rotate(-7deg); }
+            94% { transform: rotate(4deg); }
+        }
+        @keyframes catBlink {
+            0%, 44%, 48%, 100% { transform: scaleY(0); }
+            45%, 47% { transform: scaleY(1); }
+        }
+        @keyframes yarnSpin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes yarnBob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2px); }
         }
     </style>
 </head>
@@ -199,11 +392,124 @@
             </section>
         </div>
     </div>
+    <div class="pet-scene" id="pet-scene">
+        <div class="speech-bubble" id="cat-bubble" aria-hidden="true">plz</div>
+        <div class="yarn-bowl" id="yarn-bowl" aria-hidden="true">
+            <svg viewBox="0 0 72 64" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="36" cy="56" rx="20" ry="6" fill="rgba(68, 44, 26, 0.12)" />
+                <g class="yarn-bob">
+                    <g class="yarn-swirl">
+                        <circle cx="29" cy="18" r="12" fill="#f3c27e" />
+                        <path d="M20 18 C23 11, 33 10, 38 17 C35 24, 24 26, 20 18 Z" fill="none" stroke="#b8734f" stroke-width="2" stroke-linecap="round" />
+                        <path d="M22 12 C27 16, 30 20, 28 27" fill="none" stroke="#b8734f" stroke-width="2" stroke-linecap="round" />
+                        <path d="M19 20 C26 18, 32 20, 38 24" fill="none" stroke="#b8734f" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                    <g class="yarn-swirl" style="animation-duration: 2.4s;">
+                        <circle cx="46" cy="22" r="10" fill="#ffd9c7" />
+                        <path d="M39 22 C42 15, 50 14, 54 21 C52 27, 44 29, 39 22 Z" fill="none" stroke="#b76555" stroke-width="2" stroke-linecap="round" />
+                        <path d="M42 17 C45 21, 48 24, 47 30" fill="none" stroke="#b76555" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                </g>
+                <path d="M12 34 Q36 47 60 34 L56 50 Q36 63 16 50 Z" fill="#c99775" />
+                <path d="M12 34 Q36 47 60 34" fill="none" stroke="#8d5c46" stroke-width="3" stroke-linecap="round" />
+                <path d="M18 50 Q36 59 54 50" fill="none" stroke="#9c6e57" stroke-width="3" stroke-linecap="round" />
+            </svg>
+        </div>
+        <button class="cat-button" id="cat-button" type="button" aria-pressed="false" aria-label="Pause the cat animation">
+            <svg class="cat-art" viewBox="0 0 160 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <ellipse cx="84" cy="172" rx="38" ry="10" fill="rgba(67, 45, 29, 0.10)" />
+                <g class="tail-swish">
+                    <path d="M45 116 C12 100 16 56 50 42 C75 32 90 54 75 71 C65 82 52 83 43 77" fill="none" stroke="#fbf6ef" stroke-width="20" stroke-linecap="round" />
+                    <path d="M47 114 C18 100 22 63 49 51 C63 45 71 53 69 63 C66 73 58 76 46 74" fill="none" stroke="#ca7845" stroke-width="10" stroke-linecap="round" stroke-dasharray="26 20" />
+                </g>
+                <g transform="translate(56 116)">
+                    <g class="leg alt-step">
+                        <rect x="0" y="0" width="18" height="38" rx="9" fill="#f2ece4" />
+                        <ellipse cx="9" cy="38" rx="12" ry="8" fill="#f2ece4" />
+                        <ellipse cx="9" cy="42" rx="8" ry="4.5" fill="#edd6c9" />
+                    </g>
+                </g>
+                <g transform="translate(80 116)">
+                    <g class="leg">
+                        <rect x="0" y="0" width="18" height="38" rx="9" fill="#f2ece4" />
+                        <ellipse cx="9" cy="38" rx="12" ry="8" fill="#f2ece4" />
+                        <ellipse cx="9" cy="42" rx="8" ry="4.5" fill="#edd6c9" />
+                    </g>
+                </g>
+                <g class="cat-body">
+                    <ellipse cx="86" cy="108" rx="56" ry="43" fill="#fbf6ef" />
+                    <ellipse cx="64" cy="96" rx="18" ry="15" fill="#ca7845" opacity="0.95" />
+                    <ellipse cx="105" cy="112" rx="25" ry="20" fill="#ca7845" />
+                    <ellipse cx="90" cy="119" rx="34" ry="25" fill="#fffdf8" />
+                    <ellipse cx="123" cy="88" rx="12" ry="11" fill="#ca7845" opacity="0.88" />
+                    <path d="M33 110 Q52 141 84 145 Q119 147 139 118 Q127 142 90 154 Q54 151 33 110 Z" fill="#f6efe6" opacity="0.55" />
+                </g>
+                <g transform="translate(98 115)">
+                    <g class="leg">
+                        <rect x="0" y="0" width="18" height="39" rx="9" fill="#fbf6ef" />
+                        <ellipse cx="9" cy="39" rx="12" ry="8" fill="#fbf6ef" />
+                        <ellipse cx="9" cy="43" rx="8" ry="4.5" fill="#f0dccd" />
+                    </g>
+                </g>
+                <g transform="translate(119 116)">
+                    <g class="leg alt-step">
+                        <rect x="0" y="0" width="18" height="38" rx="9" fill="#fbf6ef" />
+                        <ellipse cx="9" cy="38" rx="12" ry="8" fill="#fbf6ef" />
+                        <ellipse cx="9" cy="42" rx="8" ry="4.5" fill="#f0dccd" />
+                    </g>
+                </g>
+                <g transform="translate(102 62)">
+                    <g class="head-shell">
+                    <g transform="translate(-20 -25)">
+                        <g class="ear">
+                            <path d="M0 12 L10 -15 L22 10 Z" fill="#fbf6ef" />
+                            <path d="M8 8 L11 -7 L17 7 Z" fill="#f4b7b4" />
+                        </g>
+                    </g>
+                    <g transform="translate(16 -24)">
+                        <g class="ear alt-ear">
+                            <path d="M0 10 L11 -15 L23 12 Z" fill="#fbf6ef" />
+                            <path d="M8 7 L12 -7 L18 9 Z" fill="#f4b7b4" />
+                        </g>
+                    </g>
+                    <circle cx="0" cy="0" r="34" fill="#fbf6ef" />
+                    <ellipse cx="11" cy="-5" rx="18" ry="16" fill="#ca7845" />
+                    <ellipse cx="-7" cy="15" rx="23" ry="14" fill="#fffdf8" />
+                    <ellipse cx="-18" cy="13" rx="6" ry="3.2" fill="#f7c8c2" opacity="0.7" />
+                    <ellipse cx="19" cy="13" rx="6" ry="3.2" fill="#f7c8c2" opacity="0.7" />
+                    <g transform="translate(-12 -4)">
+                        <g class="cat-eye">
+                            <ellipse cx="0" cy="0" rx="9.5" ry="11.5" fill="#fffefa" stroke="#3b2a23" stroke-width="1.4" />
+                            <g class="pupil-shift">
+                                <ellipse class="eye-pupil" cx="0" cy="1.5" rx="3.2" ry="4.4" fill="#3b2a23" />
+                                <circle class="eye-sparkle" cx="1.6" cy="-1.2" r="1.2" fill="#fff" />
+                            </g>
+                            <ellipse class="blink-lid" cx="0" cy="0" rx="10" ry="12" fill="#fbf6ef" />
+                        </g>
+                    </g>
+                    <g transform="translate(14 -2)">
+                        <g class="cat-eye">
+                            <ellipse cx="0" cy="0" rx="9.5" ry="11.5" fill="#fffefa" stroke="#3b2a23" stroke-width="1.4" />
+                            <g class="pupil-shift">
+                                <ellipse class="eye-pupil" cx="0" cy="1.5" rx="3.2" ry="4.4" fill="#3b2a23" />
+                                <circle class="eye-sparkle" cx="1.6" cy="-1.2" r="1.2" fill="#fff" />
+                            </g>
+                            <ellipse class="blink-lid" cx="0" cy="0" rx="10" ry="12" fill="#fbf6ef" />
+                        </g>
+                    </g>
+                    <path d="M-1 11 C-3 8 -6 8 -6 11 C-6 13 -3 15 -1 17 C1 15 4 13 4 11 C4 8 1 8 -1 11 Z" fill="#f2a7b0" />
+                    <path id="cat-mouth" d="M-6 20 Q-3 24 0 20 M0 20 Q3 24 6 20" fill="none" stroke="#6c4937" stroke-width="2.2" stroke-linecap="round" />
+                    <path d="M-17 12 L-31 9 M-17 16 L-31 16 M18 11 L32 8 M18 16 L32 16" fill="none" stroke="#7a5845" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                </g>
+            </svg>
+        </button>
+    </div>
     <script>
         const names = ['Vimal', 'விமல்'];
         let currentIndex = 0;
         const titleEl = document.getElementById('name-title');
-        
+
         setInterval(() => {
             titleEl.classList.add('fade');
             setTimeout(() => {
@@ -212,21 +518,113 @@
                 titleEl.classList.remove('fade');
             }, 500);
         }, 2000);
+
+        const petScene = document.getElementById('pet-scene');
+        const catButton = document.getElementById('cat-button');
+        const yarnBowl = document.getElementById('yarn-bowl');
+        const catBubble = document.getElementById('cat-bubble');
+        const catMouth = document.getElementById('cat-mouth');
+        const pupils = Array.from(catButton.querySelectorAll('.pupil-shift'));
+        const normalMouth = 'M-6 20 Q-3 24 0 20 M0 20 Q3 24 6 20';
+        const pleadingMouth = 'M-6 22 Q0 28 6 22';
+
+        let catY = 110;
+        let lastCatX = 0;
+        let lastCatY = 0;
+        let pleading = false;
+        let frameId = null;
+
+        function setPupilOffset(x, y) {
+            pupils.forEach((pupil) => {
+                pupil.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
+
+        function positionBubble() {
+            catBubble.style.left = `${lastCatX + 18}px`;
+            catBubble.style.top = `${Math.max(4, lastCatY - 6)}px`;
+        }
+
+        function syncSceneSize() {
+            const sceneHeight = petScene.clientHeight;
+            const sceneWidth = petScene.clientWidth;
+            const maxCatY = Math.max(0, sceneHeight - catButton.offsetHeight - 6);
+            catY = Math.min(catY, maxCatY);
+            lastCatX = Math.max(0, sceneWidth - catButton.offsetWidth - 12);
+            lastCatY = catY;
+            catButton.style.transform = `translate(${lastCatX}px, ${lastCatY}px)`;
+            yarnBowl.style.transform = `translate(${Math.max(0, sceneWidth - yarnBowl.offsetWidth - 2)}px, 14px)`;
+            positionBubble();
+        }
+
+        function animateCat(time) {
+            if (pleading) {
+                frameId = null;
+                return;
+            }
+
+            const t = time * 0.001;
+            const sceneHeight = petScene.clientHeight;
+            const sceneWidth = petScene.clientWidth;
+            const catWidth = catButton.offsetWidth;
+            const catHeight = catButton.offsetHeight;
+            const bowlWidth = yarnBowl.offsetWidth;
+            const bowlHeight = yarnBowl.offsetHeight;
+            const bowlMinY = 14;
+            const bowlMaxY = Math.max(bowlMinY, sceneHeight - bowlHeight - 10);
+            const bowlTravel = bowlMaxY - bowlMinY;
+            const bowlY = bowlMinY + ((Math.sin(t * 0.92) + 1) * 0.5) * bowlTravel + Math.sin(t * 2.1) * 8;
+            const bowlClampedY = Math.min(bowlMaxY, Math.max(bowlMinY, bowlY));
+            const bowlX = Math.max(0, sceneWidth - bowlWidth - 2) + Math.sin(t * 1.7) * 3;
+            const targetCatY = Math.max(0, Math.min(sceneHeight - catHeight - 6, bowlClampedY - catHeight * 0.28));
+            const catXBase = Math.max(0, sceneWidth - catWidth - 12);
+            const chaseDelta = targetCatY - catY;
+            const chaseStretch = Math.min(0.06, Math.abs(chaseDelta) * 0.0012);
+            const bob = Math.sin(t * 6.1) * 3;
+            const catX = catXBase - Math.min(10, Math.abs(chaseDelta) * 0.08) + Math.sin(t * 1.3) * 2;
+            const tilt = Math.max(-7, Math.min(7, (bowlClampedY - catY - catHeight * 0.38) * 0.06));
+
+            catY += chaseDelta * 0.1;
+            lastCatX = catX;
+            lastCatY = catY + bob;
+
+            catButton.style.transform = `translate(${catX}px, ${lastCatY}px) rotate(${tilt}deg) scale(${1 + chaseStretch}, ${1 - chaseStretch * 0.65})`;
+            yarnBowl.style.transform = `translate(${bowlX}px, ${bowlClampedY}px) rotate(${Math.sin(t * 3.4) * 7}deg)`;
+            setPupilOffset(bowlX > catX ? 2.8 : -1.2, Math.max(-2.8, Math.min(3.2, (bowlClampedY - catY - catHeight * 0.38) * 0.045)));
+            catMouth.setAttribute('d', normalMouth);
+            positionBubble();
+            frameId = window.requestAnimationFrame(animateCat);
+        }
+
+        function setPleading(nextState) {
+            pleading = nextState;
+            petScene.classList.toggle('is-pleading', pleading);
+            catButton.setAttribute('aria-pressed', String(pleading));
+            catButton.setAttribute('aria-label', pleading ? 'Resume the cat animation' : 'Pause the cat animation');
+
+            if (pleading) {
+                if (frameId !== null) {
+                    window.cancelAnimationFrame(frameId);
+                    frameId = null;
+                }
+                setPupilOffset(0, -1.6);
+                catMouth.setAttribute('d', pleadingMouth);
+                positionBubble();
+                return;
+            }
+
+            if (frameId === null) {
+                frameId = window.requestAnimationFrame(animateCat);
+            }
+        }
+
+        catButton.addEventListener('click', () => {
+            setPleading(!pleading);
+        });
+
+        window.addEventListener('resize', syncSceneSize);
+        syncSceneSize();
+        frameId = window.requestAnimationFrame(animateCat);
     </script>
-    <div class="cat-wrapper" aria-hidden="true">
-        <svg width="60" height="60" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering: pixelated;">
-            <rect x="2" y="2" width="2" height="2" fill="#333" />
-            <rect x="12" y="2" width="2" height="2" fill="#333" />
-            <rect x="2" y="4" width="12" height="6" fill="#333" />
-            <rect x="3" y="5" width="2" height="2" fill="#FFF" />
-            <rect x="11" y="5" width="2" height="2" fill="#FFF" />
-            <rect x="7" y="7" width="2" height="1" fill="#FFA5C3" />
-            <rect x="3" y="10" width="10" height="4" fill="#333" />
-            <rect x="13" y="8" width="2" height="5" fill="#333" />
-            <rect x="3" y="14" width="2" height="2" fill="#333" />
-            <rect x="7" y="14" width="2" height="2" fill="#333" />
-            <rect x="11" y="14" width="2" height="2" fill="#333" />
-        </svg>
-    </div>
 </body>
 </html>
