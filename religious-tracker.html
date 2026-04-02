@@ -13,7 +13,7 @@
             background: #f5f1e8;
             min-height: 100vh;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; padding: 60px 0; color: #333; }
         .header h1 { font-size: 3.5em; font-weight: 700; margin-bottom: 10px; }
         .back-link {
@@ -39,7 +39,7 @@
         }
         th, td {
             text-align: left;
-            padding: 12px 15px;
+            padding: 15px;
             border-bottom: 1px solid #eee;
         }
         th {
@@ -60,33 +60,10 @@
         tr:hover {
             background-color: #fafafa;
         }
-        /* Hover Tints */
-        tr.christian-row:hover { background-color: #e3f2fd !important; }
-        tr.hindu-row:hover { background-color: #fff3e0 !important; }
-        tr.islam-row:hover { background-color: #e8f5e9 !important; }
-        tr.buddhist-row:hover { background-color: #fffde7 !important; }
-        tr.jewish-row:hover { background-color: #1a237e !important; color: white; }
-        tr.jewish-row:hover a { color: #bbdefb; }
-        
-        .note-ref {
-            font-size: 0.75em;
-            vertical-align: super;
-            color: #d32f2f;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 2px;
+        tr.christian-row:hover {
+            background-color: #e3f2fd !important; /* Light blue tint */
         }
-        .notes-section {
-            background: white;
-            padding: 20px 30px;
-            border-radius: 12px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .notes-section h3 { margin-bottom: 10px; font-size: 1.2em; }
-        .notes-list { list-style: none; }
-        .notes-list li { margin-bottom: 5px; font-size: 0.9em; color: #666; }
-        .footer { text-align: center; padding: 40px 0; color: #888; font-size: 0.9em; }
+        .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -104,7 +81,6 @@
                     <tr>
                         <th>Religion</th>
                         <th>Denomination</th>
-                        <th>Sub-Denominations</th>
                         <th>Leader</th>
                         <th>Since</th>
                         <th id="time-header" class="clickable-header">Days in Charge ↕</th>
@@ -116,65 +92,51 @@
             </table>
         </div>
 
-        <div id="notes-container" class="notes-section" style="display: none;">
-            <h3>Notes</h3>
-            <ul id="notes-list" class="notes-list"></ul>
-        </div>
-
         <div class="footer">
             <p>&copy; 2026 Vimal. All rights reserved.</p>
         </div>
     </div>
 
     <script>
-        let currentMode = 'days';
+        let currentMode = 'days'; // 'days', 'hours', 'minutes', 'seconds'
         const modes = ['days', 'hours', 'minutes', 'seconds'];
         let leadersData = [];
 
-        function parseDate(dateStr) {
-            if (!dateStr || dateStr.trim() === '') return null;
-            
-            // Handle formats: "May 8th 2025", "May 2025", "2025"
-            let cleanStr = dateStr.replace(/(st|nd|rd|th)/, '');
-            let date = new Date(cleanStr + ' 12:00:00 UTC');
-            
-            if (isNaN(date.getTime())) return null;
-
-            // Check if it's an exact date (contains a day number)
-            const hasDay = /\d+\s+(January|February|March|April|May|June|July|August|September|October|November|December)/i.test(dateStr) ||
-                           /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d+/i.test(dateStr);
-            
-            return { date, isExact: hasDay };
+        function formatValue(value, mode) {
+            if (isNaN(value)) return 'N/A';
+            return Math.floor(value).toLocaleString() + (mode === 'days' ? '' : '');
         }
 
-        function calculateTime(dateInfo) {
-            if (!dateInfo || !dateInfo.isExact) return NaN;
+        function calculateTime(sinceDateStr) {
+            if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a') return NaN;
             
+            // Set base value as 12:00 UTC
+            const startDate = new Date(sinceDateStr + 'T12:00:00Z');
             const now = new Date();
-            const diffMs = now - dateInfo.date;
+            const diffMs = now - startDate;
             
             if (diffMs < 0) return 0;
 
             switch (currentMode) {
-                case 'days': return diffMs / (1000 * 60 * 60 * 24);
-                case 'hours': return diffMs / (1000 * 60 * 60);
-                case 'minutes': return diffMs / (1000 * 60);
-                case 'seconds': return diffMs / 1000;
-                default: return diffMs / (1000 * 60 * 60 * 24);
+                case 'days':
+                    return diffMs / (1000 * 60 * 60 * 24);
+                case 'hours':
+                    return diffMs / (1000 * 60 * 60);
+                case 'minutes':
+                    return diffMs / (1000 * 60);
+                case 'seconds':
+                    return diffMs / 1000;
+                default:
+                    return diffMs / (1000 * 60 * 60 * 24);
             }
-        }
-
-        function formatValue(value) {
-            if (isNaN(value)) return '';
-            return Math.floor(value).toLocaleString();
         }
 
         function updateTableValues() {
             const rows = document.querySelectorAll('#table-body tr');
             rows.forEach((row, index) => {
-                const timeCell = row.cells[5];
-                const dateInfo = leadersData[index].dateInfo;
-                timeCell.textContent = formatValue(calculateTime(dateInfo));
+                const timeCell = row.cells[4];
+                const sinceDate = leadersData[index].since;
+                timeCell.textContent = formatValue(calculateTime(sinceDate), currentMode);
             });
             
             const header = document.getElementById('time-header');
@@ -192,102 +154,45 @@
                 const response = await fetch('leaders.csv');
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
-                const tableBody = document.getElementById('table-body');
-                const notesList = document.getElementById('notes-list');
-                const notesContainer = document.getElementById('notes-container');
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
                 
-                const noteDefinitions = {
-                    '[a]': 'Independent Catholic groups are not in communion with the Pope.',
-                    '[b]': 'The Russian and Belarusian churches currently operate under Apostolic Administrations rather than a full hierarchy.'
-                };
-                const usedNotes = new Set();
+                const religionIdx = headers.indexOf('religion');
+                const sinceIdx = headers.indexOf('since');
+                const tableBody = document.getElementById('table-body');
 
                 lines.slice(1).forEach(line => {
                     if (line.trim() === '') return;
-                    
-                    // Simple CSV parse (handles commas within quotes if needed, but here simple split is fine for our data)
                     const columns = line.split(',');
-                    const religion = columns[0].trim();
-                    const denomination = columns[1].trim();
-                    const subDenom = columns[2].trim();
-                    const leader = columns[3].trim();
-                    const sinceStr = columns[4].trim();
-                    const notesStr = columns[5] ? columns[5].trim() : '';
-
-                    const dateInfo = parseDate(sinceStr);
-                    leadersData.push({ dateInfo, religion });
+                    const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
+                    const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
+                    
+                    leadersData.push({ since, religion });
 
                     const tr = document.createElement('tr');
-                    const relLower = religion.toLowerCase();
-                    if (relLower === 'christianity') tr.classList.add('christian-row');
-                    else if (relLower === 'hinduism') tr.classList.add('hindu-row');
-                    else if (relLower === 'islam') tr.classList.add('islam-row');
-                    else if (relLower === 'buddhism') tr.classList.add('buddhist-row');
-                    else if (relLower === 'judaism') tr.classList.add('jewish-row');
-
-                    // Religion with symbol
-                    const relTd = document.createElement('td');
-                    let relSymbol = '';
-                    if (relLower === 'christianity') relSymbol = ' ✝';
-                    else if (relLower === 'judaism') relSymbol = ' ✡';
-                    else if (relLower === 'hinduism') relSymbol = ' 🕉';
-                    else if (relLower === 'buddhism') relSymbol = ' ☸';
-                    else if (relLower === 'islam') relSymbol = ' ☪';
-                    relTd.textContent = religion + relSymbol;
-                    tr.appendChild(relTd);
-
-                    // Denomination
-                    const denomTd = document.createElement('td');
-                    denomTd.textContent = denomination;
-                    tr.appendChild(denomTd);
-
-                    // Sub-Denomination
-                    const subTd = document.createElement('td');
-                    subTd.textContent = subDenom;
-                    tr.appendChild(subTd);
-
-                    // Leader with Note
-                    const leaderTd = document.createElement('td');
-                    leaderTd.textContent = leader;
-                    if (notesStr) {
-                        const noteId = notesStr.match(/\[[a-z]\]/);
-                        if (noteId) {
-                            const sup = document.createElement('a');
-                            sup.textContent = noteId[0];
-                            sup.className = 'note-ref';
-                            sup.href = '#note-' + noteId[0][1];
-                            leaderTd.appendChild(sup);
-                            usedNotes.add(noteId[0]);
-                        }
+                    if (religion.toLowerCase() === 'christianity') {
+                        tr.classList.add('christian-row');
                     }
-                    tr.appendChild(leaderTd);
 
-                    // Since
-                    const sinceTd = document.createElement('td');
-                    sinceTd.textContent = sinceStr;
-                    tr.appendChild(sinceTd);
+                    for (let i = 0; i < 4; i++) {
+                        const td = document.createElement('td');
+                        let content = columns[i] ? columns[i].trim() : '';
+                        if (i === religionIdx && content.toLowerCase() === 'christianity') {
+                            content += ' ✝';
+                        }
+                        td.textContent = content;
+                        tr.appendChild(td);
+                    }
 
-                    // Time in Charge
                     const timeTd = document.createElement('td');
                     tr.appendChild(timeTd);
-
                     tableBody.appendChild(tr);
                 });
 
-                // Populate Notes
-                if (usedNotes.size > 0) {
-                    notesContainer.style.display = 'block';
-                    Array.from(usedNotes).sort().forEach(noteId => {
-                        const li = document.createElement('li');
-                        li.id = 'note-' + noteId[1];
-                        li.textContent = noteId + ' ' + (noteDefinitions[noteId] || 'Note definition missing.');
-                        notesList.appendChild(li);
-                    });
-                }
-
                 updateTableValues();
+                
+                // Refresh values every second if in seconds/minutes mode
                 setInterval(() => {
-                    if (['hours', 'minutes', 'seconds'].includes(currentMode)) {
+                    if (currentMode === 'seconds' || currentMode === 'minutes' || currentMode === 'hours') {
                         updateTableValues();
                     }
                 }, 1000);
