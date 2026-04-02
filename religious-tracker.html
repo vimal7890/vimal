@@ -111,7 +111,9 @@
             if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a') return NaN;
             
             // Set base value as 12:00 UTC
-            const startDate = new Date(sinceDateStr + 'T12:00:00Z');
+            // Remove suffixes like st, nd, rd, th for Date parsing
+            const cleanDateStr = sinceDateStr.replace(/(\d+)(st|nd|rd|th)/, '$1');
+            const startDate = new Date(cleanDateStr + ' 12:00:00 UTC');
             const now = new Date();
             const diffMs = now - startDate;
             
