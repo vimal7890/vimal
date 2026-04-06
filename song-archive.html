@@ -50,10 +50,54 @@
             padding-bottom: 0;
             border-bottom: none;
         }
+        .song-widget-shell {
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr) 28px;
+            gap: 8px;
+            align-items: stretch;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        .song-embed {
+            width: 100%;
+            min-height: 152px;
+        }
+        .song-embed iframe {
+            display: block;
+            width: 100% !important;
+            border-radius: 12px;
+        }
+        .song-visualizer {
+            width: 100%;
+            min-height: 152px;
+            height: 100%;
+            display: block;
+            align-self: stretch;
+            opacity: 0.28;
+            transition: opacity 0.28s ease;
+        }
+        .song-item:hover .song-visualizer,
+        .song-item:focus-within .song-visualizer {
+            opacity: 0.72;
+        }
         .song-description {
             color: #666;
             margin-top: 15px;
             font-size: 1em;
+        }
+        @media (max-width: 900px) {
+            .content {
+                padding: 38px 26px;
+            }
+            .song-widget-shell {
+                grid-template-columns: 24px minmax(0, 1fr) 24px;
+                gap: 6px;
+            }
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 28px 18px;
+            }
         }
     </style>
 </head>
@@ -66,14 +110,163 @@
 
         <div class="content">
             <div class="song-item">
-                <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <div class="song-widget-shell">
+                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <div class="song-embed">
+                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                </div>
                 <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
             </div>
             <div class="song-item">
-                <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <div class="song-widget-shell">
+                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <div class="song-embed">
+                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                </div>
                 <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
             </div>
         </div>
     </div>
+    <script>
+        const archiveVisualizerItems = Array.from(document.querySelectorAll('.song-widget-shell'))
+            .map((shell, index) => {
+                const canvases = shell.querySelectorAll('.song-visualizer');
+                const embed = shell.querySelector('.song-embed');
+                const iframe = embed ? embed.querySelector('iframe') : null;
+
+                return {
+                    shell,
+                    embed,
+                    iframe,
+                    energy: 0.18,
+                    targetEnergy: 0.18,
+                    phaseOffset: index * 0.9,
+                    rails: Array.from(canvases).map((canvas, canvasIndex) => ({
+                        canvas,
+                        ctx: canvas.getContext('2d'),
+                        direction: canvasIndex === 0 ? -1 : 1,
+                    })),
+                };
+            })
+            .filter((item) => item.embed && item.rails.every((rail) => rail.canvas && rail.ctx));
+
+        function pseudoNoise(seed) {
+            const value = Math.sin(seed * 12.9898) * 43758.5453;
+            return value - Math.floor(value);
+        }
+
+        function queueArchiveVisualizerResize() {
+            window.requestAnimationFrame(resizeArchiveVisualizers);
+        }
+
+        function resizeArchiveVisualizers() {
+            const ratio = window.devicePixelRatio || 1;
+
+            archiveVisualizerItems.forEach((item) => {
+                item.rails.forEach((rail) => {
+                    const width = Math.max(1, Math.floor(rail.canvas.clientWidth || rail.canvas.width));
+                    const height = Math.max(1, Math.floor(rail.canvas.clientHeight || item.embed.clientHeight || 152));
+                    rail.canvas.width = Math.max(1, Math.floor(width * ratio));
+                    rail.canvas.height = Math.max(1, Math.floor(height * ratio));
+                    rail.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                    rail.ctx.lineCap = 'round';
+                });
+            });
+        }
+
+        function drawArchiveRail(item, rail, t) {
+            const width = rail.canvas.clientWidth;
+            const height = rail.canvas.clientHeight;
+
+            if (!width || !height) {
+                return;
+            }
+
+            rail.ctx.clearRect(0, 0, width, height);
+
+            const laneCount = Math.max(8, Math.round(height / 16));
+            const laneGap = height / laneCount;
+            const innerEdge = rail.direction < 0 ? width - 1 : 1;
+            const maxReach = Math.max(5, width - 4);
+            const baseReach = 1.25;
+            const anchorAlpha = 0.08 + item.energy * 0.12;
+
+            rail.ctx.beginPath();
+            rail.ctx.strokeStyle = `rgba(158, 59, 47, ${anchorAlpha.toFixed(3)})`;
+            rail.ctx.lineWidth = 1;
+            rail.ctx.moveTo(innerEdge, 0);
+            rail.ctx.lineTo(innerEdge, height);
+            rail.ctx.stroke();
+
+            for (let i = 0; i < laneCount; i += 1) {
+                const laneRatio = i / Math.max(1, laneCount - 1);
+                const wave = 0.5 + 0.5 * Math.sin((t * 3.8) + item.phaseOffset + laneRatio * 8.4);
+                const shimmer = 0.5 + 0.5 * Math.sin((t * 7.1) + item.phaseOffset * 0.7 + laneRatio * 16.5 + rail.direction * 0.8);
+                const grain = pseudoNoise((laneRatio * 40) + (t * 1.8) + item.phaseOffset * 10);
+                const pulse = (wave * 0.44) + (shimmer * 0.34) + (grain * 0.22);
+                const magnitude = baseReach + (maxReach - baseReach) * pulse * item.energy;
+                const alpha = 0.08 + pulse * 0.16 + item.energy * 0.08;
+                const y = i * laneGap + laneGap / 2;
+                const endX = rail.direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
+
+                rail.ctx.beginPath();
+                rail.ctx.strokeStyle = `rgba(158, 59, 47, ${alpha.toFixed(3)})`;
+                rail.ctx.lineWidth = 1.05;
+                rail.ctx.moveTo(innerEdge, y);
+                rail.ctx.lineTo(endX, y);
+                rail.ctx.stroke();
+            }
+        }
+
+        function animateArchiveVisualizers() {
+            const t = performance.now() * 0.001;
+
+            archiveVisualizerItems.forEach((item) => {
+                item.energy += (item.targetEnergy - item.energy) * 0.08;
+                item.rails.forEach((rail) => drawArchiveRail(item, rail, t));
+            });
+
+            requestAnimationFrame(animateArchiveVisualizers);
+        }
+
+        archiveVisualizerItems.forEach((item) => {
+            item.shell.addEventListener('mouseenter', () => {
+                item.targetEnergy = 0.42;
+            });
+            item.shell.addEventListener('mouseleave', () => {
+                item.targetEnergy = 0.18;
+            });
+            item.shell.addEventListener('focusin', () => {
+                item.targetEnergy = 0.42;
+            });
+            item.shell.addEventListener('focusout', () => {
+                item.targetEnergy = 0.18;
+            });
+
+            if (item.iframe) {
+                item.iframe.addEventListener('load', queueArchiveVisualizerResize, { once: true });
+            }
+        });
+
+        resizeArchiveVisualizers();
+        requestAnimationFrame(animateArchiveVisualizers);
+        window.addEventListener('load', queueArchiveVisualizerResize);
+        window.addEventListener('resize', queueArchiveVisualizerResize);
+
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(() => {
+                queueArchiveVisualizerResize();
+            });
+
+            archiveVisualizerItems.forEach((item) => {
+                resizeObserver.observe(item.shell);
+                resizeObserver.observe(item.embed);
+            });
+        }
+    </script>
 </body>
 </html>
