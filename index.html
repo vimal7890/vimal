@@ -94,34 +94,30 @@
         .song-widget-shell {
             position: relative;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 78px;
-            gap: 14px;
-            align-items: center;
+            grid-template-columns: 32px minmax(0, 1fr) 32px;
+            gap: 8px;
+            align-items: stretch;
         }
         .song-embed {
             width: 100%;
             min-height: 352px;
         }
         .song-embed iframe {
+            display: block;
             width: 100% !important;
             border-radius: 12px;
         }
-        .vintage-visualizer {
-            width: 78px;
-            height: 318px;
-            border-radius: 12px;
-            border: 1px solid rgba(118, 78, 40, 0.36);
-            background:
-                linear-gradient(to bottom, rgba(255, 252, 243, 0.86), rgba(235, 220, 196, 0.94)),
-                repeating-linear-gradient(to bottom, rgba(160, 118, 70, 0.16) 0, rgba(160, 118, 70, 0.16) 1px, transparent 1px, transparent 5px);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 10px 22px rgba(62, 44, 24, 0.12);
-            opacity: 0.62;
-            transform: translateX(-4px);
-            transition: opacity 0.32s ease, transform 0.32s ease;
+        .song-visualizer {
+            width: 100%;
+            min-height: 352px;
+            height: 100%;
+            display: block;
+            align-self: stretch;
+            opacity: 0.32;
+            transition: opacity 0.28s ease;
         }
-        .vintage-visualizer.active {
-            opacity: 1;
-            transform: translateX(0);
+        .song-visualizer.active {
+            opacity: 0.9;
         }
         .show-more-section {
             margin-top: 22px;
@@ -159,13 +155,8 @@
                 opacity: 0.48;
             }
             .song-widget-shell {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .vintage-visualizer {
-                width: 100%;
-                height: 72px;
-                transform: none;
+                grid-template-columns: 24px minmax(0, 1fr) 24px;
+                gap: 6px;
             }
         }
         @media (max-width: 640px) {
@@ -213,8 +204,9 @@
             <section class="section">
                 <h2>Song of the Month</h2>
                 <div class="song-widget-shell">
+                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="352" aria-hidden="true"></canvas>
                     <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
-                    <canvas id="vintage-visualizer" class="vintage-visualizer" width="78" height="318" aria-hidden="true"></canvas>
+                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="352" aria-hidden="true"></canvas>
                 </div>
                 <p class="song-description">New Bollywood Classic</p>
                 <div class="show-more-section">
@@ -337,9 +329,17 @@
         const spotifyTrackId = '6TEPHCFsVz4C0giqDPRFmO';
         const spotifyUri = `spotify:track:${spotifyTrackId}`;
         const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${spotifyTrackId}?utm_source=generator`;
+        const songWidgetShell = document.querySelector('.song-widget-shell');
         const spotifyContainer = document.getElementById('song-embed');
-        const visualizerCanvas = document.getElementById('vintage-visualizer');
-        const visualizerCtx = visualizerCanvas.getContext('2d');
+        const visualizerTargets = [
+            { canvas: document.getElementById('visualizer-left'), direction: -1 },
+            { canvas: document.getElementById('visualizer-right'), direction: 1 },
+        ]
+            .map((target) => ({
+                ...target,
+                ctx: target.canvas ? target.canvas.getContext('2d') : null,
+            }))
+            .filter((target) => target.canvas && target.ctx);
 
         const visualizerState = {
             isPlaying: false,
@@ -347,6 +347,16 @@
             targetEnergy: 0.12,
             progressRatio: 0,
         };
+
+        function setVisualizerActive(isActive) {
+            visualizerTargets.forEach(({ canvas }) => {
+                canvas.classList.toggle('active', isActive);
+            });
+        }
+
+        function queueVisualizerResize() {
+            window.requestAnimationFrame(resizeVisualizerCanvases);
+        }
 
         function injectFallbackEmbed() {
             if (!spotifyContainer || spotifyContainer.querySelector('iframe')) {
@@ -363,16 +373,22 @@
             iframe.setAttribute('allowfullscreen', '');
             iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
             iframe.loading = 'lazy';
+            iframe.addEventListener('load', queueVisualizerResize, { once: true });
             spotifyContainer.appendChild(iframe);
+            queueVisualizerResize();
         }
 
-        function resizeVisualizerCanvas() {
+        function resizeVisualizerCanvases() {
             const ratio = window.devicePixelRatio || 1;
-            const width = visualizerCanvas.clientWidth;
-            const height = visualizerCanvas.clientHeight;
-            visualizerCanvas.width = Math.max(1, Math.floor(width * ratio));
-            visualizerCanvas.height = Math.max(1, Math.floor(height * ratio));
-            visualizerCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+            visualizerTargets.forEach(({ canvas, ctx }) => {
+                const width = Math.max(1, Math.floor(canvas.clientWidth || canvas.width));
+                const height = Math.max(1, Math.floor(canvas.clientHeight || spotifyContainer.clientHeight || 352));
+                canvas.width = Math.max(1, Math.floor(width * ratio));
+                canvas.height = Math.max(1, Math.floor(height * ratio));
+                ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                ctx.lineCap = 'round';
+            });
         }
 
         function pseudoNoise(seed) {
@@ -380,60 +396,57 @@
             return value - Math.floor(value);
         }
 
-        function drawVintageVisualizer() {
-            const t = performance.now() * 0.001;
-            const width = visualizerCanvas.clientWidth;
-            const height = visualizerCanvas.clientHeight;
+        function drawVisualizerRail(target, t) {
+            const { canvas, ctx, direction } = target;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
 
-            visualizerState.energy += (visualizerState.targetEnergy - visualizerState.energy) * 0.08;
-            visualizerCtx.clearRect(0, 0, width, height);
-
-            const isVertical = height > width;
-            const laneCount = isVertical ? 38 : 26;
-            const laneGap = (isVertical ? height : width) / laneCount;
-            const base = 6;
-            const maxReach = (isVertical ? width : height) - 12;
-
-            visualizerCtx.beginPath();
-            visualizerCtx.strokeStyle = 'rgba(122, 86, 45, 0.38)';
-            visualizerCtx.lineWidth = 1;
-            if (isVertical) {
-                visualizerCtx.moveTo(7, 0);
-                visualizerCtx.lineTo(7, height);
-            } else {
-                visualizerCtx.moveTo(0, height - 8);
-                visualizerCtx.lineTo(width, height - 8);
+            if (!width || !height) {
+                return;
             }
-            visualizerCtx.stroke();
+
+            ctx.clearRect(0, 0, width, height);
+
+            const laneCount = Math.max(14, Math.round(height / 18));
+            const laneGap = height / laneCount;
+            const innerEdge = direction < 0 ? width - 1 : 1;
+            const maxReach = Math.max(6, width - 5);
+            const baseReach = 1.5;
+            const anchorAlpha = visualizerState.isPlaying ? 0.16 : 0.08;
+
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(158, 59, 47, ${anchorAlpha})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(innerEdge, 0);
+            ctx.lineTo(innerEdge, height);
+            ctx.stroke();
 
             for (let i = 0; i < laneCount; i += 1) {
                 const laneRatio = i / Math.max(1, laneCount - 1);
-                const harmonic = Math.abs(Math.sin((t * 7.6) + laneRatio * 14 + visualizerState.progressRatio * 40));
-                const shimmer = Math.abs(Math.sin((t * 15.8) + laneRatio * 26));
-                const grain = pseudoNoise((laneRatio * 100) + (t * 3.5) + visualizerState.progressRatio * 300);
-                const pulse = 0.22 + 0.4 * harmonic + 0.24 * shimmer + 0.14 * grain;
-                const magnitude = base + (maxReach - base) * pulse * visualizerState.energy;
-                const alpha = 0.28 + 0.72 * pulse * (0.35 + visualizerState.energy);
+                const wave = 0.5 + 0.5 * Math.sin((t * 4.6) + laneRatio * 10.5 + visualizerState.progressRatio * 18);
+                const shimmer = 0.5 + 0.5 * Math.sin((t * 8.4) + laneRatio * 19.5 + direction * 0.8);
+                const grain = pseudoNoise((laneRatio * 80) + (t * 2.1) + visualizerState.progressRatio * 160);
+                const pulse = (wave * 0.46) + (shimmer * 0.34) + (grain * 0.2);
+                const energyScale = 0.2 + visualizerState.energy * 0.52;
+                const magnitude = baseReach + (maxReach - baseReach) * pulse * energyScale;
+                const alpha = 0.1 + pulse * (visualizerState.isPlaying ? 0.3 : 0.12);
+                const y = i * laneGap + laneGap / 2;
+                const endX = direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
 
-                visualizerCtx.strokeStyle = `rgba(142, 56, 38, ${alpha.toFixed(3)})`;
-                visualizerCtx.lineWidth = isVertical ? 2 : 1.8;
-                visualizerCtx.beginPath();
-
-                if (isVertical) {
-                    const y = i * laneGap + laneGap / 2;
-                    visualizerCtx.moveTo(8, y);
-                    visualizerCtx.lineTo(magnitude, y);
-                } else {
-                    const x = i * laneGap + laneGap / 2;
-                    const yBase = height - 8;
-                    visualizerCtx.moveTo(x, yBase);
-                    visualizerCtx.lineTo(x, yBase - magnitude);
-                }
-
-                visualizerCtx.stroke();
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(158, 59, 47, ${alpha.toFixed(3)})`;
+                ctx.lineWidth = 1.15;
+                ctx.moveTo(innerEdge, y);
+                ctx.lineTo(endX, y);
+                ctx.stroke();
             }
+        }
 
-            requestAnimationFrame(drawVintageVisualizer);
+        function drawVisualizers() {
+            const t = performance.now() * 0.001;
+            visualizerState.energy += (visualizerState.targetEnergy - visualizerState.energy) * 0.08;
+            visualizerTargets.forEach((target) => drawVisualizerRail(target, t));
+            requestAnimationFrame(drawVisualizers);
         }
 
         function updatePlaybackState(data) {
@@ -447,12 +460,39 @@
 
             visualizerState.isPlaying = isPlaying;
             visualizerState.targetEnergy = isPlaying ? 0.98 : 0.12;
-            visualizerCanvas.classList.toggle('active', isPlaying);
+            setVisualizerActive(isPlaying);
         }
 
-        resizeVisualizerCanvas();
-        requestAnimationFrame(drawVintageVisualizer);
-        window.addEventListener('resize', resizeVisualizerCanvas);
+        resizeVisualizerCanvases();
+        requestAnimationFrame(drawVisualizers);
+        window.addEventListener('resize', queueVisualizerResize);
+        window.addEventListener('load', queueVisualizerResize);
+
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(() => {
+                queueVisualizerResize();
+            });
+
+            if (songWidgetShell) {
+                resizeObserver.observe(songWidgetShell);
+            }
+
+            if (spotifyContainer) {
+                resizeObserver.observe(spotifyContainer);
+            }
+        }
+
+        if (window.MutationObserver && spotifyContainer) {
+            const embedObserver = new MutationObserver(() => {
+                const iframe = spotifyContainer.querySelector('iframe');
+                if (iframe) {
+                    iframe.addEventListener('load', queueVisualizerResize, { once: true });
+                }
+                queueVisualizerResize();
+            });
+
+            embedObserver.observe(spotifyContainer, { childList: true, subtree: true });
+        }
 
         let spotifyControllerReady = false;
         const fallbackTimer = setTimeout(() => {
@@ -476,10 +516,11 @@
                 (EmbedController) => {
                     spotifyControllerReady = true;
                     clearTimeout(fallbackTimer);
+                    queueVisualizerResize();
 
                     EmbedController.addListener('playback_started', () => {
                         visualizerState.targetEnergy = 0.98;
-                        visualizerCanvas.classList.add('active');
+                        setVisualizerActive(true);
                     });
 
                     EmbedController.addListener('playback_update', (event) => {
