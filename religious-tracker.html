@@ -103,15 +103,21 @@
         let leadersData = [];
 
         function formatValue(value, mode) {
-            if (isNaN(value)) return 'N/A';
+            if (isNaN(value)) return '';
             return Math.floor(value).toLocaleString() + (mode === 'days' ? '' : '');
         }
 
+        function hasExactDatePrecision(sinceDateStr) {
+            if (!sinceDateStr) return false;
+            return /^[A-Za-z]+\s+\d{1,2}(st|nd|rd|th)?\s+\d{4}$/.test(sinceDateStr.trim());
+        }
+
         function calculateTime(sinceDateStr) {
-            if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a') return NaN;
+            if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a' || !hasExactDatePrecision(sinceDateStr)) {
+                return NaN;
+            }
             
-            // Set base value as 12:00 UTC
-            // Remove suffixes like st, nd, rd, th for Date parsing
+            // Only calculate live time for rows with a fully specified day.
             const cleanDateStr = sinceDateStr.replace(/(\d+)(st|nd|rd|th)/, '$1');
             const startDate = new Date(cleanDateStr + ' 12:00:00 UTC');
             const now = new Date();
