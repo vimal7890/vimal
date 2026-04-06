@@ -91,6 +91,38 @@
         }
         .contact-info { text-align: center; font-size: 1.1em; color: #555; }
         .song-description { color: #666; margin-top: 15px; font-size: 1em; }
+        .song-widget-shell {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 78px;
+            gap: 14px;
+            align-items: center;
+        }
+        .song-embed {
+            width: 100%;
+            min-height: 352px;
+        }
+        .song-embed iframe {
+            width: 100% !important;
+            border-radius: 12px;
+        }
+        .vintage-visualizer {
+            width: 78px;
+            height: 318px;
+            border-radius: 12px;
+            border: 1px solid rgba(118, 78, 40, 0.36);
+            background:
+                linear-gradient(to bottom, rgba(255, 252, 243, 0.86), rgba(235, 220, 196, 0.94)),
+                repeating-linear-gradient(to bottom, rgba(160, 118, 70, 0.16) 0, rgba(160, 118, 70, 0.16) 1px, transparent 1px, transparent 5px);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 10px 22px rgba(62, 44, 24, 0.12);
+            opacity: 0.62;
+            transform: translateX(-4px);
+            transition: opacity 0.32s ease, transform 0.32s ease;
+        }
+        .vintage-visualizer.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
         .show-more-section {
             margin-top: 22px;
             padding-top: 18px;
@@ -125,6 +157,15 @@
             .side-ornament {
                 width: 76px;
                 opacity: 0.48;
+            }
+            .song-widget-shell {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .vintage-visualizer {
+                width: 100%;
+                height: 72px;
+                transform: none;
             }
         }
         @media (max-width: 640px) {
@@ -171,7 +212,10 @@
 
             <section class="section">
                 <h2>Song of the Month</h2>
-                <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <div class="song-widget-shell">
+                    <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
+                    <canvas id="vintage-visualizer" class="vintage-visualizer" width="78" height="318" aria-hidden="true"></canvas>
+                </div>
                 <p class="song-description">New Bollywood Classic</p>
                 <div class="show-more-section">
                     <a href="song-archive.html" class="work-link">Show More →</a>
@@ -289,6 +333,167 @@
                 titleEl.classList.remove('fade');
             }, 500);
         }, 2000);
+
+        const spotifyTrackId = '6TEPHCFsVz4C0giqDPRFmO';
+        const spotifyUri = `spotify:track:${spotifyTrackId}`;
+        const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${spotifyTrackId}?utm_source=generator`;
+        const spotifyContainer = document.getElementById('song-embed');
+        const visualizerCanvas = document.getElementById('vintage-visualizer');
+        const visualizerCtx = visualizerCanvas.getContext('2d');
+
+        const visualizerState = {
+            isPlaying: false,
+            energy: 0.12,
+            targetEnergy: 0.12,
+            progressRatio: 0,
+        };
+
+        function injectFallbackEmbed() {
+            if (!spotifyContainer || spotifyContainer.querySelector('iframe')) {
+                return;
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('data-testid', 'embed-iframe');
+            iframe.style.borderRadius = '12px';
+            iframe.src = spotifyEmbedUrl;
+            iframe.width = '100%';
+            iframe.height = '352';
+            iframe.frameBorder = '0';
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+            iframe.loading = 'lazy';
+            spotifyContainer.appendChild(iframe);
+        }
+
+        function resizeVisualizerCanvas() {
+            const ratio = window.devicePixelRatio || 1;
+            const width = visualizerCanvas.clientWidth;
+            const height = visualizerCanvas.clientHeight;
+            visualizerCanvas.width = Math.max(1, Math.floor(width * ratio));
+            visualizerCanvas.height = Math.max(1, Math.floor(height * ratio));
+            visualizerCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        }
+
+        function pseudoNoise(seed) {
+            const value = Math.sin(seed * 12.9898) * 43758.5453;
+            return value - Math.floor(value);
+        }
+
+        function drawVintageVisualizer() {
+            const t = performance.now() * 0.001;
+            const width = visualizerCanvas.clientWidth;
+            const height = visualizerCanvas.clientHeight;
+
+            visualizerState.energy += (visualizerState.targetEnergy - visualizerState.energy) * 0.08;
+            visualizerCtx.clearRect(0, 0, width, height);
+
+            const isVertical = height > width;
+            const laneCount = isVertical ? 38 : 26;
+            const laneGap = (isVertical ? height : width) / laneCount;
+            const base = 6;
+            const maxReach = (isVertical ? width : height) - 12;
+
+            visualizerCtx.beginPath();
+            visualizerCtx.strokeStyle = 'rgba(122, 86, 45, 0.38)';
+            visualizerCtx.lineWidth = 1;
+            if (isVertical) {
+                visualizerCtx.moveTo(7, 0);
+                visualizerCtx.lineTo(7, height);
+            } else {
+                visualizerCtx.moveTo(0, height - 8);
+                visualizerCtx.lineTo(width, height - 8);
+            }
+            visualizerCtx.stroke();
+
+            for (let i = 0; i < laneCount; i += 1) {
+                const laneRatio = i / Math.max(1, laneCount - 1);
+                const harmonic = Math.abs(Math.sin((t * 7.6) + laneRatio * 14 + visualizerState.progressRatio * 40));
+                const shimmer = Math.abs(Math.sin((t * 15.8) + laneRatio * 26));
+                const grain = pseudoNoise((laneRatio * 100) + (t * 3.5) + visualizerState.progressRatio * 300);
+                const pulse = 0.22 + 0.4 * harmonic + 0.24 * shimmer + 0.14 * grain;
+                const magnitude = base + (maxReach - base) * pulse * visualizerState.energy;
+                const alpha = 0.28 + 0.72 * pulse * (0.35 + visualizerState.energy);
+
+                visualizerCtx.strokeStyle = `rgba(142, 56, 38, ${alpha.toFixed(3)})`;
+                visualizerCtx.lineWidth = isVertical ? 2 : 1.8;
+                visualizerCtx.beginPath();
+
+                if (isVertical) {
+                    const y = i * laneGap + laneGap / 2;
+                    visualizerCtx.moveTo(8, y);
+                    visualizerCtx.lineTo(magnitude, y);
+                } else {
+                    const x = i * laneGap + laneGap / 2;
+                    const yBase = height - 8;
+                    visualizerCtx.moveTo(x, yBase);
+                    visualizerCtx.lineTo(x, yBase - magnitude);
+                }
+
+                visualizerCtx.stroke();
+            }
+
+            requestAnimationFrame(drawVintageVisualizer);
+        }
+
+        function updatePlaybackState(data) {
+            const duration = Number(data && data.duration) || 0;
+            const position = Number(data && data.position) || 0;
+            const isPlaying = Boolean(data) && !data.isPaused && !data.isBuffering;
+
+            if (duration > 0) {
+                visualizerState.progressRatio = Math.max(0, Math.min(1, position / duration));
+            }
+
+            visualizerState.isPlaying = isPlaying;
+            visualizerState.targetEnergy = isPlaying ? 0.98 : 0.12;
+            visualizerCanvas.classList.toggle('active', isPlaying);
+        }
+
+        resizeVisualizerCanvas();
+        requestAnimationFrame(drawVintageVisualizer);
+        window.addEventListener('resize', resizeVisualizerCanvas);
+
+        let spotifyControllerReady = false;
+        const fallbackTimer = setTimeout(() => {
+            if (!spotifyControllerReady) {
+                injectFallbackEmbed();
+            }
+        }, 1800);
+
+        window.onSpotifyIframeApiReady = (IFrameAPI) => {
+            if (!spotifyContainer) {
+                return;
+            }
+
+            IFrameAPI.createController(
+                spotifyContainer,
+                {
+                    uri: spotifyUri,
+                    width: 640,
+                    height: 352,
+                },
+                (EmbedController) => {
+                    spotifyControllerReady = true;
+                    clearTimeout(fallbackTimer);
+
+                    EmbedController.addListener('playback_started', () => {
+                        visualizerState.targetEnergy = 0.98;
+                        visualizerCanvas.classList.add('active');
+                    });
+
+                    EmbedController.addListener('playback_update', (event) => {
+                        updatePlaybackState(event && event.data);
+                    });
+                },
+            );
+        };
+
+        const spotifyApiScript = document.createElement('script');
+        spotifyApiScript.src = 'https://open.spotify.com/embed/iframe-api/v1';
+        spotifyApiScript.async = true;
+        spotifyApiScript.onerror = injectFallbackEmbed;
+        document.body.appendChild(spotifyApiScript);
     </script>
 </body>
 </html>
