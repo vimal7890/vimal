@@ -159,7 +159,7 @@
 
         async function loadTable() {
             try {
-                const response = await fetch('leaders.csv');
+                const response = await fetch(`leaders.csv?v=${Date.now()}`, { cache: 'no-store' });
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
                 const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
