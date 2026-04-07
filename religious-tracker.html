@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Religious Leader Tracker - Vimal</title>
+    <title>Bureaucracy of Religion - Vimal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -14,6 +14,43 @@
             min-height: 100vh;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .home-button {
+            position: fixed;
+            top: clamp(12px, 2vw, 22px);
+            left: clamp(12px, 2vw, 22px);
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(51, 51, 51, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1;
+            backdrop-filter: blur(2px);
+            transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+        }
+        .home-button svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+        .home-button:hover,
+        .home-button:focus-visible {
+            color: #d93025;
+            border-color: rgba(217, 48, 37, 0.45);
+            background: #fff;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+        .home-button:focus-visible {
+            outline: 2px solid rgba(217, 48, 37, 0.55);
+            outline-offset: 2px;
+        }
         .header { text-align: center; padding: 60px 0; color: #333; }
         .header h1 { font-size: 3.5em; font-weight: 700; margin-bottom: 10px; }
         .back-link {
@@ -67,13 +104,29 @@
             background-color: #fff4df !important; /* Soft saffron tint */
         }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
+        .denomination-link {
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .denomination-link:hover,
+        .denomination-link:focus-visible {
+            color: #d93025;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <a href="index.html" class="home-button" aria-label="Go to home page">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+        </svg>
+        <span>Home</span>
+    </a>
     <div class="container">
         <div class="header">
-            <h1>Religious Leader Tracker</h1>
-            <p>A comprehensive tracker of the leaders of various religious denominations.</p>
+            <h1>Bureaucracy of Religion</h1>
+            <p>A project tracking the bureaucracy of religion across various religious denominations.</p>
         </div>
 
         <a href="index.html" class="back-link">← Back to Home</a>
@@ -104,6 +157,37 @@
         let currentMode = 'days'; // 'days', 'hours', 'minutes', 'seconds'
         const modes = ['days', 'hours', 'minutes', 'seconds'];
         let leadersData = [];
+        const denominationPages = {
+            "Roman Catholic": "religious-denominations/roman-catholic.html",
+            "Coptic Catholic Church": "religious-denominations/coptic-catholic-church.html",
+            "Melkite Greek Catholic Church": "religious-denominations/melkite-greek-catholic-church.html",
+            "Maronite Church": "religious-denominations/maronite-church.html",
+            "Syriac Catholic Church": "religious-denominations/syriac-catholic-church.html",
+            "Armenian Catholic Church": "religious-denominations/armenian-catholic-church.html",
+            "Chaldean Catholic Church": "religious-denominations/chaldean-catholic-church.html",
+            "Ukrainian Greek Catholic Church": "religious-denominations/ukrainian-greek-catholic-church.html",
+            "Syro-Malabar Church": "religious-denominations/syro-malabar-church.html",
+            "Syro-Malankara Catholic Church": "religious-denominations/syro-malankara-catholic-church.html",
+            "Romanian Greek Catholic Church": "religious-denominations/romanian-greek-catholic-church.html",
+            "Ethiopian Catholic Church": "religious-denominations/ethiopian-catholic-church.html",
+            "Eritrean Catholic Church": "religious-denominations/eritrean-catholic-church.html",
+            "Hungarian Greek Catholic Church": "religious-denominations/hungarian-greek-catholic-church.html",
+            "Slovak Greek Catholic Church": "religious-denominations/slovak-greek-catholic-church.html",
+            "Ruthenian Byzantine Catholic Church": "religious-denominations/ruthenian-byzantine-catholic-church.html",
+            "Italo-Albanian Catholic Church": "religious-denominations/italo-albanian-catholic-church.html",
+            "Greek Byzantine Catholic Church": "religious-denominations/greek-byzantine-catholic-church.html",
+            "Bulgarian Greek Catholic Church": "religious-denominations/bulgarian-greek-catholic-church.html",
+            "Croatian and Serbian Byzantine Catholic Church": "religious-denominations/croatian-and-serbian-byzantine-catholic-church.html",
+            "Macedonian Greek Catholic Church": "religious-denominations/macedonian-greek-catholic-church.html",
+            "Albanian Greek Catholic Church": "religious-denominations/albanian-greek-catholic-church.html",
+            "Belarusian Greek Catholic Church": "religious-denominations/belarusian-greek-catholic-church.html",
+            "Russian Byzantine Catholic Church": "religious-denominations/russian-byzantine-catholic-church.html",
+            "Jodo Shinshu (Hongwanji-ha)": "religious-denominations/jodo-shinshu-hongwanji-ha.html",
+            "Jodo Shinshu (Otani-ha)": "religious-denominations/jodo-shinshu-otani-ha.html",
+            "Soka Gakkai": "religious-denominations/soka-gakkai.html",
+            "Thai Buddhism": "religious-denominations/thai-buddhism.html",
+            "Tibetan Buddhism (Gelug)": "religious-denominations/tibetan-buddhism-gelug.html",
+        };
 
         function formatValue(value, mode) {
             if (isNaN(value)) return '';
@@ -168,6 +252,7 @@
                 const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
                 
                 const religionIdx = headers.indexOf('religion');
+                const denominationIdx = headers.indexOf('denomination');
                 const sinceIdx = headers.indexOf('since');
                 const tableBody = document.getElementById('table-body');
 
@@ -175,6 +260,7 @@
                     if (line.trim() === '') return;
                     const columns = line.split(',');
                     const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
+                    const denomination = columns[denominationIdx] ? columns[denominationIdx].trim() : '';
                     const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
                     
                     leadersData.push({ since, religion });
@@ -194,7 +280,15 @@
                         } else if (i === religionIdx && content.toLowerCase() === 'buddhism') {
                             content += ' ☸';
                         }
-                        td.textContent = content;
+                        if (i === denominationIdx && denominationPages[denomination]) {
+                            const link = document.createElement('a');
+                            link.href = denominationPages[denomination];
+                            link.className = 'denomination-link';
+                            link.textContent = content;
+                            td.appendChild(link);
+                        } else {
+                            td.textContent = content;
+                        }
                         tr.appendChild(td);
                     }
 

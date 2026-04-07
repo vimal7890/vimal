@@ -1,0 +1,67 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f5f1e8;
+    min-height: 100vh;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+}
+.back-link {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease, transform 0.2s ease;
+    transform-origin: left center;
+}
+.back-link:hover,
+.back-link:focus-visible {
+    color: #d93025;
+    transform: scale(1.04);
+    text-decoration: underline;
+}
+.page-title {
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+    margin-bottom: 24px;
+    color: #333;
+}
+.info-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.section-title {
+    font-size: 1.35rem;
+    margin-bottom: 14px;
+    color: #333;
+}
+.intro-text {
+    color: #555;
+    font-size: 1.08rem;
+}
+.source-note {
+    margin-top: 18px;
+    font-size: 0.95rem;
+    color: #666;
+}
+.source-note a {
+    color: #333;
+}
+@media (max-width: 640px) {
+    .container {
+        padding: 24px 14px 40px;
+    }
+    .info-card {
+        padding: 22px;
+    }
+    .intro-text {
+        font-size: 1rem;
+    }
+}
