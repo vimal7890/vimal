@@ -137,6 +137,7 @@
                     <tr>
                         <th>Religion</th>
                         <th>Denomination</th>
+                        <th>Sub Denomination</th>
                         <th>Leader</th>
                         <th>Since</th>
                         <th id="time-header" class="clickable-header">Days in Charge ↕</th>
@@ -229,7 +230,7 @@
         function updateTableValues() {
             const rows = document.querySelectorAll('#table-body tr');
             rows.forEach((row, index) => {
-                const timeCell = row.cells[4];
+                const timeCell = row.cells[row.cells.length - 1];
                 const sinceDate = leadersData[index].since;
                 timeCell.textContent = formatValue(calculateTime(sinceDate), currentMode);
             });
@@ -253,6 +254,7 @@
                 
                 const religionIdx = headers.indexOf('religion');
                 const denominationIdx = headers.indexOf('denomination');
+                const subDenominationIdx = headers.indexOf('sub denomination');
                 const sinceIdx = headers.indexOf('since');
                 const tableBody = document.getElementById('table-body');
 
@@ -260,7 +262,7 @@
                     if (line.trim() === '') return;
                     const columns = line.split(',');
                     const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
-                    const denomination = columns[denominationIdx] ? columns[denominationIdx].trim() : '';
+                    const subDenomination = columns[subDenominationIdx] ? columns[subDenominationIdx].trim() : '';
                     const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
                     
                     leadersData.push({ since, religion });
@@ -272,7 +274,7 @@
                         tr.classList.add('buddhist-row');
                     }
 
-                    for (let i = 0; i < 4; i++) {
+                    for (let i = 0; i <= sinceIdx; i++) {
                         const td = document.createElement('td');
                         let content = columns[i] ? columns[i].trim() : '';
                         if (i === religionIdx && content.toLowerCase() === 'christianity') {
@@ -280,9 +282,9 @@
                         } else if (i === religionIdx && content.toLowerCase() === 'buddhism') {
                             content += ' ☸';
                         }
-                        if (i === denominationIdx && denominationPages[denomination]) {
+                        if (i === subDenominationIdx && denominationPages[subDenomination]) {
                             const link = document.createElement('a');
-                            link.href = denominationPages[denomination];
+                            link.href = denominationPages[subDenomination];
                             link.className = 'denomination-link';
                             link.textContent = content;
                             td.appendChild(link);
