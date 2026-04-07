@@ -138,6 +138,7 @@
                         <th>Religion</th>
                         <th>Denomination</th>
                         <th>Sub Denomination</th>
+                        <th>Sub Denomination 2</th>
                         <th>Leader</th>
                         <th>Since</th>
                         <th id="time-header" class="clickable-header">Days in Charge ↕</th>
@@ -227,6 +228,26 @@
             }
         }
 
+        function getDenominationPageMatch({ denomination, subDenomination, subDenomination2 }) {
+            const candidates = [
+                { label: subDenomination2, column: 'subDenomination2' },
+                { label: subDenomination && subDenomination2 ? `${subDenomination} (${subDenomination2})` : '', column: 'subDenomination2' },
+                { label: subDenomination, column: 'subDenomination' },
+                { label: denomination, column: 'denomination' }
+            ];
+
+            for (const candidate of candidates) {
+                if (!candidate.label) continue;
+
+                const page = denominationPages[candidate.label];
+                if (page) {
+                    return { page, column: candidate.column };
+                }
+            }
+
+            return null;
+        }
+
         function updateTableValues() {
             const rows = document.querySelectorAll('#table-body tr');
             rows.forEach((row, index) => {
@@ -255,6 +276,7 @@
                 const religionIdx = headers.indexOf('religion');
                 const denominationIdx = headers.indexOf('denomination');
                 const subDenominationIdx = headers.indexOf('sub denomination');
+                const subDenomination2Idx = headers.indexOf('sub denomination 2');
                 const sinceIdx = headers.indexOf('since');
                 const tableBody = document.getElementById('table-body');
 
@@ -262,8 +284,15 @@
                     if (line.trim() === '') return;
                     const columns = line.split(',');
                     const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
+                    const denomination = columns[denominationIdx] ? columns[denominationIdx].trim() : '';
                     const subDenomination = columns[subDenominationIdx] ? columns[subDenominationIdx].trim() : '';
+                    const subDenomination2 = columns[subDenomination2Idx] ? columns[subDenomination2Idx].trim() : '';
                     const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
+                    const denominationPageMatch = getDenominationPageMatch({
+                        denomination,
+                        subDenomination,
+                        subDenomination2
+                    });
                     
                     leadersData.push({ since, religion });
 
@@ -282,9 +311,13 @@
                         } else if (i === religionIdx && content.toLowerCase() === 'buddhism') {
                             content += ' ☸';
                         }
-                        if (i === subDenominationIdx && denominationPages[subDenomination]) {
+                        const shouldLinkSubDenomination = i === subDenominationIdx && denominationPageMatch?.column === 'subDenomination';
+                        const shouldLinkSubDenomination2 = i === subDenomination2Idx && denominationPageMatch?.column === 'subDenomination2';
+                        const shouldLinkDenomination = i === denominationIdx && denominationPageMatch?.column === 'denomination';
+
+                        if ((shouldLinkSubDenomination || shouldLinkSubDenomination2 || shouldLinkDenomination) && denominationPageMatch?.page) {
                             const link = document.createElement('a');
-                            link.href = denominationPages[subDenomination];
+                            link.href = denominationPageMatch.page;
                             link.className = 'denomination-link';
                             link.textContent = content;
                             td.appendChild(link);
