@@ -141,7 +141,7 @@
         }
         .song-embed {
             width: 100%;
-            min-height: 352px;
+            min-height: 152px;
             min-width: 0;
         }
         .song-embed iframe {
@@ -151,7 +151,7 @@
         }
         .song-visualizer {
             width: 100%;
-            min-height: 352px;
+            min-height: 152px;
             height: 100%;
             display: block;
             align-self: stretch;
@@ -293,9 +293,9 @@
             <section class="section">
                 <h2>Song of the Month</h2>
                 <div class="song-widget-shell">
-                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="352" aria-hidden="true"></canvas>
+                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="152" aria-hidden="true"></canvas>
                     <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
-                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="352" aria-hidden="true"></canvas>
+                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="152" aria-hidden="true"></canvas>
                 </div>
                 <p class="song-description">New Bollywood Classic</p>
                 <div class="show-more-section">
@@ -457,7 +457,7 @@
             iframe.style.borderRadius = '12px';
             iframe.src = spotifyEmbedUrl;
             iframe.width = '100%';
-            iframe.height = '352';
+            iframe.height = '152';
             iframe.frameBorder = '0';
             iframe.setAttribute('allowfullscreen', '');
             iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
@@ -472,7 +472,7 @@
 
             visualizerTargets.forEach(({ canvas, ctx }) => {
                 const width = Math.max(1, Math.floor(canvas.clientWidth || canvas.width));
-                const height = Math.max(1, Math.floor(canvas.clientHeight || spotifyContainer.clientHeight || 352));
+                const height = Math.max(1, Math.floor(canvas.clientHeight || spotifyContainer.clientHeight || 152));
                 canvas.width = Math.max(1, Math.floor(width * ratio));
                 canvas.height = Math.max(1, Math.floor(height * ratio));
                 ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -600,7 +600,7 @@
                 {
                     uri: spotifyUri,
                     width: 640,
-                    height: 352,
+                    height: 152,
                 },
                 (EmbedController) => {
                     spotifyControllerReady = true;
