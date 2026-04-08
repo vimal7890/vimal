@@ -103,6 +103,12 @@
         tr.buddhist-row:hover {
             background-color: #fff4df !important; /* Soft saffron tint */
         }
+        tr.hindu-row:hover {
+            background-color: #fff0e1 !important; /* Soft orange tint */
+        }
+        tr.islam-row:hover {
+            background-color: #e8f5e9 !important; /* Soft green tint */
+        }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
         .denomination-link {
             color: #333;
@@ -156,9 +162,8 @@
     </div>
 
     <script>
-        let currentMode = 'days'; // 'days', 'hours', 'minutes', 'seconds'
-        const modes = ['days', 'hours', 'minutes', 'seconds'];
         let leadersData = [];
+        let sortDirection = null; // null = unsorted, 'asc' = lowest first, 'desc' = highest first
         const denominationPages = {
             "Roman Catholic": "religious-denominations/roman-catholic.html",
             "Coptic Catholic Church": "religious-denominations/coptic-catholic-church.html",
@@ -252,9 +257,9 @@
             "Union for Reform Judaism (North America)": "religious-denominations/union-for-reform-judaism-north-america.html",
         };
 
-        function formatValue(value, mode) {
+        function formatValue(value) {
             if (isNaN(value)) return '';
-            return Math.floor(value).toLocaleString() + (mode === 'days' ? '' : '');
+            return Math.floor(value).toLocaleString();
         }
 
         function hasExactDatePrecision(sinceDateStr) {
@@ -262,7 +267,7 @@
             return /^[A-Za-z]+\s+\d{1,2}(st|nd|rd|th)?\s+\d{4}$/.test(sinceDateStr.trim());
         }
 
-        function calculateTime(sinceDateStr) {
+        function calculateDays(sinceDateStr) {
             if (!sinceDateStr || sinceDateStr.toLowerCase() === 'n/a' || !hasExactDatePrecision(sinceDateStr)) {
                 return NaN;
             }
@@ -274,19 +279,7 @@
             const diffMs = now - startDate;
             
             if (diffMs < 0) return 0;
-
-            switch (currentMode) {
-                case 'days':
-                    return diffMs / (1000 * 60 * 60 * 24);
-                case 'hours':
-                    return diffMs / (1000 * 60 * 60);
-                case 'minutes':
-                    return diffMs / (1000 * 60);
-                case 'seconds':
-                    return diffMs / 1000;
-                default:
-                    return diffMs / (1000 * 60 * 60 * 24);
-            }
+            return diffMs / (1000 * 60 * 60 * 24);
         }
 
         function getDenominationPageMatch({ denomination, subDenomination, subDenomination2 }) {
@@ -314,17 +307,54 @@
             rows.forEach((row, index) => {
                 const timeCell = row.cells[row.cells.length - 1];
                 const sinceDate = leadersData[index].since;
-                timeCell.textContent = formatValue(calculateTime(sinceDate), currentMode);
+                timeCell.textContent = formatValue(calculateDays(sinceDate));
             });
-            
+        }
+
+        function updateHeaderArrow() {
             const header = document.getElementById('time-header');
-            const modeLabels = {
-                'days': 'Days in Charge ↕',
-                'hours': 'Hours in Charge ↕',
-                'minutes': 'Minutes in Charge ↕',
-                'seconds': 'Seconds in Charge ↕'
-            };
-            header.textContent = modeLabels[currentMode];
+            if (sortDirection === 'asc') {
+                header.textContent = 'Days in Charge ↑';
+            } else if (sortDirection === 'desc') {
+                header.textContent = 'Days in Charge ↓';
+            } else {
+                header.textContent = 'Days in Charge ↕';
+            }
+        }
+
+        function sortTable() {
+            // Toggle sort direction
+            if (sortDirection === null || sortDirection === 'desc') {
+                sortDirection = 'asc';
+            } else {
+                sortDirection = 'desc';
+            }
+
+            const tableBody = document.getElementById('table-body');
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            // Build an array of { row, index, days } so we can sort
+            const rowsWithData = rows.map((row, index) => ({
+                row,
+                originalIndex: index,
+                days: calculateDays(leadersData[index].since)
+            }));
+
+            rowsWithData.sort((a, b) => {
+                const aVal = isNaN(a.days) ? -Infinity : a.days;
+                const bVal = isNaN(b.days) ? -Infinity : b.days;
+                return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+            });
+
+            // Reorder leadersData and DOM rows
+            const newLeadersData = rowsWithData.map(r => leadersData[r.originalIndex]);
+            leadersData = newLeadersData;
+
+            // Re-append rows in sorted order (moves them in the DOM)
+            rowsWithData.forEach(r => tableBody.appendChild(r.row));
+
+            updateTableValues();
+            updateHeaderArrow();
         }
 
         async function loadTable() {
@@ -362,6 +392,10 @@
                         tr.classList.add('christian-row');
                     } else if (religion.toLowerCase() === 'buddhism') {
                         tr.classList.add('buddhist-row');
+                    } else if (religion.toLowerCase() === 'hinduism') {
+                        tr.classList.add('hindu-row');
+                    } else if (religion.toLowerCase() === 'islam') {
+                        tr.classList.add('islam-row');
                     }
 
                     for (let i = 0; i <= sinceIdx; i++) {
@@ -394,24 +428,13 @@
                 });
 
                 updateTableValues();
-                
-                // Refresh values every second if in seconds/minutes mode
-                setInterval(() => {
-                    if (currentMode === 'seconds' || currentMode === 'minutes' || currentMode === 'hours') {
-                        updateTableValues();
-                    }
-                }, 1000);
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
             }
         }
 
-        document.getElementById('time-header').addEventListener('click', () => {
-            const nextIdx = (modes.indexOf(currentMode) + 1) % modes.length;
-            currentMode = modes[nextIdx];
-            updateTableValues();
-        });
+        document.getElementById('time-header').addEventListener('click', sortTable);
 
         window.onload = loadTable;
     </script>
