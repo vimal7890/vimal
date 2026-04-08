@@ -256,6 +256,11 @@
             "United American Free Will Baptist Church": "religious-denominations/united-american-free-will-baptist-church.html",
             "Union for Reform Judaism (North America)": "religious-denominations/union-for-reform-judaism-north-america.html",
         };
+        const religionSymbols = {
+            christianity: '✝',
+            buddhism: '☸',
+            hinduism: 'ॐ'
+        };
 
         function formatValue(value) {
             if (isNaN(value)) return '';
@@ -401,10 +406,11 @@
                     for (let i = 0; i <= sinceIdx; i++) {
                         const td = document.createElement('td');
                         let content = columns[i] ? columns[i].trim() : '';
-                        if (i === religionIdx && content.toLowerCase() === 'christianity') {
-                            content += ' ✝';
-                        } else if (i === religionIdx && content.toLowerCase() === 'buddhism') {
-                            content += ' ☸';
+                        if (i === religionIdx) {
+                            const religionSymbol = religionSymbols[content.toLowerCase()];
+                            if (religionSymbol) {
+                                content += ` ${religionSymbol}`;
+                            }
                         }
                         const shouldLinkSubDenomination = i === subDenominationIdx && denominationPageMatch?.column === 'subDenomination';
                         const shouldLinkSubDenomination2 = i === subDenomination2Idx && denominationPageMatch?.column === 'subDenomination2';
