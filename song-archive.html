@@ -89,22 +89,44 @@
             border-bottom: none;
         }
         .song-widget-shell {
+            position: relative;
             display: grid;
-            grid-template-columns: clamp(10px, 4vw, 28px) minmax(0, 1fr) clamp(10px, 4vw, 28px);
-            gap: clamp(4px, 1.7vw, 8px);
+            grid-template-columns: clamp(16px, 4.7vw, 36px) minmax(0, 1fr) clamp(16px, 4.7vw, 36px);
+            gap: clamp(5px, 1.8vw, 10px);
             align-items: stretch;
             max-width: min(100%, 860px);
             margin: 0 auto;
+            isolation: isolate;
+        }
+        .song-widget-shell::before {
+            content: "";
+            position: absolute;
+            inset: 16px -8px;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 44%),
+                linear-gradient(180deg, rgba(202, 245, 255, 0.34) 0%, rgba(110, 196, 240, 0.18) 50%, rgba(101, 218, 188, 0.24) 100%);
+            filter: blur(18px);
+            opacity: 0.88;
+            z-index: 0;
+            pointer-events: none;
         }
         .song-embed {
             width: 100%;
             min-height: 152px;
             min-width: 0;
+            position: relative;
+            z-index: 2;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow:
+                0 18px 34px rgba(80, 104, 138, 0.14),
+                inset 0 1px 0 rgba(255, 255, 255, 0.72);
         }
         .song-embed iframe {
             display: block;
             width: 100% !important;
-            border-radius: 12px;
+            border-radius: 18px;
         }
         .song-visualizer {
             width: 100%;
@@ -112,13 +134,34 @@
             height: 100%;
             display: block;
             align-self: stretch;
-            opacity: 0.28;
-            transition: opacity 0.28s ease;
+            position: relative;
+            z-index: 1;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 50% 8%, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.56) 18%, rgba(255, 255, 255, 0) 44%),
+                linear-gradient(180deg, rgba(239, 253, 255, 0.98) 0%, rgba(177, 229, 248, 0.86) 34%, rgba(96, 182, 231, 0.74) 68%, rgba(110, 213, 186, 0.82) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -10px 18px rgba(34, 115, 164, 0.2),
+                0 0 0 1px rgba(181, 235, 255, 0.82),
+                0 12px 26px rgba(67, 117, 161, 0.2),
+                0 0 18px rgba(136, 226, 255, 0.28);
+            filter: saturate(1.08);
+            opacity: 0.78;
+            transition: opacity 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease, transform 0.28s ease;
             pointer-events: none;
         }
         .song-item:hover .song-visualizer,
         .song-item:focus-within .song-visualizer {
-            opacity: 0.72;
+            opacity: 1;
+            filter: saturate(1.18);
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -10px 18px rgba(34, 115, 164, 0.22),
+                0 0 0 1px rgba(190, 241, 255, 0.9),
+                0 15px 30px rgba(64, 120, 168, 0.24),
+                0 0 24px rgba(136, 232, 255, 0.4);
         }
         .song-description {
             color: #666;
@@ -144,11 +187,11 @@
         }
         @media (max-width: 420px) {
             .song-widget-shell {
-                grid-template-columns: 8px minmax(0, 1fr) 8px;
-                gap: 2px;
+                grid-template-columns: 12px minmax(0, 1fr) 12px;
+                gap: 4px;
             }
             .song-visualizer {
-                opacity: 0.2;
+                opacity: 0.42;
             }
         }
     </style>
@@ -169,21 +212,21 @@
         <div class="content">
             <div class="song-item">
                 <div class="song-widget-shell">
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <canvas class="song-visualizer" width="36" height="152" aria-hidden="true"></canvas>
                     <div class="song-embed">
-                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <iframe data-testid="embed-iframe" style="border-radius:18px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <canvas class="song-visualizer" width="36" height="152" aria-hidden="true"></canvas>
                 </div>
                 <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
             </div>
             <div class="song-item">
                 <div class="song-widget-shell">
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <canvas class="song-visualizer" width="36" height="152" aria-hidden="true"></canvas>
                     <div class="song-embed">
-                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <iframe data-testid="embed-iframe" style="border-radius:18px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    <canvas class="song-visualizer" width="36" height="152" aria-hidden="true"></canvas>
                 </div>
                 <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
             </div>
@@ -236,6 +279,17 @@
             });
         }
 
+        function traceRoundedRect(ctx, x, y, width, height, radius) {
+            const safeRadius = Math.min(radius, width / 2, height / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + safeRadius, y);
+            ctx.arcTo(x + width, y, x + width, y + height, safeRadius);
+            ctx.arcTo(x + width, y + height, x, y + height, safeRadius);
+            ctx.arcTo(x, y + height, x, y, safeRadius);
+            ctx.arcTo(x, y, x + width, y, safeRadius);
+            ctx.closePath();
+        }
+
         function drawArchiveRail(item, rail, t) {
             const width = rail.canvas.clientWidth;
             const height = rail.canvas.clientHeight;
@@ -246,38 +300,94 @@
 
             rail.ctx.clearRect(0, 0, width, height);
 
-            const laneCount = Math.max(8, Math.round(height / 16));
-            const laneGap = height / laneCount;
-            const innerEdge = rail.direction < 0 ? width - 1 : 1;
-            const maxReach = Math.max(5, width - 4);
-            const baseReach = 1.25;
-            const anchorAlpha = 0.08 + item.energy * 0.12;
+            rail.ctx.save();
+            traceRoundedRect(rail.ctx, 0.5, 0.5, width - 1, height - 1, Math.min(18, width * 0.45));
+            rail.ctx.clip();
 
-            rail.ctx.beginPath();
-            rail.ctx.strokeStyle = `rgba(158, 59, 47, ${anchorAlpha.toFixed(3)})`;
-            rail.ctx.lineWidth = 1;
-            rail.ctx.moveTo(innerEdge, 0);
-            rail.ctx.lineTo(innerEdge, height);
-            rail.ctx.stroke();
+            const outwardEdge = rail.direction < 0 ? 0 : width;
+            const innerEdge = rail.direction < 0 ? width - 2 : 2;
+            const energyScale = 0.22 + item.energy * 0.9;
+            const ambientGradient = rail.ctx.createLinearGradient(innerEdge, 0, outwardEdge, height);
+            ambientGradient.addColorStop(0, 'rgba(255, 255, 255, 0.32)');
+            ambientGradient.addColorStop(0.22, 'rgba(197, 245, 255, 0.24)');
+            ambientGradient.addColorStop(0.62, 'rgba(96, 195, 255, 0.16)');
+            ambientGradient.addColorStop(1, 'rgba(44, 135, 198, 0.04)');
+            rail.ctx.fillStyle = ambientGradient;
+            rail.ctx.fillRect(0, 0, width, height);
 
-            for (let i = 0; i < laneCount; i += 1) {
-                const laneRatio = i / Math.max(1, laneCount - 1);
-                const wave = 0.5 + 0.5 * Math.sin((t * 3.8) + item.phaseOffset + laneRatio * 8.4);
-                const shimmer = 0.5 + 0.5 * Math.sin((t * 7.1) + item.phaseOffset * 0.7 + laneRatio * 16.5 + rail.direction * 0.8);
-                const grain = pseudoNoise((laneRatio * 40) + (t * 1.8) + item.phaseOffset * 10);
-                const pulse = (wave * 0.44) + (shimmer * 0.34) + (grain * 0.22);
-                const magnitude = baseReach + (maxReach - baseReach) * pulse * item.energy;
-                const alpha = 0.08 + pulse * 0.16 + item.energy * 0.08;
-                const y = i * laneGap + laneGap / 2;
-                const endX = rail.direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
+            const topGlow = rail.ctx.createRadialGradient(width * 0.5, height * 0.08, 0, width * 0.5, height * 0.08, height * 0.8);
+            topGlow.addColorStop(0, `rgba(255, 255, 255, ${(0.24 + item.energy * 0.22).toFixed(3)})`);
+            topGlow.addColorStop(0.34, `rgba(188, 241, 255, ${(0.16 + item.energy * 0.16).toFixed(3)})`);
+            topGlow.addColorStop(1, 'rgba(188, 241, 255, 0)');
+            rail.ctx.fillStyle = topGlow;
+            rail.ctx.fillRect(0, 0, width, height);
 
+            for (let i = 0; i < 3; i += 1) {
+                const beamCenter = ((t * (15 + i * 3.2)) + item.phaseOffset * 26 + i * height * 0.31) % (height + 66) - 33;
+                const beamGradient = rail.ctx.createLinearGradient(0, beamCenter - 24, 0, beamCenter + 24);
+                beamGradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+                beamGradient.addColorStop(0.5, `rgba(255, 255, 255, ${(0.04 + energyScale * 0.08).toFixed(3)})`);
+                beamGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                rail.ctx.fillStyle = beamGradient;
+                rail.ctx.fillRect(0, beamCenter - 28, width, 56);
+            }
+
+            rail.ctx.save();
+            rail.ctx.shadowColor = 'rgba(123, 234, 255, 0.45)';
+            rail.ctx.shadowBlur = 10 + item.energy * 10;
+
+            for (let i = 0; i < 4; i += 1) {
+                const ribbonRatio = i / 3;
+                const baseY = height * (0.14 + ribbonRatio * 0.24);
+                const sway = Math.sin((t * 2.1) + item.phaseOffset + ribbonRatio * 4.2 + rail.direction * 0.7);
+                const crest = Math.sin((t * 4.5) + item.phaseOffset * 0.8 + ribbonRatio * 6.7 + rail.direction * 1.1);
+                const extent = (0.34 + 0.22 * Math.sin((t * 1.5) + item.phaseOffset * 0.5 + ribbonRatio * 3.1)) * energyScale;
+                const outerX = rail.direction < 0
+                    ? innerEdge - (width * (0.34 + extent))
+                    : innerEdge + (width * (0.34 + extent));
+                const controlX1 = rail.direction < 0 ? innerEdge - width * 0.18 : innerEdge + width * 0.18;
+                const controlX2 = rail.direction < 0 ? innerEdge - width * (0.3 + extent * 0.44) : innerEdge + width * (0.3 + extent * 0.44);
+                const endY = baseY + sway * height * 0.1;
+                const controlY1 = baseY - height * (0.08 + 0.03 * crest);
+                const controlY2 = endY + height * (0.1 + 0.04 * sway);
+                const ribbonGradient = rail.ctx.createLinearGradient(innerEdge, baseY, outerX, endY);
+                ribbonGradient.addColorStop(0, `rgba(255, 255, 255, ${(0.8 - ribbonRatio * 0.1).toFixed(3)})`);
+                ribbonGradient.addColorStop(0.3, `rgba(194, 247, 255, ${(0.7 - ribbonRatio * 0.08).toFixed(3)})`);
+                ribbonGradient.addColorStop(0.68, `rgba(109, 220, 255, ${(0.4 - ribbonRatio * 0.05).toFixed(3)})`);
+                ribbonGradient.addColorStop(1, 'rgba(102, 220, 181, 0)');
+                rail.ctx.strokeStyle = ribbonGradient;
+                rail.ctx.lineWidth = 1.45 + item.energy * 0.9 - ribbonRatio * 0.18;
                 rail.ctx.beginPath();
-                rail.ctx.strokeStyle = `rgba(158, 59, 47, ${alpha.toFixed(3)})`;
-                rail.ctx.lineWidth = 1.05;
-                rail.ctx.moveTo(innerEdge, y);
-                rail.ctx.lineTo(endX, y);
+                rail.ctx.moveTo(innerEdge, baseY);
+                rail.ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, outerX, endY);
                 rail.ctx.stroke();
             }
+
+            rail.ctx.restore();
+
+            for (let i = 0; i < 4; i += 1) {
+                const travel = ((t * (13 + i * 2.1)) + item.phaseOffset * 22 + i * height * 0.24) % (height + 42) - 21;
+                const drift = 0.18 + pseudoNoise((i * 17) + item.phaseOffset * 11) * 0.34;
+                const x = rail.direction < 0 ? width * (0.7 - drift) : width * (0.3 + drift);
+                const radius = 2.4 + i * 0.32 + item.energy * 0.7;
+                const orbGradient = rail.ctx.createRadialGradient(x - radius * 0.25, travel - radius * 0.35, 0, x, travel, radius * 1.9);
+                orbGradient.addColorStop(0, `rgba(255, 255, 255, ${(0.68 - i * 0.07).toFixed(3)})`);
+                orbGradient.addColorStop(0.48, `rgba(171, 241, 255, ${(0.28 + item.energy * 0.18).toFixed(3)})`);
+                orbGradient.addColorStop(1, 'rgba(171, 241, 255, 0)');
+                rail.ctx.fillStyle = orbGradient;
+                rail.ctx.beginPath();
+                rail.ctx.arc(x, travel, radius * 1.9, 0, Math.PI * 2);
+                rail.ctx.fill();
+            }
+
+            rail.ctx.strokeStyle = `rgba(255, 255, 255, ${(0.28 + item.energy * 0.36).toFixed(3)})`;
+            rail.ctx.lineWidth = 1;
+            rail.ctx.beginPath();
+            rail.ctx.moveTo(innerEdge, 10);
+            rail.ctx.lineTo(innerEdge, height - 10);
+            rail.ctx.stroke();
+
+            rail.ctx.restore();
         }
 
         function animateArchiveVisualizers() {
