@@ -3,6 +3,146 @@
 
     var script = document.currentScript;
     var homeHref = (script && script.dataset && script.dataset.homeHref) ? script.dataset.homeHref : "index.html";
+    var scrollStorageKey = "page-scroll:" + window.location.pathname + window.location.search;
+    var isRestoringScroll = false;
+
+    function getNavigationType() {
+        if (window.performance && typeof window.performance.getEntriesByType === "function") {
+            var entries = window.performance.getEntriesByType("navigation");
+            if (entries && entries.length && entries[0] && entries[0].type) {
+                return entries[0].type;
+            }
+        }
+
+        if (window.performance && window.performance.navigation) {
+            switch (window.performance.navigation.type) {
+                case 1:
+                    return "reload";
+                case 2:
+                    return "back_forward";
+                default:
+                    return "navigate";
+            }
+        }
+
+        return "navigate";
+    }
+
+    function loadSavedScrollPosition() {
+        try {
+            var rawValue = window.sessionStorage.getItem(scrollStorageKey);
+            if (!rawValue) {
+                return null;
+            }
+
+            var parsedValue = JSON.parse(rawValue);
+            if (!parsedValue || typeof parsedValue.x !== "number" || typeof parsedValue.y !== "number") {
+                return null;
+            }
+
+            return parsedValue;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function saveScrollPosition() {
+        if (isRestoringScroll) {
+            return;
+        }
+
+        try {
+            window.sessionStorage.setItem(scrollStorageKey, JSON.stringify({
+                x: window.scrollX,
+                y: window.scrollY
+            }));
+        } catch (error) {
+            // Ignore storage errors so page behavior still works normally.
+        }
+    }
+
+    function setupScrollPersistence() {
+        var pendingSaveFrame = 0;
+
+        function scheduleSave() {
+            if (pendingSaveFrame || isRestoringScroll) {
+                return;
+            }
+
+            pendingSaveFrame = window.requestAnimationFrame(function () {
+                pendingSaveFrame = 0;
+                saveScrollPosition();
+            });
+        }
+
+        window.addEventListener("scroll", scheduleSave, { passive: true });
+        window.addEventListener("beforeunload", saveScrollPosition);
+        window.addEventListener("pagehide", saveScrollPosition);
+        document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
+                saveScrollPosition();
+            }
+        });
+    }
+
+    function restoreScrollPosition(savedPosition) {
+        if (!savedPosition || getNavigationType() !== "reload") {
+            return;
+        }
+
+        if ("scrollRestoration" in window.history) {
+            window.history.scrollRestoration = "manual";
+        }
+
+        var restoreAttempts = 0;
+        var maxRestoreAttempts = 80;
+        var restoreTimer = 0;
+
+        function stopRestoring() {
+            if (restoreTimer) {
+                window.clearInterval(restoreTimer);
+                restoreTimer = 0;
+            }
+
+            isRestoringScroll = false;
+            saveScrollPosition();
+        }
+
+        function attemptRestore() {
+            restoreAttempts += 1;
+
+            var doc = document.documentElement;
+            var maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
+            var targetX = Math.max(0, savedPosition.x);
+            var targetY = Math.max(0, savedPosition.y);
+            var appliedY = Math.min(targetY, maxScrollY);
+
+            window.scrollTo(targetX, appliedY);
+
+            if ((maxScrollY >= targetY && Math.abs(window.scrollY - targetY) <= 2) || restoreAttempts >= maxRestoreAttempts) {
+                stopRestoring();
+            }
+        }
+
+        function startRestoreLoop() {
+            if (restoreTimer) {
+                return;
+            }
+
+            isRestoringScroll = true;
+            attemptRestore();
+            restoreTimer = window.setInterval(attemptRestore, 100);
+        }
+
+        if (document.readyState === "complete") {
+            startRestoreLoop();
+        } else {
+            window.addEventListener("load", startRestoreLoop, { once: true });
+        }
+    }
+
+    setupScrollPersistence();
+    restoreScrollPosition(loadSavedScrollPosition());
 
     // Skip injection if a page-specific home button already exists.
     if (document.querySelector("a.home-button, a.global-home-button, a[aria-label='Go to home page']")) {
