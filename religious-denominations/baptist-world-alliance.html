@@ -7,15 +7,198 @@
     <link rel="stylesheet" href="denomination-page.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container wide-container">
         <a href="../religious-tracker.html" class="back-link">&larr; Back to Religious Leader Tracker</a>
-        <h1 class="page-title">Baptist World Alliance</h1>
+        <div class="page-title-row">
+            <h1 class="page-title">Baptist World Alliance</h1>
+            <img
+                class="title-logo"
+                src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Baptist_World_Alliance_logo.png"
+                alt="Baptist World Alliance logo"
+                loading="lazy"
+                width="300"
+                height="300"
+            >
+        </div>
         <section class="info-card">
             <h2 class="section-title">Intro</h2>
-            <p class="intro-text">The Baptist World Alliance (BWA) is an international communion of Baptists, with an estimated 53 million people from 283 member bodies in 138 countries and territories as of 2025.</p>
+            <p class="intro-text">The Baptist World Alliance is an international Baptist communion that links member bodies across more than 130 countries and territories and represents tens of millions of Baptists worldwide.</p>
             <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Baptist_World_Alliance" target="_blank" rel="noopener noreferrer">Baptist World Alliance</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
+        <section class="info-card section-spacing">
+            <h2 class="section-title">List of members</h2>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>Denomination</th>
+                            <th>Number of members</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bwa-members-body"></tbody>
+                </table>
+            </div>
+            <p class="source-note">Source: Member list adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Baptist_World_Alliance#List_of_members" target="_blank" rel="noopener noreferrer">Baptist World Alliance</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+            <p class="table-hint">Member names link to a local detail page when the Baptist World Alliance Wikipedia page also links to a corresponding member article.</p>
+        </section>
+        <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Baptist_World_Alliance_logo.png" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>, credited to baptistworld.org and marked public domain.</p>
     </div>
+    <script src="baptist-world-alliance-data.js"></script>
+    <script>
+        const manualWikiMatches = {
+            "Association of the Evangelical Baptist Church of Cape Verde": "Evangelical Baptist Church Association of Cape Verde",
+            "Baptist Union of Burundi": "Union of Baptist Churches in Burundi",
+            "Union of Baptist Churches in Cameroon": "Union of Baptist Churches of Cameroon",
+            "Baptist Convention of the District of Columbia": "District of Columbia Baptist Convention",
+            "Baptist Church Council of Nepal": "Nepal Baptist Church Council",
+            "Baptist Union of Poland": "Baptist Christian Church of the Republic of Poland",
+            "Convention of Philippine Baptist Churches, Inc.": "Convention of Philippine Baptist Churches",
+            "Baptist Conference of the Philippines, Inc.": "Baptist Conference of the Philippines",
+            "Visayas and Mindanao Convention of Southern Baptist Churches": "Convention of Visayas and Mindanao of Southern Baptist Churches",
+            "Baptist Convention of Nicaragua (CBN)": "Baptist Convention of Nicaragua",
+            "Union of Missionary Baptist Churches of Cote d'Ivoire": "Union of Missionary Baptist Churches in Ivory Coast",
+            "All-Ukrainian Union of Associations of Evangelical Christian Baptists": "All-Ukrainian Union of Associations of Evangelical Christians-Baptists",
+            "Union of Evangelical Christian Baptists of Uzbekistan": "Union of Evangelical Christian-Baptists of Uzbekistan",
+            "Evangelical Christian Baptist Union of Italy": "Baptist Evangelical Christian Union of Italy",
+            "Northern India Baptist Union": "Baptist Union of North India",
+            "Evangelical Baptist Convention of Peru": "Baptist Evangelical Convention of Peru",
+            "Evangelical Baptist Convention of Uruguay": "Baptist Evangelical Convention of Uruguay",
+            "General Conference of Seventh Day Baptists USA and Canada": "Seventh Day Baptist General Conference",
+            "Hong Kong Baptist Convention": "Baptist Convention of Hong Kong",
+            "Baptist Churches of Christian Unity": "Christian Unity Baptist Churches in Rwanda",
+            "Karen Baptist Church of Kawthoolei (KKBC)": "Thailand Karen Baptist Convention",
+            "Samoa Baptist Union and International Ministries": "Samoa Baptist Union and International Ministries",
+            "Baptist Convention of Vietnam (BCV)": "Baptist Convention of Vietnam",
+            "Converge (Baptist General Conference)": "Converge",
+            "Lott Carey Baptist Foreign Mission Society, USA": "Lott Carey Baptist Foreign Mission Convention, USA",
+            "Progressive National Baptist Convention, Inc.": "Progressive National Baptist Convention",
+            "National Missionary and Educational Baptist Convention of the Bahamas": "Bahamas National Baptist Missionary and Educational Convention"
+        };
+
+        function parseRawRows(raw) {
+            return raw.split("\n").map((line) => {
+                const [country, denomination, members] = line.split("|");
+                return { country, denomination, members };
+            });
+        }
+
+        function parseWikiLabels(raw) {
+            return raw.split("\n").map((line) => line.trim()).filter(Boolean);
+        }
+
+        function normalizeAscii(value) {
+            return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function tokenize(value) {
+            return normalizeAscii(value)
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, " ")
+                .split(/\s+/)
+                .filter((token) => token && !["of", "the", "and", "in", "inc", "usa"].includes(token));
+        }
+
+        function normalizeCompact(value) {
+            return tokenize(value).join("");
+        }
+
+        function jaccardScore(a, b) {
+            const aSet = new Set(a);
+            const bSet = new Set(b);
+            let intersection = 0;
+
+            for (const token of aSet) {
+                if (bSet.has(token)) {
+                    intersection += 1;
+                }
+            }
+
+            const union = new Set([...aSet, ...bSet]).size;
+            return union === 0 ? 0 : intersection / union;
+        }
+
+        function buildWikiMatcher(labels) {
+            return labels.map((label) => ({ label, tokens: tokenize(label) }));
+        }
+
+        function resolveWikipediaTitle(denomination, wikiMatchers) {
+            if (denomination === "Baptist World Alliance") {
+                return null;
+            }
+
+            if (manualWikiMatches[denomination]) {
+                return manualWikiMatches[denomination];
+            }
+
+            const rowTokens = tokenize(denomination);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of wikiMatchers) {
+                const score = jaccardScore(rowTokens, matcher.tokens);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher.label;
+                }
+            }
+
+            if (bestScore >= 0.8) {
+                return bestMatch;
+            }
+
+            if (bestScore >= 0.72) {
+                const rowCompact = normalizeCompact(denomination);
+                const matchCompact = normalizeCompact(bestMatch);
+                if (rowCompact.includes(matchCompact) || matchCompact.includes(rowCompact)) {
+                    return bestMatch;
+                }
+            }
+
+            return null;
+        }
+
+        function createMemberHref(denomination, wikiTitle) {
+            const params = new URLSearchParams({
+                member: denomination,
+                title: wikiTitle
+            });
+            return `baptist-world-alliance-member.html?${params.toString()}`;
+        }
+
+        function renderTable() {
+            const rows = parseRawRows(window.bwaMemberRowsRaw);
+            const wikiMatchers = buildWikiMatcher(parseWikiLabels(window.bwaWikipediaLabelsRaw));
+            const tbody = document.getElementById("bwa-members-body");
+
+            rows.forEach((row) => {
+                const tr = document.createElement("tr");
+                const countryTd = document.createElement("td");
+                const denominationTd = document.createElement("td");
+                const membersTd = document.createElement("td");
+
+                countryTd.textContent = row.country;
+                membersTd.textContent = row.members;
+
+                const wikiTitle = resolveWikipediaTitle(row.denomination, wikiMatchers);
+                if (wikiTitle) {
+                    const link = document.createElement("a");
+                    link.className = "table-link";
+                    link.href = createMemberHref(row.denomination, wikiTitle);
+                    link.textContent = row.denomination;
+                    denominationTd.appendChild(link);
+                } else {
+                    denominationTd.textContent = row.denomination;
+                }
+
+                tr.append(countryTd, denominationTd, membersTd);
+                tbody.appendChild(tr);
+            });
+        }
+
+        renderTable();
+    </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
 </body>
 </html>
