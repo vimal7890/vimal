@@ -108,6 +108,9 @@
         tr.christian-row:hover {
             background-color: #e3f2fd !important; /* Light blue tint */
         }
+        tr.judaism-row:hover {
+            background-color: #cfe2ff !important; /* Slightly darker blue than Christianity */
+        }
         tr.buddhist-row:hover {
             background-color: #fff4df !important; /* Soft saffron tint */
         }
@@ -527,6 +530,8 @@
                     const tr = document.createElement('tr');
                     if (religion.toLowerCase() === 'christianity') {
                         tr.classList.add('christian-row');
+                    } else if (religion.toLowerCase() === 'judaism') {
+                        tr.classList.add('judaism-row');
                     } else if (religion.toLowerCase() === 'buddhism') {
                         tr.classList.add('buddhist-row');
                     } else if (religion.toLowerCase() === 'hinduism') {
