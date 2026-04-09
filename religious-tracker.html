@@ -120,6 +120,15 @@
             color: #d93025;
             text-decoration: underline;
         }
+        .members-cell {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .source-cell {
+            color: #666;
+            font-size: 0.95em;
+            min-width: 180px;
+        }
     </style>
 </head>
 <body>
@@ -145,6 +154,8 @@
                         <th>Denomination</th>
                         <th>Sub Denomination</th>
                         <th>Sub Denomination 2</th>
+                        <th>Members</th>
+                        <th>Source</th>
                         <th>Leader</th>
                         <th>Since</th>
                         <th id="time-header" class="clickable-header">Days in Charge ↕</th>
@@ -163,6 +174,7 @@
 
     <script>
         let leadersData = [];
+        let membershipData = {};
         let sortDirection = null; // null = unsorted, 'asc' = lowest first, 'desc' = highest first
         const denominationPages = {
             "Roman Catholic": "religious-denominations/roman-catholic.html",
@@ -268,6 +280,51 @@
             return Math.floor(value).toLocaleString();
         }
 
+        function parseCSV(csvText) {
+            const rows = [];
+            let row = [];
+            let value = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                const nextChar = csvText[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        value += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    row.push(value);
+                    value = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') {
+                        i++;
+                    }
+                    row.push(value);
+                    if (row.some(cell => cell !== '')) {
+                        rows.push(row);
+                    }
+                    row = [];
+                    value = '';
+                } else {
+                    value += char;
+                }
+            }
+
+            if (value !== '' || row.length > 0) {
+                row.push(value);
+                if (row.some(cell => cell !== '')) {
+                    rows.push(row);
+                }
+            }
+
+            return rows;
+        }
+
         function hasExactDatePrecision(sinceDateStr) {
             if (!sinceDateStr) return false;
             return /^[A-Za-z]+\s+\d{1,2}(st|nd|rd|th)?\s+\d{4}$/.test(sinceDateStr.trim());
@@ -302,6 +359,25 @@
                 const page = denominationPages[candidate.label];
                 if (page) {
                     return { page, column: candidate.column };
+                }
+            }
+
+            return null;
+        }
+
+        function getMembershipDataMatch({ denomination, subDenomination, subDenomination2 }) {
+            const candidates = [
+                subDenomination2,
+                subDenomination && subDenomination2 ? `${subDenomination} (${subDenomination2})` : '',
+                subDenomination,
+                denomination
+            ];
+
+            for (const candidate of candidates) {
+                if (!candidate) continue;
+                const match = membershipData[candidate];
+                if (match) {
+                    return match;
                 }
             }
 
@@ -365,27 +441,35 @@
 
         async function loadTable() {
             try {
-                const response = await fetch(`leaders.csv?v=${Date.now()}`, { cache: 'no-store' });
-                const csvText = await response.text();
-                const lines = csvText.split('\n');
-                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                const [csvResponse, membershipResponse] = await Promise.all([
+                    fetch(`leaders.csv?v=${Date.now()}`, { cache: 'no-store' }),
+                    fetch(`membership-data.json?v=${Date.now()}`, { cache: 'no-store' })
+                ]);
+                const csvText = await csvResponse.text();
+                membershipData = await membershipResponse.json();
+                const rows = parseCSV(csvText);
+                const headers = (rows[0] || []).map(h => h.trim().toLowerCase());
                 
                 const religionIdx = headers.indexOf('religion');
                 const denominationIdx = headers.indexOf('denomination');
                 const subDenominationIdx = headers.indexOf('sub denomination');
                 const subDenomination2Idx = headers.indexOf('sub denomination 2');
+                const leaderIdx = headers.indexOf('leader');
                 const sinceIdx = headers.indexOf('since');
                 const tableBody = document.getElementById('table-body');
 
-                lines.slice(1).forEach(line => {
-                    if (line.trim() === '') return;
-                    const columns = line.split(',');
+                rows.slice(1).forEach(columns => {
                     const religion = columns[religionIdx] ? columns[religionIdx].trim() : '';
                     const denomination = columns[denominationIdx] ? columns[denominationIdx].trim() : '';
                     const subDenomination = columns[subDenominationIdx] ? columns[subDenominationIdx].trim() : '';
                     const subDenomination2 = columns[subDenomination2Idx] ? columns[subDenomination2Idx].trim() : '';
                     const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
                     const denominationPageMatch = getDenominationPageMatch({
+                        denomination,
+                        subDenomination,
+                        subDenomination2
+                    });
+                    const membershipMatch = getMembershipDataMatch({
                         denomination,
                         subDenomination,
                         subDenomination2
@@ -404,18 +488,37 @@
                         tr.classList.add('islam-row');
                     }
 
-                    for (let i = 0; i <= sinceIdx; i++) {
+                    const displayCells = [
+                        { type: 'csv', index: religionIdx },
+                        { type: 'csv', index: denominationIdx },
+                        { type: 'csv', index: subDenominationIdx },
+                        { type: 'csv', index: subDenomination2Idx },
+                        { type: 'members', content: membershipMatch?.members || '' },
+                        { type: 'source', content: membershipMatch?.source || '' },
+                        { type: 'csv', index: leaderIdx },
+                        { type: 'csv', index: sinceIdx },
+                    ];
+
+                    for (const cell of displayCells) {
                         const td = document.createElement('td');
-                        let content = columns[i] ? columns[i].trim() : '';
-                        if (i === religionIdx) {
+                        let content = cell.type === 'csv'
+                            ? (columns[cell.index] ? columns[cell.index].trim() : '')
+                            : cell.content;
+                        if (cell.type === 'csv' && cell.index === religionIdx) {
                             const religionSymbol = religionSymbols[content.toLowerCase()];
                             if (religionSymbol) {
                                 content += ` ${religionSymbol}`;
                             }
                         }
-                        const shouldLinkSubDenomination = i === subDenominationIdx && denominationPageMatch?.column === 'subDenomination';
-                        const shouldLinkSubDenomination2 = i === subDenomination2Idx && denominationPageMatch?.column === 'subDenomination2';
-                        const shouldLinkDenomination = i === denominationIdx && denominationPageMatch?.column === 'denomination';
+                        if (cell.type === 'members') {
+                            td.classList.add('members-cell');
+                        }
+                        if (cell.type === 'source') {
+                            td.classList.add('source-cell');
+                        }
+                        const shouldLinkSubDenomination = cell.type === 'csv' && cell.index === subDenominationIdx && denominationPageMatch?.column === 'subDenomination';
+                        const shouldLinkSubDenomination2 = cell.type === 'csv' && cell.index === subDenomination2Idx && denominationPageMatch?.column === 'subDenomination2';
+                        const shouldLinkDenomination = cell.type === 'csv' && cell.index === denominationIdx && denominationPageMatch?.column === 'denomination';
 
                         if ((shouldLinkSubDenomination || shouldLinkSubDenomination2 || shouldLinkDenomination) && denominationPageMatch?.page) {
                             const link = document.createElement('a');
