@@ -6,6 +6,15 @@
     var scrollStorageKey = "page-scroll:" + window.location.pathname + window.location.search;
     var isRestoringScroll = false;
 
+    function normalizePageUrl(url) {
+        try {
+            var parsed = new URL(url, window.location.href);
+            return parsed.origin + parsed.pathname + parsed.search;
+        } catch (error) {
+            return String(url || "").split("#")[0];
+        }
+    }
+
     function getNavigationType() {
         if (window.performance && typeof window.performance.getEntriesByType === "function") {
             var entries = window.performance.getEntriesByType("navigation");
@@ -26,6 +35,21 @@
         }
 
         return "navigate";
+    }
+
+    function shouldRestoreScroll(savedPosition) {
+        if (!savedPosition) {
+            return false;
+        }
+
+        var navigationType = getNavigationType();
+        if (navigationType === "reload" || navigationType === "back_forward") {
+            return true;
+        }
+
+        // Some browser contexts report reloads as "navigate"; fall back to
+        // matching the referrer to the current document in that case.
+        return normalizePageUrl(document.referrer) === normalizePageUrl(window.location.href);
     }
 
     function loadSavedScrollPosition() {
@@ -86,7 +110,7 @@
     }
 
     function restoreScrollPosition(savedPosition) {
-        if (!savedPosition || getNavigationType() !== "reload") {
+        if (!shouldRestoreScroll(savedPosition)) {
             return;
         }
 
@@ -95,8 +119,10 @@
         }
 
         var restoreAttempts = 0;
-        var maxRestoreAttempts = 80;
+        var maxRestoreAttempts = 300;
         var restoreTimer = 0;
+        var restoreObserver = null;
+        var restoreFrame = 0;
 
         function stopRestoring() {
             if (restoreTimer) {
@@ -104,11 +130,22 @@
                 restoreTimer = 0;
             }
 
+            if (restoreObserver) {
+                restoreObserver.disconnect();
+                restoreObserver = null;
+            }
+
+            if (restoreFrame) {
+                window.cancelAnimationFrame(restoreFrame);
+                restoreFrame = 0;
+            }
+
             isRestoringScroll = false;
             saveScrollPosition();
         }
 
         function attemptRestore() {
+            restoreFrame = 0;
             restoreAttempts += 1;
 
             var doc = document.documentElement;
@@ -124,6 +161,14 @@
             }
         }
 
+        function scheduleRestoreAttempt() {
+            if (restoreFrame || !isRestoringScroll) {
+                return;
+            }
+
+            restoreFrame = window.requestAnimationFrame(attemptRestore);
+        }
+
         function startRestoreLoop() {
             if (restoreTimer) {
                 return;
@@ -132,6 +177,14 @@
             isRestoringScroll = true;
             attemptRestore();
             restoreTimer = window.setInterval(attemptRestore, 100);
+
+            if (window.MutationObserver && document.body) {
+                restoreObserver = new MutationObserver(scheduleRestoreAttempt);
+                restoreObserver.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
         }
 
         if (document.readyState === "complete") {
@@ -139,6 +192,8 @@
         } else {
             window.addEventListener("load", startRestoreLoop, { once: true });
         }
+
+        window.addEventListener("pageshow", scheduleRestoreAttempt, { once: true });
     }
 
     setupScrollPersistence();
