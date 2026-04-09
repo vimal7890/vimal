@@ -13,7 +13,11 @@
             background: #f5f1e8;
             min-height: 100vh;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .container {
+            width: min(1720px, calc(100vw - 24px));
+            margin: 0 auto;
+            padding: 20px clamp(12px, 1.8vw, 28px);
+        }
         .home-button {
             position: fixed;
             top: clamp(12px, 2vw, 22px);
@@ -63,7 +67,7 @@
         .back-link:hover { text-decoration: underline; }
         .table-container {
             background: white;
-            padding: 30px;
+            padding: clamp(18px, 1.6vw, 30px);
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             overflow-x: auto;
@@ -73,11 +77,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: fixed;
+            font-size: clamp(0.85rem, 0.2vw + 0.82rem, 0.96rem);
         }
         th, td {
             text-align: left;
-            padding: 15px;
+            padding: 12px 10px;
             border-bottom: 1px solid #eee;
+            vertical-align: top;
+            overflow-wrap: break-word;
         }
         th {
             background-color: #f8f8f8;
@@ -122,12 +130,50 @@
         }
         .members-cell {
             font-weight: 600;
-            white-space: nowrap;
+            white-space: normal;
         }
         .source-cell {
             color: #666;
             font-size: 0.95em;
-            min-width: 180px;
+            min-width: 0;
+        }
+        #leaders-table th:nth-child(1),
+        #leaders-table td:nth-child(1) { width: 9%; }
+        #leaders-table th:nth-child(2),
+        #leaders-table td:nth-child(2) { width: 11%; }
+        #leaders-table th:nth-child(3),
+        #leaders-table td:nth-child(3) { width: 11%; }
+        #leaders-table th:nth-child(4),
+        #leaders-table td:nth-child(4) { width: 17%; }
+        #leaders-table th:nth-child(5),
+        #leaders-table td:nth-child(5) { width: 8%; }
+        #leaders-table th:nth-child(6),
+        #leaders-table td:nth-child(6) { width: 11%; }
+        #leaders-table th:nth-child(7),
+        #leaders-table td:nth-child(7) { width: 18%; }
+        #leaders-table th:nth-child(8),
+        #leaders-table td:nth-child(8) { width: 7%; }
+        #leaders-table th:nth-child(9),
+        #leaders-table td:nth-child(9) { width: 8%; }
+        @media (max-width: 1100px) {
+            .container {
+                width: 100%;
+                padding: 16px;
+            }
+            .header {
+                padding: 48px 0 32px;
+            }
+            .table-container {
+                padding: 18px;
+            }
+            table {
+                table-layout: auto;
+                min-width: 980px;
+                font-size: 0.92rem;
+            }
+            th, td {
+                padding: 12px;
+            }
         }
     </style>
 </head>
