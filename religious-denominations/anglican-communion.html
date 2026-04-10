@@ -114,8 +114,38 @@
             Saba: "bq",
             "Saint Helena": "sh"
         };
+        const countryFlagCodeOverrides = {
+            England: "GB",
+            Scotland: "GB",
+            Wales: "GB",
+            "Republic of Ireland": "IE",
+            "Northern Ireland": "GB",
+            "Democratic Republic of the Congo": "CD",
+            "Republic of Congo": "CG",
+            "South Korea": "KR",
+            "North Korea": "KP",
+            Palestine: "PS",
+            Macau: "MO",
+            "Hong Kong": "HK",
+            "British Virgin Islands": "VG",
+            "United States Virgin Islands": "VI",
+            "Northern Mariana Islands": "MP",
+            "Puerto Rico": "PR",
+            "Saint Barthelemy": "BL",
+            "Saint Kitts and Nevis": "KN",
+            "Saint Vincent and the Grenadines": "VC",
+            "Saint Lucia": "LC",
+            "Saint Martin": "MF",
+            "Turks and Caicos Islands": "TC",
+            "Cayman Islands": "KY",
+            "Cape Verde": "CV",
+            "Sint Eustatius": "BQ",
+            Saba: "BQ",
+            "Saint Helena": "SH"
+        };
 
         const ignoredMapTerritories = new Set(["Crown Dependencies", "Europe"]);
+        const countryFlagMatchers = [];
         let memberRows = [];
         let mapTerritories = [];
         let activeMapRegion = null;
@@ -143,6 +173,7 @@
         function renderTable() {
             const tbody = document.getElementById("ac-members-body");
             const fragment = document.createDocumentFragment();
+            const territorySet = new Set(mapTerritories);
 
             memberRows.forEach((row) => {
                 const tr = document.createElement("tr");
@@ -152,7 +183,7 @@
 
                 typeTd.textContent = row.type;
                 churchTd.textContent = row.church;
-                jurisdictionTd.textContent = row.jurisdiction;
+                renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
 
                 tr.append(typeTd, churchTd, jurisdictionTd);
                 fragment.appendChild(tr);
@@ -218,6 +249,121 @@
 
             const union = new Set([...aSet, ...bSet]).size;
             return union === 0 ? 0 : intersection / union;
+        }
+
+        function buildCountryFlagMatchers() {
+            if (countryFlagMatchers.length > 0 || typeof Intl === "undefined" || typeof Intl.DisplayNames !== "function") {
+                return;
+            }
+
+            const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+            for (let firstCodePoint = 65; firstCodePoint <= 90; firstCodePoint += 1) {
+                for (let secondCodePoint = 65; secondCodePoint <= 90; secondCodePoint += 1) {
+                    const code = String.fromCharCode(firstCodePoint, secondCodePoint);
+                    const label = displayNames.of(code);
+
+                    if (!label || label === code) {
+                        continue;
+                    }
+
+                    countryFlagMatchers.push({
+                        code,
+                        compact: normalizeCompact(label),
+                        tokens: tokenize(label)
+                    });
+                }
+            }
+        }
+
+        function resolveCountryFlagCode(countryName) {
+            if (countryFlagCodeOverrides[countryName]) {
+                return countryFlagCodeOverrides[countryName];
+            }
+
+            const countryTokens = tokenize(countryName);
+            const countryCompact = normalizeCompact(countryName);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of countryFlagMatchers) {
+                const score = jaccardScore(countryTokens, matcher.tokens);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher;
+                }
+            }
+
+            if (!bestMatch) {
+                return null;
+            }
+
+            const compactMatch = bestMatch.compact.includes(countryCompact) || countryCompact.includes(bestMatch.compact);
+
+            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.3)) {
+                return bestMatch.code;
+            }
+
+            return null;
+        }
+
+        function createFlagEmoji(countryCode) {
+            return Array.from(countryCode.toUpperCase(), (letter) =>
+                String.fromCodePoint(127397 + letter.charCodeAt(0))
+            ).join("");
+        }
+
+        function getCountryMarker(countryName) {
+            const countryCode = resolveCountryFlagCode(countryName);
+            return countryCode ? createFlagEmoji(countryCode) : "";
+        }
+
+        function appendTerritoryWithMarker(cell, territoryName) {
+            const marker = getCountryMarker(territoryName);
+            cell.append(territoryName);
+
+            if (marker) {
+                const markerSpan = document.createElement("span");
+                markerSpan.className = "country-flag";
+                markerSpan.setAttribute("aria-hidden", "true");
+                markerSpan.textContent = marker;
+                cell.append(markerSpan);
+            }
+        }
+
+        function renderJurisdictionPart(cell, part, territorySet) {
+            if (territorySet.has(part)) {
+                appendTerritoryWithMarker(cell, part);
+                return;
+            }
+
+            const andSegments = part.split(/\s+and\s+/).map((segment) => segment.trim()).filter(Boolean);
+
+            if (andSegments.length > 1 && andSegments.every((segment) => territorySet.has(segment))) {
+                andSegments.forEach((segment, index) => {
+                    appendTerritoryWithMarker(cell, segment);
+
+                    if (index < andSegments.length - 1) {
+                        cell.append(" and ");
+                    }
+                });
+                return;
+            }
+
+            cell.append(part);
+        }
+
+        function renderJurisdictionCell(cell, jurisdiction, territorySet) {
+            const jurisdictionParts = jurisdiction.split(",").map((part) => part.trim()).filter(Boolean);
+
+            jurisdictionParts.forEach((part, index) => {
+                renderJurisdictionPart(cell, part, territorySet);
+
+                if (index < jurisdictionParts.length - 1) {
+                    cell.append(", ");
+                }
+            });
         }
 
         function buildMapRegionMatchers(svgRoot) {
@@ -458,6 +604,7 @@
         function initializePage() {
             memberRows = parseRawRows(window.acMemberRowsRaw);
             mapTerritories = parseMapTerritories(window.acMapTerritoriesRaw);
+            buildCountryFlagMatchers();
 
             renderTable();
             initializeMemberMap();
