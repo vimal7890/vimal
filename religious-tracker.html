@@ -348,6 +348,21 @@
             "Russian Orthodox Church": "🇷🇺",
             "Serbian Orthodox Church": "🇷🇸"
         };
+        const sunniCountryFlags = [
+            { country: 'Bosnia and Herzegovina', flag: '🇧🇦' },
+            { country: 'Saudi Arabia', flag: '🇸🇦' },
+            { country: 'Russian Federation', flag: '🇷🇺' },
+            { country: 'Macedonia', flag: '🇲🇰' },
+            { country: 'Kazakhstan', flag: '🇰🇿' },
+            { country: 'Uzbekistan', flag: '🇺🇿' },
+            { country: 'Australia', flag: '🇦🇺' },
+            { country: 'Malaysia', flag: '🇲🇾' },
+            { country: 'Taiwan', flag: '🇹🇼' },
+            { country: 'Russia', flag: '🇷🇺' },
+            { country: 'China', flag: '🇨🇳' },
+            { country: 'Ukraine', flag: '🇺🇦' },
+            { country: 'Yemen', flag: '🇾🇪' }
+        ];
         const sortableColumns = {
             religion: {
                 elementId: 'religion-header',
@@ -490,12 +505,31 @@
             return null;
         }
 
-        function getSubDenomination2DisplayName({ religion, subDenomination, churchName }) {
+        function escapeRegExp(value) {
+            return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function addSunniCountryFlags(churchName) {
+            let flaggedName = churchName;
+
+            sunniCountryFlags.forEach(({ country, flag }) => {
+                const countryPattern = new RegExp(`\\b${escapeRegExp(country)}\\b(?!\\s*${escapeRegExp(flag)})`, 'g');
+                flaggedName = flaggedName.replace(countryPattern, `${country} ${flag}`);
+            });
+
+            return flaggedName;
+        }
+
+        function getSubDenomination2DisplayName({ religion, denomination, subDenomination, churchName }) {
             if (subDenomination === 'Eastern Orthodoxy') {
                 const easternOrthodoxyFlag = easternOrthodoxyFlags[churchName];
                 if (easternOrthodoxyFlag) {
                     return `${churchName} ${easternOrthodoxyFlag}`;
                 }
+            }
+
+            if (religion === 'Islam' && denomination === 'Sunni') {
+                return addSunniCountryFlags(churchName);
             }
 
             if (churchName === 'Thai Buddhism') {
@@ -688,6 +722,7 @@
                         if (cell.type === 'csv' && cell.index === subDenomination2Idx) {
                             content = getSubDenomination2DisplayName({
                                 religion,
+                                denomination,
                                 subDenomination,
                                 churchName: content
                             });
