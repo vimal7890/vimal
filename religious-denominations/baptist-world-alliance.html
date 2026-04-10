@@ -482,6 +482,20 @@
 
                 mapObject.dataset.initialized = "true";
                 svgRoot.setAttribute("role", "img");
+
+                if (!svgRoot.hasAttribute("viewBox")) {
+                    const declaredWidth = Number.parseFloat(svgRoot.getAttribute("width") || mapObject.getAttribute("width") || "0");
+                    const declaredHeight = Number.parseFloat(svgRoot.getAttribute("height") || mapObject.getAttribute("height") || "0");
+
+                    if (declaredWidth > 0 && declaredHeight > 0) {
+                        svgRoot.setAttribute("viewBox", `0 0 ${declaredWidth} ${declaredHeight}`);
+                    }
+                }
+
+                if (!svgRoot.hasAttribute("preserveAspectRatio")) {
+                    svgRoot.setAttribute("preserveAspectRatio", "xMidYMid meet");
+                }
+
                 svgRoot.insertBefore(createMapStyleElement(mapDocument), svgRoot.firstChild);
 
                 const mapMatchers = buildMapRegionMatchers(svgRoot);
