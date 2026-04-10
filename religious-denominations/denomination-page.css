@@ -158,6 +158,10 @@ body {
 .data-table tbody tr:hover {
     background: #faf7f0;
 }
+.data-table tbody tr.total-row td {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
 .table-link {
     color: #333;
     font-weight: 600;

@@ -175,6 +175,10 @@
             return Number.isNaN(memberCount) ? -Infinity : memberCount;
         }
 
+        function isTotalRow(row) {
+            return row.country === "World" && row.denomination === "Baptist World Alliance";
+        }
+
         function updateMembersSortHeader() {
             const membersHeader = document.getElementById("members-header");
             const sortIndicator = document.getElementById("members-sort-indicator");
@@ -205,6 +209,10 @@
                 const countryTd = document.createElement("td");
                 const denominationTd = document.createElement("td");
                 const membersTd = document.createElement("td");
+
+                if (isTotalRow(row)) {
+                    tr.classList.add("total-row");
+                }
 
                 countryTd.textContent = row.country;
                 membersTd.textContent = row.members;
