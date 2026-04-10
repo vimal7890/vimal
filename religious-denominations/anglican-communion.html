@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anglican Communion</title>
+    <link rel="stylesheet" href="denomination-page.css">
+</head>
+<body>
+    <div class="container wide-container">
+        <a href="../religious-tracker.html" class="back-link">&larr; Back to Religious Leader Tracker</a>
+        <div class="page-title-row">
+            <h1 class="page-title">Anglican Communion</h1>
+            <img
+                class="title-logo"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Anglican%20Communion%20rose.svg"
+                alt="Anglican Communion logo"
+                loading="lazy"
+                width="300"
+                height="300"
+            >
+        </div>
+
+        <section class="info-card">
+            <h2 class="section-title">Intro</h2>
+            <p class="intro-text">The Anglican Communion is a worldwide fellowship of autonomous churches rooted in the historic tradition of the Church of England.<br>Its member churches are in communion with the Archbishop of Canterbury, who serves as a symbolic focus of unity rather than a central ruler.<br>These churches share Anglican foundations in scripture, worship, episcopal leadership, and inherited practice while governing themselves locally.<br>The Communion includes dozens of member churches across many countries and territories and represents many millions of baptized Christians.<br>Its shared life is coordinated through consultative bodies such as the Lambeth Conference, the Anglican Consultative Council, and the Primates' Meeting.</p>
+            <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Anglican_Communion" target="_blank" rel="noopener noreferrer">Anglican Communion</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+        </section>
+
+        <section class="info-card section-spacing">
+            <h2 class="section-title">List of members</h2>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Member Church</th>
+                            <th scope="col">Territorial Jurisdiction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ac-members-body"></tbody>
+                </table>
+            </div>
+            <p class="bwa-map-summary" id="ac-member-summary"></p>
+            <p class="source-note">Source: Province and extraprovincial church list adapted from the "<a href="https://en.wikipedia.org/wiki/Anglican_Communion#Organisation" target="_blank" rel="noopener noreferrer">Organisation</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Anglican_Communion" target="_blank" rel="noopener noreferrer">Anglican Communion</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+        </section>
+
+        <section class="info-card section-spacing">
+            <h2 class="section-title">Member map</h2>
+            <p class="intro-text">Countries and territories represented in Anglican Communion provincial and extraprovincial jurisdictions are highlighted in red. Hover anywhere on the map to see the country or territory name.</p>
+            <div class="bwa-map-meta">
+                <div class="bwa-map-legend" aria-label="Map legend">
+                    <span class="bwa-map-legend-swatch" aria-hidden="true"></span>
+                    <span>Has an associated Anglican member church jurisdiction</span>
+                </div>
+                <p class="bwa-map-hover-name" id="ac-map-hover-name" aria-live="polite">Hover over a country or territory to see its name.</p>
+            </div>
+            <p class="bwa-map-summary" id="ac-map-summary"></p>
+            <div class="bwa-map-frame">
+                <object
+                    class="bwa-world-map-object"
+                    id="ac-world-map-object"
+                    data="baptist-world-alliance-world-map.svg"
+                    type="image/svg+xml"
+                    aria-label="World map showing Anglican Communion member church jurisdictions"
+                >
+                    <p class="error-text">The world map could not be loaded.</p>
+                </object>
+                <div class="bwa-map-loading loading-text" id="ac-map-loading">Loading world map...</div>
+            </div>
+            <p class="source-note">Base map adapted from <a href="https://commons.wikimedia.org/wiki/File:BlankMap-World.svg" target="_blank" rel="noopener noreferrer">BlankMap-World.svg</a> on Wikimedia Commons and released to the public domain.</p>
+        </section>
+
+        <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Anglican_Communion_rose.svg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> ("Anglican Communion rose.svg") by Samuelmartins406, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+    </div>
+
+    <script src="anglican-communion-data.js"></script>
+    <script>
+        const mapRegionOverrides = {
+            England: "gb",
+            Scotland: "gb",
+            Wales: "gb",
+            "Republic of Ireland": "ie",
+            "Northern Ireland": "gb",
+            "Democratic Republic of the Congo": "cd",
+            "Republic of Congo": "cg",
+            "South Korea": "kr",
+            "North Korea": "kp",
+            "United States": "us",
+            "United States Virgin Islands": "vi",
+            "British Virgin Islands": "vg",
+            "Northern Mariana Islands": "mp",
+            "Puerto Rico": "pr",
+            "United Arab Emirates": "ae",
+            "Saudi Arabia": "sa",
+            "Dominican Republic": "do",
+            "Saint Barthelemy": "bl",
+            "Saint Kitts and Nevis": "kn",
+            "Saint Vincent and the Grenadines": "vc",
+            "Saint Lucia": "lc",
+            "Saint Martin": "mf",
+            "Turks and Caicos Islands": "tc",
+            "Cayman Islands": "ky",
+            "Falkland Islands": "fk",
+            "Cape Verde": "cv",
+            "South Sudan": "ss",
+            Palestine: "ps",
+            Macau: "mo",
+            "Hong Kong": "hk",
+            "New Caledonia": "nc",
+            "Cook Islands": "ck",
+            "Solomon Islands": "sb",
+            "Sint Eustatius": "bq",
+            Saba: "bq",
+            "Saint Helena": "sh"
+        };
+
+        const ignoredMapTerritories = new Set(["Crown Dependencies", "Europe"]);
+        let memberRows = [];
+        let mapTerritories = [];
+        let activeMapRegion = null;
+
+        function parseRawRows(raw) {
+            return raw
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const [type, church, jurisdiction] = line.split("|");
+                    return { church, jurisdiction, type };
+                });
+        }
+
+        function parseMapTerritories(raw) {
+            return [...new Set(
+                raw
+                    .split("\n")
+                    .map((line) => line.trim())
+                    .filter((line) => line && !ignoredMapTerritories.has(line))
+            )];
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("ac-members-body");
+            const fragment = document.createDocumentFragment();
+
+            memberRows.forEach((row) => {
+                const tr = document.createElement("tr");
+                const typeTd = document.createElement("td");
+                const churchTd = document.createElement("td");
+                const jurisdictionTd = document.createElement("td");
+
+                typeTd.textContent = row.type;
+                churchTd.textContent = row.church;
+                jurisdictionTd.textContent = row.jurisdiction;
+
+                tr.append(typeTd, churchTd, jurisdictionTd);
+                fragment.appendChild(tr);
+            });
+
+            tbody.replaceChildren(fragment);
+
+            const provinceCount = memberRows.filter((row) => row.type === "Province").length;
+            const extraprovCount = memberRows.filter((row) => row.type === "Extraprovincial church").length;
+            document.getElementById("ac-member-summary").textContent = `${memberRows.length} member churches are listed (${provinceCount} provinces and ${extraprovCount} extraprovincial churches).`;
+        }
+
+        function setMapHoverLabel(label) {
+            document.getElementById("ac-map-hover-name").textContent = label || "Hover over a country or territory to see its name.";
+        }
+
+        function setMapLoadingState(message, isError = false) {
+            const loadingElement = document.getElementById("ac-map-loading");
+
+            if (!loadingElement) {
+                return;
+            }
+
+            if (!message) {
+                loadingElement.hidden = true;
+                loadingElement.textContent = "";
+                return;
+            }
+
+            loadingElement.hidden = false;
+            loadingElement.textContent = message;
+            loadingElement.classList.toggle("loading-text", !isError);
+            loadingElement.classList.toggle("error-text", isError);
+        }
+
+        function normalizeAscii(value) {
+            return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function tokenize(value) {
+            return normalizeAscii(value)
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, " ")
+                .split(/\s+/)
+                .filter((token) => token && !["of", "the", "and", "in", "islands", "saint"].includes(token));
+        }
+
+        function normalizeCompact(value) {
+            return tokenize(value).join("");
+        }
+
+        function jaccardScore(a, b) {
+            const aSet = new Set(a);
+            const bSet = new Set(b);
+            let intersection = 0;
+
+            for (const token of aSet) {
+                if (bSet.has(token)) {
+                    intersection += 1;
+                }
+            }
+
+            const union = new Set([...aSet, ...bSet]).size;
+            return union === 0 ? 0 : intersection / union;
+        }
+
+        function buildMapRegionMatchers(svgRoot) {
+            const titleElements = Array.from(svgRoot.querySelectorAll("[id] > title"));
+
+            return titleElements
+                .map((titleElement) => {
+                    const root = titleElement.parentElement;
+
+                    if (!root || !/^[a-z]{2,3}-?$/.test(root.id)) {
+                        return null;
+                    }
+
+                    const title = titleElement.textContent.trim();
+                    return {
+                        compact: normalizeCompact(title),
+                        id: root.id,
+                        root,
+                        title,
+                        tokens: tokenize(title)
+                    };
+                })
+                .filter(Boolean);
+        }
+
+        function resolveMapRegionId(territoryName, mapMatchers) {
+            if (Object.prototype.hasOwnProperty.call(mapRegionOverrides, territoryName)) {
+                return mapRegionOverrides[territoryName];
+            }
+
+            const territoryTokens = tokenize(territoryName);
+            const territoryCompact = normalizeCompact(territoryName);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of mapMatchers) {
+                const score = jaccardScore(territoryTokens, matcher.tokens);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher;
+                }
+            }
+
+            if (!bestMatch) {
+                return null;
+            }
+
+            const compactMatch = bestMatch.compact.includes(territoryCompact) || territoryCompact.includes(bestMatch.compact);
+
+            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.25)) {
+                return bestMatch.id;
+            }
+
+            return null;
+        }
+
+        function setActiveMapRegion(region) {
+            if (activeMapRegion === region) {
+                return;
+            }
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.remove("is-hovered");
+            }
+
+            activeMapRegion = region;
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.add("is-hovered");
+                setMapHoverLabel(activeMapRegion.dataset.regionName);
+                return;
+            }
+
+            setMapHoverLabel(null);
+        }
+
+        function createMapStyleElement(svgDocument) {
+            const styleElement = svgDocument.createElementNS("http://www.w3.org/2000/svg", "style");
+
+            styleElement.textContent = `
+                .oceanxx {
+                    fill: #e6f1fb;
+                }
+
+                .landxx {
+                    fill: #dbe5ef;
+                    stroke: #ffffff;
+                    stroke-width: 0.7;
+                }
+
+                .circlexx,
+                .subxx {
+                    opacity: 1;
+                    fill: #dbe5ef;
+                    stroke: #ffffff;
+                }
+
+                .ac-map-region,
+                .ac-map-region * {
+                    cursor: pointer;
+                    transition: fill 0.16s ease, opacity 0.16s ease, stroke 0.16s ease, stroke-width 0.16s ease;
+                }
+
+                .ac-map-member-region.landxx,
+                .ac-map-member-region .landxx,
+                .ac-map-member-region.circlexx,
+                .ac-map-member-region .circlexx,
+                .ac-map-member-region.subxx,
+                .ac-map-member-region .subxx {
+                    fill: #c62828;
+                }
+
+                .ac-map-region.is-hovered.landxx,
+                .ac-map-region.is-hovered .landxx,
+                .ac-map-region.is-hovered.circlexx,
+                .ac-map-region.is-hovered .circlexx,
+                .ac-map-region.is-hovered.subxx,
+                .ac-map-region.is-hovered .subxx {
+                    stroke: #4c1212;
+                    stroke-width: 1.15;
+                }
+
+                .ac-map-region.is-hovered:not(.ac-map-member-region).landxx,
+                .ac-map-region.is-hovered:not(.ac-map-member-region) .landxx,
+                .ac-map-region.is-hovered:not(.ac-map-member-region).circlexx,
+                .ac-map-region.is-hovered:not(.ac-map-member-region) .circlexx,
+                .ac-map-region.is-hovered:not(.ac-map-member-region).subxx,
+                .ac-map-region.is-hovered:not(.ac-map-member-region) .subxx {
+                    fill: #c5d3e2;
+                }
+
+                .ac-map-member-region.is-hovered.landxx,
+                .ac-map-member-region.is-hovered .landxx,
+                .ac-map-member-region.is-hovered.circlexx,
+                .ac-map-member-region.is-hovered .circlexx,
+                .ac-map-member-region.is-hovered.subxx,
+                .ac-map-member-region.is-hovered .subxx {
+                    fill: #a91e1e;
+                }
+            `;
+
+            return styleElement;
+        }
+
+        function initializeMemberMap() {
+            const mapObject = document.getElementById("ac-world-map-object");
+            const mapSummary = document.getElementById("ac-map-summary");
+
+            if (!mapObject) {
+                return;
+            }
+
+            mapSummary.textContent = `${mapTerritories.length} countries and territories in Anglican member church jurisdictions are highlighted in red.`;
+
+            function handleMapReady() {
+                if (mapObject.dataset.initialized === "true") {
+                    return;
+                }
+
+                const mapDocument = mapObject.contentDocument;
+                const svgRoot = mapDocument?.querySelector("svg");
+
+                if (!svgRoot) {
+                    setMapLoadingState("The world map could not be loaded.", true);
+                    return;
+                }
+
+                mapObject.dataset.initialized = "true";
+                svgRoot.setAttribute("role", "img");
+
+                if (!svgRoot.hasAttribute("viewBox")) {
+                    const declaredWidth = Number.parseFloat(svgRoot.getAttribute("width") || mapObject.getAttribute("width") || "0");
+                    const declaredHeight = Number.parseFloat(svgRoot.getAttribute("height") || mapObject.getAttribute("height") || "0");
+
+                    if (declaredWidth > 0 && declaredHeight > 0) {
+                        svgRoot.setAttribute("viewBox", `0 0 ${declaredWidth} ${declaredHeight}`);
+                    }
+                }
+
+                if (!svgRoot.hasAttribute("preserveAspectRatio")) {
+                    svgRoot.setAttribute("preserveAspectRatio", "xMidYMid meet");
+                }
+
+                svgRoot.insertBefore(createMapStyleElement(mapDocument), svgRoot.firstChild);
+
+                const mapMatchers = buildMapRegionMatchers(svgRoot);
+                const matcherById = new Map(mapMatchers.map((matcher) => [matcher.id, matcher]));
+                const unmatchedTerritories = [];
+
+                mapMatchers.forEach((matcher) => {
+                    matcher.root.classList.add("ac-map-region");
+                    matcher.root.dataset.regionName = matcher.title;
+                });
+
+                mapTerritories.forEach((territoryName) => {
+                    const regionId = resolveMapRegionId(territoryName, mapMatchers);
+                    const matcher = regionId ? matcherById.get(regionId) : null;
+
+                    if (!matcher) {
+                        unmatchedTerritories.push(territoryName);
+                        return;
+                    }
+
+                    matcher.root.classList.add("ac-map-member-region");
+                    matcher.root.dataset.memberTerritory = territoryName;
+                });
+
+                svgRoot.addEventListener("pointerover", (event) => {
+                    const region = event.target.closest("[data-region-name]");
+                    setActiveMapRegion(region);
+                });
+
+                svgRoot.addEventListener("pointerleave", () => {
+                    setActiveMapRegion(null);
+                });
+
+                if (unmatchedTerritories.length > 0) {
+                    console.warn("Unmatched Anglican Communion map territories:", unmatchedTerritories);
+                }
+
+                setMapLoadingState("");
+            }
+
+            mapObject.addEventListener("load", handleMapReady, { once: true });
+            mapObject.addEventListener("error", () => {
+                setMapLoadingState("The world map could not be loaded.", true);
+            }, { once: true });
+
+            if (mapObject.contentDocument?.querySelector("svg")) {
+                handleMapReady();
+                return;
+            }
+
+            setMapLoadingState("Loading world map...");
+        }
+
+        function initializePage() {
+            memberRows = parseRawRows(window.acMemberRowsRaw);
+            mapTerritories = parseMapTerritories(window.acMapTerritoriesRaw);
+
+            renderTable();
+            initializeMemberMap();
+        }
+
+        initializePage();
+    </script>
+    <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
+</body>
+</html>

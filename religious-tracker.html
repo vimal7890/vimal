@@ -302,6 +302,7 @@
             "Uniting Church in Australia": "religious-denominations/uniting-church-in-australia.html",
             "United Church of Canada": "religious-denominations/united-church-of-canada.html",
             "Association of Fundamental Baptist Churches in the Philippines": "religious-denominations/association-of-fundamental-baptist-churches-in-the-philippines.html",
+            "Anglican Communion": "religious-denominations/anglican-communion.html",
             "Episcopal Missionary Church": "religious-denominations/episcopal-missionary-church.html",
             "Reformed Episcopal Church": "religious-denominations/reformed-episcopal-church.html",
             "Anglican Catholic Church in Australia": "religious-denominations/anglican-catholic-church-in-australia.html",
@@ -324,6 +325,9 @@
             islam: '☪',
             judaism: '✡'
         };
+        const churchOfEnglandEffectiveLeadershipLabel = 'Church of England / Effective leadership (also head of Anglican Communion)';
+        const churchOfEnglandEffectiveLeadershipPrefix = 'Church of England / Effective leadership (also head of ';
+        const anglicanCommunionPagePath = 'religious-denominations/anglican-communion.html';
         const easternOrthodoxyFlags = {
             "Albanian Orthodox Church": "🇦🇱",
             "Bulgarian Orthodox Church": "🇧🇬",
@@ -631,6 +635,28 @@
                         const shouldLinkSubDenomination = cell.type === 'csv' && cell.index === subDenominationIdx && denominationPageMatch?.column === 'subDenomination';
                         const shouldLinkSubDenomination2 = cell.type === 'csv' && cell.index === subDenomination2Idx && denominationPageMatch?.column === 'subDenomination2';
                         const shouldLinkDenomination = cell.type === 'csv' && cell.index === denominationIdx && denominationPageMatch?.column === 'denomination';
+
+                        const isChurchOfEnglandEffectiveLeadershipCell =
+                            cell.type === 'csv' &&
+                            cell.index === subDenomination2Idx &&
+                            content === churchOfEnglandEffectiveLeadershipLabel;
+
+                        if (isChurchOfEnglandEffectiveLeadershipCell) {
+                            td.append(churchOfEnglandEffectiveLeadershipPrefix);
+
+                            const link = document.createElement('a');
+                            link.href = anglicanCommunionPagePath;
+                            link.className = 'denomination-link';
+
+                            const boldText = document.createElement('strong');
+                            boldText.textContent = 'Anglican Communion';
+
+                            link.appendChild(boldText);
+                            td.appendChild(link);
+                            td.append(')');
+                            tr.appendChild(td);
+                            continue;
+                        }
 
                         if ((shouldLinkSubDenomination || shouldLinkSubDenomination2 || shouldLinkDenomination) && denominationPageMatch?.page) {
                             const link = document.createElement('a');
