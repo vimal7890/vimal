@@ -199,10 +199,10 @@
             <table id="leaders-table">
                 <thead>
                     <tr>
-                        <th>Religion</th>
-                        <th>Denomination</th>
-                        <th>Sub Denomination</th>
-                        <th>Sub Denomination 2</th>
+                        <th id="religion-header" class="clickable-header">Religion ↕</th>
+                        <th id="denomination-header" class="clickable-header">Denomination ↕</th>
+                        <th id="sub-denomination-header" class="clickable-header">Sub Denomination ↕</th>
+                        <th id="sub-denomination-2-header" class="clickable-header">Sub Denomination 2 ↕</th>
                         <th>Members</th>
                         <th>Source</th>
                         <th>Leader</th>
@@ -224,7 +224,8 @@
     <script>
         let leadersData = [];
         let membershipData = {};
-        let sortDirection = null; // null = unsorted, 'asc' = lowest first, 'desc' = highest first
+        let activeSortColumn = null;
+        let sortDirection = null; // null = unsorted, 'asc' = ascending, 'desc' = descending
         const denominationPages = {
             "Roman Catholic": "religious-denominations/roman-catholic.html",
             "Coptic Catholic Church": "religious-denominations/coptic-catholic-church.html",
@@ -346,6 +347,38 @@
             "Romanian Orthodox Church": "🇷🇴",
             "Russian Orthodox Church": "🇷🇺",
             "Serbian Orthodox Church": "🇷🇸"
+        };
+        const sortableColumns = {
+            religion: {
+                elementId: 'religion-header',
+                label: 'Religion',
+                type: 'text',
+                dataKey: 'religion'
+            },
+            denomination: {
+                elementId: 'denomination-header',
+                label: 'Denomination',
+                type: 'text',
+                dataKey: 'denomination'
+            },
+            subDenomination: {
+                elementId: 'sub-denomination-header',
+                label: 'Sub Denomination',
+                type: 'text',
+                dataKey: 'subDenomination'
+            },
+            subDenomination2: {
+                elementId: 'sub-denomination-2-header',
+                label: 'Sub Denomination 2',
+                type: 'text',
+                dataKey: 'subDenomination2'
+            },
+            days: {
+                elementId: 'time-header',
+                label: 'Days in Charge',
+                type: 'days',
+                dataKey: 'since'
+            }
         };
 
         function formatValue(value) {
@@ -495,50 +528,77 @@
             });
         }
 
-        function updateHeaderArrow() {
-            const header = document.getElementById('time-header');
-            if (sortDirection === 'asc') {
-                header.textContent = 'Days in Charge ↑';
-            } else if (sortDirection === 'desc') {
-                header.textContent = 'Days in Charge ↓';
-            } else {
-                header.textContent = 'Days in Charge ↕';
-            }
+        function updateHeaderArrows() {
+            Object.entries(sortableColumns).forEach(([columnKey, config]) => {
+                const header = document.getElementById(config.elementId);
+                if (!header) return;
+
+                let arrow = '↕';
+                if (activeSortColumn === columnKey) {
+                    arrow = sortDirection === 'asc' ? '↑' : '↓';
+                }
+
+                header.textContent = `${config.label} ${arrow}`;
+            });
         }
 
-        function sortTable() {
-            // Toggle sort direction
-            if (sortDirection === null || sortDirection === 'desc') {
-                sortDirection = 'asc';
+        function compareTextValues(a, b, direction) {
+            const aText = (a || '').trim();
+            const bText = (b || '').trim();
+            const aEmpty = aText === '';
+            const bEmpty = bText === '';
+
+            if (aEmpty && bEmpty) return 0;
+            if (aEmpty) return 1;
+            if (bEmpty) return -1;
+
+            const comparison = aText.localeCompare(bText, undefined, { sensitivity: 'base' });
+            return direction === 'asc' ? comparison : -comparison;
+        }
+
+        function sortTableBy(columnKey) {
+            if (!sortableColumns[columnKey]) return;
+
+            if (activeSortColumn === columnKey) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
             } else {
-                sortDirection = 'desc';
+                activeSortColumn = columnKey;
+                sortDirection = 'asc';
             }
 
             const tableBody = document.getElementById('table-body');
             const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-            // Build an array of { row, index, days } so we can sort
             const rowsWithData = rows.map((row, index) => ({
                 row,
                 originalIndex: index,
-                days: calculateDays(leadersData[index].since)
+                data: leadersData[index]
             }));
 
             rowsWithData.sort((a, b) => {
-                const aVal = isNaN(a.days) ? -Infinity : a.days;
-                const bVal = isNaN(b.days) ? -Infinity : b.days;
-                return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+                const config = sortableColumns[columnKey];
+                let comparison = 0;
+
+                if (config.type === 'days') {
+                    const aDays = calculateDays(a.data.since);
+                    const bDays = calculateDays(b.data.since);
+                    const aVal = isNaN(aDays) ? -Infinity : aDays;
+                    const bVal = isNaN(bDays) ? -Infinity : bDays;
+                    comparison = sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+                } else {
+                    comparison = compareTextValues(a.data[config.dataKey], b.data[config.dataKey], sortDirection);
+                }
+
+                if (comparison !== 0) return comparison;
+                return a.originalIndex - b.originalIndex;
             });
 
-            // Reorder leadersData and DOM rows
-            const newLeadersData = rowsWithData.map(r => leadersData[r.originalIndex]);
-            leadersData = newLeadersData;
+            leadersData = rowsWithData.map(item => item.data);
 
-            // Re-append rows in sorted order (moves them in the DOM)
-            rowsWithData.forEach(r => tableBody.appendChild(r.row));
+            rowsWithData.forEach(item => tableBody.appendChild(item.row));
 
             updateTableValues();
-            updateHeaderArrow();
+            updateHeaderArrows();
         }
 
         async function loadTable() {
@@ -582,7 +642,13 @@
                         subDenomination2
                     });
                     
-                    leadersData.push({ since, religion });
+                    leadersData.push({
+                        since,
+                        religion,
+                        denomination,
+                        subDenomination,
+                        subDenomination2
+                    });
 
                     const tr = document.createElement('tr');
                     if (religion.toLowerCase() === 'christianity') {
@@ -676,13 +742,19 @@
                 });
 
                 updateTableValues();
+                updateHeaderArrows();
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
             }
         }
 
-        document.getElementById('time-header').addEventListener('click', sortTable);
+        Object.keys(sortableColumns).forEach(columnKey => {
+            const header = document.getElementById(sortableColumns[columnKey].elementId);
+            if (!header) return;
+            header.addEventListener('click', () => sortTableBy(columnKey));
+        });
+        updateHeaderArrows();
 
         window.onload = loadTable;
     </script>
