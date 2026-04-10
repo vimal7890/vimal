@@ -167,16 +167,6 @@ body {
     font-size: 1.05rem;
     font-weight: 700;
 }
-.table-link {
-    color: #333;
-    font-weight: 600;
-    text-decoration: none;
-}
-.table-link:hover,
-.table-link:focus-visible {
-    color: #d93025;
-    text-decoration: underline;
-}
 .page-footer-note {
     margin-top: 22px;
 }
