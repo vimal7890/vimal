@@ -134,15 +134,20 @@ body {
 .sort-button {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 6px;
     width: 100%;
     padding: 0;
     border: 0;
     background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
     color: inherit;
     cursor: pointer;
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     letter-spacing: inherit;
     text-transform: inherit;
     text-align: left;
