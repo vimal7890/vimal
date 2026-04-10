@@ -453,13 +453,33 @@
             return null;
         }
 
-        function getEasternOrthodoxyDisplayName(subDenomination, churchName) {
-            if (subDenomination !== 'Eastern Orthodoxy') {
-                return churchName;
+        function getSubDenomination2DisplayName({ religion, subDenomination, churchName }) {
+            if (subDenomination === 'Eastern Orthodoxy') {
+                const easternOrthodoxyFlag = easternOrthodoxyFlags[churchName];
+                if (easternOrthodoxyFlag) {
+                    return `${churchName} ${easternOrthodoxyFlag}`;
+                }
             }
 
-            const flag = easternOrthodoxyFlags[churchName];
-            return flag ? `${churchName} ${flag}` : churchName;
+            if (churchName === 'Thai Buddhism') {
+                return `${churchName} 🇹🇭`;
+            }
+
+            if (churchName === 'Gelug in Mongolia') {
+                return `${churchName} 🇲🇳`;
+            }
+
+            if (religion === 'Judaism') {
+                if (churchName === 'Ireland') {
+                    return `${churchName} 🇮🇪`;
+                }
+
+                if (churchName.includes('Israel')) {
+                    return churchName.replace(/Israel/g, 'Israel 🇮🇱');
+                }
+            }
+
+            return churchName;
         }
 
         function updateTableValues() {
@@ -596,7 +616,11 @@
                             }
                         }
                         if (cell.type === 'csv' && cell.index === subDenomination2Idx) {
-                            content = getEasternOrthodoxyDisplayName(subDenomination, content);
+                            content = getSubDenomination2DisplayName({
+                                religion,
+                                subDenomination,
+                                churchName: content
+                            });
                         }
                         if (cell.type === 'members') {
                             td.classList.add('members-cell');
