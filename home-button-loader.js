@@ -196,8 +196,183 @@
         window.addEventListener("pageshow", scheduleRestoreAttempt, { once: true });
     }
 
+    function getNormalizedHeaderLabel(value) {
+        return String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
+    }
+
+    function parseDaysSortValue(value) {
+        var normalized = String(value || "").replace(/,/g, "").trim();
+        if (!normalized) {
+            return null;
+        }
+
+        var matched = normalized.match(/-?\d+(?:\.\d+)?/);
+        if (!matched) {
+            return null;
+        }
+
+        var parsed = Number(matched[0]);
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    function ensureGlobalDaysSortStyle() {
+        if (document.getElementById("global-days-since-sort-style")) {
+            return;
+        }
+
+        var style = document.createElement("style");
+        style.id = "global-days-since-sort-style";
+        style.textContent = [
+            ".global-days-sort-button {",
+            "    display: flex;",
+            "    align-items: center;",
+            "    justify-content: flex-start;",
+            "    gap: 6px;",
+            "    width: 100%;",
+            "    padding: 0;",
+            "    border: 0;",
+            "    background: transparent;",
+            "    appearance: none;",
+            "    -webkit-appearance: none;",
+            "    color: inherit;",
+            "    font: inherit;",
+            "    line-height: inherit;",
+            "    letter-spacing: inherit;",
+            "    text-transform: inherit;",
+            "    text-align: left;",
+            "    cursor: pointer;",
+            "}",
+            ".global-days-sort-button:focus-visible {",
+            "    outline: 2px solid rgba(217, 48, 37, 0.55);",
+            "    outline-offset: 2px;",
+            "}",
+            ".global-days-sort-indicator {",
+            "    flex-shrink: 0;",
+            "    font-size: 1rem;",
+            "}"
+        ].join("\n");
+        document.head.appendChild(style);
+    }
+
+    function sortTableRowsByDaysSince(headerCell, direction) {
+        var table = headerCell.closest("table");
+        if (!table || !table.tBodies || table.tBodies.length === 0) {
+            return;
+        }
+
+        var tbody = table.tBodies[0];
+        var columnIndex = headerCell.cellIndex;
+        if (columnIndex < 0) {
+            return;
+        }
+
+        var rows = Array.prototype.slice.call(tbody.rows);
+        if (rows.length < 2) {
+            return;
+        }
+
+        var rowsWithValues = rows.map(function (row, originalIndex) {
+            var cell = row.cells[columnIndex];
+            return {
+                row: row,
+                originalIndex: originalIndex,
+                value: parseDaysSortValue(cell ? cell.textContent : "")
+            };
+        });
+
+        rowsWithValues.sort(function (a, b) {
+            var aMissing = a.value === null;
+            var bMissing = b.value === null;
+
+            if (aMissing && bMissing) {
+                return a.originalIndex - b.originalIndex;
+            }
+
+            if (aMissing) {
+                return 1;
+            }
+
+            if (bMissing) {
+                return -1;
+            }
+
+            var difference = direction === "desc" ? b.value - a.value : a.value - b.value;
+            if (difference !== 0) {
+                return difference;
+            }
+
+            return a.originalIndex - b.originalIndex;
+        });
+
+        rowsWithValues.forEach(function (item) {
+            tbody.appendChild(item.row);
+        });
+    }
+
+    function setupDaysSinceSortHeader(headerCell) {
+        if (headerCell.dataset.daysSinceSortManaged === "true") {
+            return;
+        }
+
+        if (headerCell.querySelector("button")) {
+            return;
+        }
+
+        var headerLabel = String(headerCell.textContent || "").replace(/\s+/g, " ").trim() || "Days Since";
+        headerCell.textContent = "";
+        headerCell.dataset.daysSinceSortManaged = "true";
+        headerCell.setAttribute("aria-sort", "none");
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "sort-button global-days-sort-button";
+
+        var label = document.createElement("span");
+        label.textContent = headerLabel;
+
+        var indicator = document.createElement("span");
+        indicator.className = "sort-indicator global-days-sort-indicator";
+        indicator.textContent = "\u2195";
+        indicator.setAttribute("aria-hidden", "true");
+
+        button.appendChild(label);
+        button.appendChild(indicator);
+        headerCell.appendChild(button);
+
+        button.addEventListener("click", function () {
+            var nextDirection = headerCell.dataset.daysSinceSortDirection === "desc" ? "asc" : "desc";
+            sortTableRowsByDaysSince(headerCell, nextDirection);
+            headerCell.dataset.daysSinceSortDirection = nextDirection;
+            headerCell.setAttribute("aria-sort", nextDirection === "desc" ? "descending" : "ascending");
+            indicator.textContent = nextDirection === "desc" ? "\u2193" : "\u2191";
+        });
+    }
+
+    function initializeGlobalDaysSinceSorting() {
+        var headerCells = document.querySelectorAll("table th");
+        if (!headerCells.length) {
+            return;
+        }
+
+        ensureGlobalDaysSortStyle();
+
+        Array.prototype.forEach.call(headerCells, function (headerCell) {
+            if (headerCell.dataset.daysSinceSortIgnore === "true") {
+                return;
+            }
+
+            if (getNormalizedHeaderLabel(headerCell.textContent) !== "days since") {
+                return;
+            }
+
+            setupDaysSinceSortHeader(headerCell);
+        });
+    }
+
     setupScrollPersistence();
     restoreScrollPosition(loadSavedScrollPosition());
+    initializeGlobalDaysSinceSorting();
+    window.addEventListener("load", initializeGlobalDaysSinceSorting);
 
     // Skip injection if a page-specific home button already exists.
     if (document.querySelector("a.home-button, a.global-home-button, a[aria-label='Go to home page']")) {
