@@ -235,7 +235,7 @@ body {
     border: 1px solid #e7dbc6;
     border-radius: 16px;
     overflow: hidden;
-    background: linear-gradient(180deg, #faf6ee 0%, #f2ebdf 100%);
+    background: linear-gradient(180deg, #f7fbff 0%, #e9f2fb 100%);
     aspect-ratio: 2754 / 1398;
     min-height: 320px;
 }
@@ -251,8 +251,12 @@ body {
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: rgba(250, 246, 238, 0.9);
+    background: rgba(247, 251, 255, 0.92);
     text-align: center;
+}
+.bwa-map-loading[hidden] {
+    display: none;
+    pointer-events: none;
 }
 @media (max-width: 720px) {
     .page-title-row {
