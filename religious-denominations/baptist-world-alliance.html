@@ -40,7 +40,7 @@
                 </table>
             </div>
             <p class="source-note">Source: Member list adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Baptist_World_Alliance#List_of_members" target="_blank" rel="noopener noreferrer">Baptist World Alliance</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
-            <p class="table-hint">Member names link to a local detail page when the Baptist World Alliance Wikipedia page also links to a corresponding member article.</p>
+            <p class="table-hint">Member names link directly to Wikipedia when the Baptist World Alliance article also links to a corresponding member article.</p>
         </section>
         <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Baptist_World_Alliance_logo.png" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>, credited to baptistworld.org and marked public domain.</p>
     </div>
@@ -159,12 +159,8 @@
             return null;
         }
 
-        function createMemberHref(denomination, wikiTitle) {
-            const params = new URLSearchParams({
-                member: denomination,
-                title: wikiTitle
-            });
-            return `baptist-world-alliance-member.html?${params.toString()}`;
+        function createWikipediaHref(wikiTitle) {
+            return `https://en.wikipedia.org/wiki/${encodeURIComponent(wikiTitle.replace(/ /g, "_"))}`;
         }
 
         function renderTable() {
@@ -185,7 +181,9 @@
                 if (wikiTitle) {
                     const link = document.createElement("a");
                     link.className = "table-link";
-                    link.href = createMemberHref(row.denomination, wikiTitle);
+                    link.href = createWikipediaHref(wikiTitle);
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
                     link.textContent = row.denomination;
                     denominationTd.appendChild(link);
                 } else {
