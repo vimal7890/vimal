@@ -324,6 +324,25 @@
             islam: '☪',
             judaism: '✡'
         };
+        const easternOrthodoxyFlags = {
+            "Albanian Orthodox Church": "🇦🇱",
+            "Bulgarian Orthodox Church": "🇧🇬",
+            "Church of Greece": "🇬🇷",
+            "Cypriot Orthodox Church": "🇨🇾",
+            "Czech and Slovak Orthodox Church": "🇨🇿🇸🇰",
+            "Ecumenical Patriarchate of Constantinople": "🇹🇷",
+            "Georgian Orthodox Church": "🇬🇪",
+            "Greek Orthodox Patriarchate of Alexandria": "🇪🇬",
+            "Greek Orthodox Patriarchate of Antioch": "🇸🇾",
+            "Greek Orthodox Patriarchate of Jerusalem": "🇮🇱",
+            "Moldovan Orthodox Church": "🇲🇩",
+            "Orthodox Church in America": "🇺🇸🇨🇦",
+            "Orthodox Church of Finland": "🇫🇮",
+            "Polish Orthodox Church": "🇵🇱",
+            "Romanian Orthodox Church": "🇷🇴",
+            "Russian Orthodox Church": "🇷🇺",
+            "Serbian Orthodox Church": "🇷🇸"
+        };
 
         function formatValue(value) {
             if (isNaN(value)) return '';
@@ -432,6 +451,15 @@
             }
 
             return null;
+        }
+
+        function getEasternOrthodoxyDisplayName(subDenomination, churchName) {
+            if (subDenomination !== 'Eastern Orthodoxy') {
+                return churchName;
+            }
+
+            const flag = easternOrthodoxyFlags[churchName];
+            return flag ? `${churchName} ${flag}` : churchName;
         }
 
         function updateTableValues() {
@@ -561,6 +589,9 @@
                             if (religionSymbol) {
                                 content += ` ${religionSymbol}`;
                             }
+                        }
+                        if (cell.type === 'csv' && cell.index === subDenomination2Idx) {
+                            content = getEasternOrthodoxyDisplayName(subDenomination, content);
                         }
                         if (cell.type === 'members') {
                             td.classList.add('members-cell');
