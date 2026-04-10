@@ -167,6 +167,10 @@ body {
     font-size: 1.05rem;
     font-weight: 700;
 }
+.country-flag {
+    display: inline-block;
+    margin-right: 0.45em;
+}
 .page-footer-note {
     margin-top: 22px;
 }
@@ -183,6 +187,70 @@ body {
     font-size: 0.95rem;
     color: #666;
 }
+.bwa-map-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+.bwa-map-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid #eadfca;
+    border-radius: 999px;
+    background: #faf6ee;
+    color: #5c4b39;
+    font-size: 0.96rem;
+    font-weight: 600;
+}
+.bwa-map-legend-swatch {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #7d1616;
+    border-radius: 4px;
+    background: #c62828;
+    flex-shrink: 0;
+}
+.bwa-map-hover-name,
+.bwa-map-summary {
+    color: #5c4b39;
+    font-size: 0.98rem;
+}
+.bwa-map-hover-name {
+    font-weight: 600;
+}
+.bwa-map-summary {
+    margin-top: 12px;
+}
+.bwa-map-frame {
+    position: relative;
+    margin-top: 18px;
+    border: 1px solid #e7dbc6;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #faf6ee 0%, #f2ebdf 100%);
+    aspect-ratio: 2754 / 1398;
+    min-height: 320px;
+}
+.bwa-world-map-object {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.bwa-map-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(250, 246, 238, 0.9);
+    text-align: center;
+}
 @media (max-width: 720px) {
     .page-title-row {
         align-items: flex-start;
@@ -190,5 +258,8 @@ body {
     }
     .title-logo {
         height: 64px;
+    }
+    .bwa-map-frame {
+        min-height: 220px;
     }
 }

@@ -46,12 +46,65 @@
             </div>
             <p class="source-note">Source: Member list adapted from the Wikipedia article "Baptist World Alliance." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
+        <section class="info-card section-spacing">
+            <h2 class="section-title">Member map</h2>
+            <p class="intro-text">Countries and territories with a Baptist World Alliance member body are highlighted in red. Hover anywhere on the map to see the country or territory name.</p>
+            <div class="bwa-map-meta">
+                <div class="bwa-map-legend" aria-label="Map legend">
+                    <span class="bwa-map-legend-swatch" aria-hidden="true"></span>
+                    <span>Has an associated member church</span>
+                </div>
+                <p class="bwa-map-hover-name" id="bwa-map-hover-name" aria-live="polite">Hover over a country or territory to see its name.</p>
+            </div>
+            <p class="bwa-map-summary" id="bwa-map-summary"></p>
+            <div class="bwa-map-frame">
+                <object
+                    class="bwa-world-map-object"
+                    id="bwa-world-map-object"
+                    data="baptist-world-alliance-world-map.svg"
+                    type="image/svg+xml"
+                    aria-label="World map showing Baptist World Alliance member countries and territories"
+                >
+                    <p class="error-text">The world map could not be loaded.</p>
+                </object>
+                <div class="bwa-map-loading loading-text" id="bwa-map-loading">Loading world map...</div>
+            </div>
+            <p class="source-note">Base map adapted from <a href="https://commons.wikimedia.org/wiki/File:BlankMap-World.svg" target="_blank" rel="noopener noreferrer">BlankMap-World.svg</a> on Wikimedia Commons and released to the public domain.</p>
+        </section>
         <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Baptist_World_Alliance_logo.png" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>, credited to baptistworld.org and marked public domain.</p>
     </div>
     <script src="baptist-world-alliance-data.js"></script>
     <script>
+        const countryFlagCodeOverrides = {
+            "Cote d'Ivoire": "CI",
+            "Czech Republic": "CZ",
+            "Democratic Republic of the Congo": "CD",
+            "Hong Kong": "HK",
+            Korea: "KR",
+            Macau: "MO",
+            Myanmar: "MM",
+            "Palestinian Territories": "PS",
+            "Republic of the Congo": "CG",
+            "Russian Federation": "RU",
+            "Saint Kitts and Nevis": "KN",
+            "Saint Vincent and the Grenadines": "VC",
+            "The Gambia": "GM",
+            Turkey: "TR",
+            "United States of America": "US"
+        };
+        const countryFlagEmojiOverrides = {
+            World: "🌍"
+        };
+        const mapRegionOverrides = {
+            Korea: "kr",
+            Macau: "mo",
+            "Palestinian Territories": "ps",
+            Syria: "sy"
+        };
+        const countryFlagMatchers = [];
         let memberRows = [];
         let membersSortDirection = null;
+        let activeMapRegion = null;
 
         function parseRawRows(raw) {
             return raw.split("\n").filter((line) => line.trim()).map((line) => {
@@ -65,8 +118,130 @@
             return Number.isNaN(memberCount) ? -Infinity : memberCount;
         }
 
+        function normalizeAscii(value) {
+            return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function tokenize(value) {
+            return normalizeAscii(value)
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, " ")
+                .split(/\s+/)
+                .filter((token) => token && !["of", "the", "and", "in", "inc", "usa"].includes(token));
+        }
+
+        function normalizeCompact(value) {
+            return tokenize(value).join("");
+        }
+
+        function jaccardScore(a, b) {
+            const aSet = new Set(a);
+            const bSet = new Set(b);
+            let intersection = 0;
+
+            for (const token of aSet) {
+                if (bSet.has(token)) {
+                    intersection += 1;
+                }
+            }
+
+            const union = new Set([...aSet, ...bSet]).size;
+            return union === 0 ? 0 : intersection / union;
+        }
+
+        function buildCountryFlagMatchers() {
+            if (countryFlagMatchers.length > 0 || typeof Intl === "undefined" || typeof Intl.DisplayNames !== "function") {
+                return;
+            }
+
+            const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+            for (let firstCodePoint = 65; firstCodePoint <= 90; firstCodePoint += 1) {
+                for (let secondCodePoint = 65; secondCodePoint <= 90; secondCodePoint += 1) {
+                    const code = String.fromCharCode(firstCodePoint, secondCodePoint);
+                    const label = displayNames.of(code);
+
+                    if (!label || label === code) {
+                        continue;
+                    }
+
+                    countryFlagMatchers.push({
+                        code,
+                        compact: normalizeCompact(label),
+                        tokens: tokenize(label)
+                    });
+                }
+            }
+        }
+
+        function resolveCountryFlagCode(countryName) {
+            if (countryFlagCodeOverrides[countryName]) {
+                return countryFlagCodeOverrides[countryName];
+            }
+
+            const countryTokens = tokenize(countryName);
+            const countryCompact = normalizeCompact(countryName);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of countryFlagMatchers) {
+                const score = jaccardScore(countryTokens, matcher.tokens);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher;
+                }
+            }
+
+            if (!bestMatch) {
+                return null;
+            }
+
+            const compactMatch = bestMatch.compact.includes(countryCompact) || countryCompact.includes(bestMatch.compact);
+
+            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.3)) {
+                return bestMatch.code;
+            }
+
+            return null;
+        }
+
+        function createFlagEmoji(countryCode) {
+            return Array.from(countryCode.toUpperCase(), (letter) =>
+                String.fromCodePoint(127397 + letter.charCodeAt(0))
+            ).join("");
+        }
+
+        function getCountryMarker(countryName) {
+            if (countryFlagEmojiOverrides[countryName]) {
+                return countryFlagEmojiOverrides[countryName];
+            }
+
+            const countryCode = resolveCountryFlagCode(countryName);
+            return countryCode ? createFlagEmoji(countryCode) : "";
+        }
+
+        function renderCountryCell(cell, countryName) {
+            const marker = getCountryMarker(countryName);
+
+            if (marker) {
+                const markerSpan = document.createElement("span");
+                markerSpan.className = "country-flag";
+                markerSpan.setAttribute("aria-hidden", "true");
+                markerSpan.textContent = marker;
+                cell.append(markerSpan);
+            }
+
+            cell.append(countryName);
+        }
+
         function isTotalRow(row) {
             return row.country === "World" && row.denomination === "Baptist World Alliance";
+        }
+
+        function getUniqueMemberCountries() {
+            return [...new Set(memberRows.filter((row) => !isTotalRow(row)).map((row) => row.country))];
         }
 
         function updateMembersSortHeader() {
@@ -103,7 +278,7 @@
                     tr.classList.add("total-row");
                 }
 
-                countryTd.textContent = row.country;
+                renderCountryCell(countryTd, row.country);
                 denominationTd.textContent = row.denomination;
                 membersTd.textContent = row.members;
 
@@ -113,6 +288,251 @@
 
             tbody.replaceChildren(fragment);
             updateMembersSortHeader();
+        }
+
+        function setMapHoverLabel(label) {
+            document.getElementById("bwa-map-hover-name").textContent = label || "Hover over a country or territory to see its name.";
+        }
+
+        function setMapLoadingState(message, isError = false) {
+            const loadingElement = document.getElementById("bwa-map-loading");
+
+            if (!loadingElement) {
+                return;
+            }
+
+            if (!message) {
+                loadingElement.hidden = true;
+                loadingElement.textContent = "";
+                return;
+            }
+
+            loadingElement.hidden = false;
+            loadingElement.textContent = message;
+            loadingElement.classList.toggle("loading-text", !isError);
+            loadingElement.classList.toggle("error-text", isError);
+        }
+
+        function buildMapRegionMatchers(svgRoot) {
+            const titleElements = Array.from(svgRoot.querySelectorAll("[id] > title"));
+
+            return titleElements
+                .map((titleElement) => {
+                    const root = titleElement.parentElement;
+
+                    if (!root || !/^[a-z]{2,3}-?$/.test(root.id)) {
+                        return null;
+                    }
+
+                    const title = titleElement.textContent.trim();
+                    return {
+                        compact: normalizeCompact(title),
+                        id: root.id,
+                        root,
+                        title,
+                        tokens: tokenize(title)
+                    };
+                })
+                .filter(Boolean);
+        }
+
+        function resolveMapRegionId(countryName, mapMatchers) {
+            if (mapRegionOverrides[countryName]) {
+                return mapRegionOverrides[countryName];
+            }
+
+            const countryTokens = tokenize(countryName);
+            const countryCompact = normalizeCompact(countryName);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of mapMatchers) {
+                const score = jaccardScore(countryTokens, matcher.tokens);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher;
+                }
+            }
+
+            if (!bestMatch) {
+                return null;
+            }
+
+            const compactMatch = bestMatch.compact.includes(countryCompact) || countryCompact.includes(bestMatch.compact);
+
+            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.25)) {
+                return bestMatch.id;
+            }
+
+            return null;
+        }
+
+        function setActiveMapRegion(region) {
+            if (activeMapRegion === region) {
+                return;
+            }
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.remove("is-hovered");
+            }
+
+            activeMapRegion = region;
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.add("is-hovered");
+                setMapHoverLabel(activeMapRegion.dataset.regionName);
+                return;
+            }
+
+            setMapHoverLabel(null);
+        }
+
+        function createMapStyleElement(svgDocument) {
+            const styleElement = svgDocument.createElementNS("http://www.w3.org/2000/svg", "style");
+
+            styleElement.textContent = `
+                .oceanxx {
+                    fill: #f6f0e5;
+                }
+
+                .landxx {
+                    fill: #dfd5c6;
+                    stroke: #ffffff;
+                    stroke-width: 0.7;
+                }
+
+                .circlexx,
+                .subxx {
+                    opacity: 1;
+                    fill: #dfd5c6;
+                    stroke: #ffffff;
+                }
+
+                .bwa-map-region,
+                .bwa-map-region * {
+                    cursor: pointer;
+                    transition: fill 0.16s ease, opacity 0.16s ease, stroke 0.16s ease, stroke-width 0.16s ease;
+                }
+
+                .bwa-map-member-region.landxx,
+                .bwa-map-member-region .landxx,
+                .bwa-map-member-region.circlexx,
+                .bwa-map-member-region .circlexx,
+                .bwa-map-member-region.subxx,
+                .bwa-map-member-region .subxx {
+                    fill: #c62828;
+                }
+
+                .bwa-map-region.is-hovered.landxx,
+                .bwa-map-region.is-hovered .landxx,
+                .bwa-map-region.is-hovered.circlexx,
+                .bwa-map-region.is-hovered .circlexx,
+                .bwa-map-region.is-hovered.subxx,
+                .bwa-map-region.is-hovered .subxx {
+                    stroke: #4c1212;
+                    stroke-width: 1.15;
+                }
+
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region).landxx,
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region) .landxx,
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region).circlexx,
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region) .circlexx,
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region).subxx,
+                .bwa-map-region.is-hovered:not(.bwa-map-member-region) .subxx {
+                    fill: #c8bcaa;
+                }
+
+                .bwa-map-member-region.is-hovered.landxx,
+                .bwa-map-member-region.is-hovered .landxx,
+                .bwa-map-member-region.is-hovered.circlexx,
+                .bwa-map-member-region.is-hovered .circlexx,
+                .bwa-map-member-region.is-hovered.subxx,
+                .bwa-map-member-region.is-hovered .subxx {
+                    fill: #a91e1e;
+                }
+            `;
+
+            return styleElement;
+        }
+
+        function initializeMemberMap() {
+            const mapObject = document.getElementById("bwa-world-map-object");
+            const mapSummary = document.getElementById("bwa-map-summary");
+
+            if (!mapObject) {
+                return;
+            }
+
+            const memberCountries = getUniqueMemberCountries();
+            mapSummary.textContent = `${memberCountries.length} countries and territories in the member list are highlighted in red.`;
+
+            function handleMapReady() {
+                if (mapObject.dataset.initialized === "true") {
+                    return;
+                }
+
+                const mapDocument = mapObject.contentDocument;
+                const svgRoot = mapDocument?.querySelector("svg");
+
+                if (!svgRoot) {
+                    setMapLoadingState("The world map could not be loaded.", true);
+                    return;
+                }
+
+                mapObject.dataset.initialized = "true";
+                svgRoot.setAttribute("role", "img");
+                svgRoot.insertBefore(createMapStyleElement(mapDocument), svgRoot.firstChild);
+
+                const mapMatchers = buildMapRegionMatchers(svgRoot);
+                const matcherById = new Map(mapMatchers.map((matcher) => [matcher.id, matcher]));
+                const unmatchedCountries = [];
+
+                mapMatchers.forEach((matcher) => {
+                    matcher.root.classList.add("bwa-map-region");
+                    matcher.root.dataset.regionName = matcher.title;
+                });
+
+                memberCountries.forEach((countryName) => {
+                    const regionId = resolveMapRegionId(countryName, mapMatchers);
+                    const matcher = regionId ? matcherById.get(regionId) : null;
+
+                    if (!matcher) {
+                        unmatchedCountries.push(countryName);
+                        return;
+                    }
+
+                    matcher.root.classList.add("bwa-map-member-region");
+                    matcher.root.dataset.memberCountry = countryName;
+                });
+
+                svgRoot.addEventListener("pointerover", (event) => {
+                    const region = event.target.closest("[data-region-name]");
+                    setActiveMapRegion(region);
+                });
+
+                svgRoot.addEventListener("pointerleave", () => {
+                    setActiveMapRegion(null);
+                });
+
+                if (unmatchedCountries.length > 0) {
+                    console.warn("Unmatched Baptist World Alliance map regions:", unmatchedCountries);
+                }
+
+                setMapLoadingState("");
+            }
+
+            mapObject.addEventListener("load", handleMapReady, { once: true });
+            mapObject.addEventListener("error", () => {
+                setMapLoadingState("The world map could not be loaded.", true);
+            }, { once: true });
+
+            if (mapObject.contentDocument?.querySelector("svg")) {
+                handleMapReady();
+                return;
+            }
+
+            setMapLoadingState("Loading world map...");
         }
 
         function sortByMembers() {
@@ -136,6 +556,7 @@
         }
 
         function initializeTable() {
+            buildCountryFlagMatchers();
             memberRows = parseRawRows(window.bwaMemberRowsRaw).map((row, originalIndex) => ({
                 ...row,
                 membersCount: parseMemberCount(row.members),
@@ -144,6 +565,7 @@
 
             renderTable();
             document.getElementById("members-sort-button").addEventListener("click", sortByMembers);
+            initializeMemberMap();
         }
 
         initializeTable();
