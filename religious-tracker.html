@@ -541,6 +541,11 @@
                     const denomination = columns[denominationIdx] ? columns[denominationIdx].trim() : '';
                     const subDenomination = columns[subDenominationIdx] ? columns[subDenominationIdx].trim() : '';
                     const subDenomination2 = columns[subDenomination2Idx] ? columns[subDenomination2Idx].trim() : '';
+
+                    if (subDenomination2 === 'Cooperative Baptist Fellowship') {
+                        return;
+                    }
+
                     const since = columns[sinceIdx] ? columns[sinceIdx].trim() : '';
                     const denominationPageMatch = getDenominationPageMatch({
                         denomination,
