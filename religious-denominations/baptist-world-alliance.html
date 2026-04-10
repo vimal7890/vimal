@@ -225,6 +225,8 @@
         function renderCountryCell(cell, countryName) {
             const marker = getCountryMarker(countryName);
 
+            cell.append(countryName);
+
             if (marker) {
                 const markerSpan = document.createElement("span");
                 markerSpan.className = "country-flag";
@@ -232,8 +234,6 @@
                 markerSpan.textContent = marker;
                 cell.append(markerSpan);
             }
-
-            cell.append(countryName);
         }
 
         function isTotalRow(row) {

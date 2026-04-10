@@ -169,7 +169,7 @@ body {
 }
 .country-flag {
     display: inline-block;
-    margin-right: 0.45em;
+    margin-left: 0.45em;
 }
 .page-footer-note {
     margin-top: 22px;
