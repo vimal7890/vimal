@@ -31,9 +31,14 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Country</th>
-                            <th>Denomination</th>
-                            <th>Number of members</th>
+                            <th scope="col">Country</th>
+                            <th scope="col">Denomination</th>
+                            <th scope="col" id="members-header" aria-sort="none">
+                                <button type="button" class="sort-button" id="members-sort-button">
+                                    <span>Number of members</span>
+                                    <span class="sort-indicator" id="members-sort-indicator" aria-hidden="true">↕</span>
+                                </button>
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="bwa-members-body"></tbody>
@@ -75,9 +80,11 @@
             "Progressive National Baptist Convention, Inc.": "Progressive National Baptist Convention",
             "National Missionary and Educational Baptist Convention of the Bahamas": "Bahamas National Baptist Missionary and Educational Convention"
         };
+        let memberRows = [];
+        let membersSortDirection = null;
 
         function parseRawRows(raw) {
-            return raw.split("\n").map((line) => {
+            return raw.split("\n").filter((line) => line.trim()).map((line) => {
                 const [country, denomination, members] = line.split("|");
                 return { country, denomination, members };
             });
@@ -163,12 +170,37 @@
             return `https://en.wikipedia.org/wiki/${encodeURIComponent(wikiTitle.replace(/ /g, "_"))}`;
         }
 
-        function renderTable() {
-            const rows = parseRawRows(window.bwaMemberRowsRaw);
-            const wikiMatchers = buildWikiMatcher(parseWikiLabels(window.bwaWikipediaLabelsRaw));
-            const tbody = document.getElementById("bwa-members-body");
+        function parseMemberCount(value) {
+            const memberCount = Number.parseInt(value.replace(/,/g, ""), 10);
+            return Number.isNaN(memberCount) ? -Infinity : memberCount;
+        }
 
-            rows.forEach((row) => {
+        function updateMembersSortHeader() {
+            const membersHeader = document.getElementById("members-header");
+            const sortIndicator = document.getElementById("members-sort-indicator");
+
+            if (membersSortDirection === "desc") {
+                membersHeader.setAttribute("aria-sort", "descending");
+                sortIndicator.textContent = "↓";
+                return;
+            }
+
+            if (membersSortDirection === "asc") {
+                membersHeader.setAttribute("aria-sort", "ascending");
+                sortIndicator.textContent = "↑";
+                return;
+            }
+
+            membersHeader.setAttribute("aria-sort", "none");
+            sortIndicator.textContent = "↕";
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("bwa-members-body");
+            const wikiMatchers = buildWikiMatcher(parseWikiLabels(window.bwaWikipediaLabelsRaw));
+            const fragment = document.createDocumentFragment();
+
+            memberRows.forEach((row) => {
                 const tr = document.createElement("tr");
                 const countryTd = document.createElement("td");
                 const denominationTd = document.createElement("td");
@@ -191,11 +223,45 @@
                 }
 
                 tr.append(countryTd, denominationTd, membersTd);
-                tbody.appendChild(tr);
+                fragment.appendChild(tr);
             });
+
+            tbody.replaceChildren(fragment);
+            updateMembersSortHeader();
         }
 
-        renderTable();
+        function sortByMembers() {
+            if (membersSortDirection === null || membersSortDirection === "asc") {
+                membersSortDirection = "desc";
+            } else {
+                membersSortDirection = "asc";
+            }
+
+            memberRows.sort((a, b) => {
+                if (a.membersCount === b.membersCount) {
+                    return a.originalIndex - b.originalIndex;
+                }
+
+                return membersSortDirection === "desc"
+                    ? b.membersCount - a.membersCount
+                    : a.membersCount - b.membersCount;
+            });
+
+            renderTable();
+        }
+
+        function initializeTable() {
+            memberRows = parseRawRows(window.bwaMemberRowsRaw).map((row, originalIndex) => ({
+                ...row,
+                membersCount: parseMemberCount(row.members),
+                originalIndex
+            }));
+
+            renderTable();
+            document.getElementById("members-sort-button").addEventListener("click", sortByMembers);
+        }
+
+        initializeTable();
     </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
 </body>

@@ -131,6 +131,30 @@ body {
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
+.sort-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    text-align: left;
+}
+.sort-button:hover,
+.sort-button:focus-visible {
+    color: #d93025;
+}
+.sort-indicator {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
 .data-table tbody tr:hover {
     background: #faf7f0;
 }
