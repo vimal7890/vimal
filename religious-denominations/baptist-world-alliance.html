@@ -73,6 +73,7 @@
         </section>
         <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Baptist_World_Alliance_logo.png" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>, credited to baptistworld.org and marked public domain.</p>
     </div>
+    <script src="country-flag-utils.js"></script>
     <script src="baptist-world-alliance-data.js"></script>
     <script>
         const countryFlagCodeOverrides = {
@@ -101,7 +102,13 @@
             "Palestinian Territories": "ps",
             Syria: "sy"
         };
-        const countryFlagMatchers = [];
+        const countryFlagOptions = {
+            codeOverrides: countryFlagCodeOverrides,
+            emojiOverrides: countryFlagEmojiOverrides,
+            extraStopWords: ["inc", "usa"],
+            exactThreshold: 0.95,
+            compactThreshold: 0.3
+        };
         let memberRows = [];
         let membersSortDirection = null;
         let activeMapRegion = null;
@@ -150,90 +157,8 @@
             return union === 0 ? 0 : intersection / union;
         }
 
-        function buildCountryFlagMatchers() {
-            if (countryFlagMatchers.length > 0 || typeof Intl === "undefined" || typeof Intl.DisplayNames !== "function") {
-                return;
-            }
-
-            const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
-
-            for (let firstCodePoint = 65; firstCodePoint <= 90; firstCodePoint += 1) {
-                for (let secondCodePoint = 65; secondCodePoint <= 90; secondCodePoint += 1) {
-                    const code = String.fromCharCode(firstCodePoint, secondCodePoint);
-                    const label = displayNames.of(code);
-
-                    if (!label || label === code) {
-                        continue;
-                    }
-
-                    countryFlagMatchers.push({
-                        code,
-                        compact: normalizeCompact(label),
-                        tokens: tokenize(label)
-                    });
-                }
-            }
-        }
-
-        function resolveCountryFlagCode(countryName) {
-            if (countryFlagCodeOverrides[countryName]) {
-                return countryFlagCodeOverrides[countryName];
-            }
-
-            const countryTokens = tokenize(countryName);
-            const countryCompact = normalizeCompact(countryName);
-            let bestMatch = null;
-            let bestScore = 0;
-
-            for (const matcher of countryFlagMatchers) {
-                const score = jaccardScore(countryTokens, matcher.tokens);
-
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestMatch = matcher;
-                }
-            }
-
-            if (!bestMatch) {
-                return null;
-            }
-
-            const compactMatch = bestMatch.compact.includes(countryCompact) || countryCompact.includes(bestMatch.compact);
-
-            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.3)) {
-                return bestMatch.code;
-            }
-
-            return null;
-        }
-
-        function createFlagEmoji(countryCode) {
-            return Array.from(countryCode.toUpperCase(), (letter) =>
-                String.fromCodePoint(127397 + letter.charCodeAt(0))
-            ).join("");
-        }
-
-        function getCountryMarker(countryName) {
-            if (countryFlagEmojiOverrides[countryName]) {
-                return countryFlagEmojiOverrides[countryName];
-            }
-
-            const countryCode = resolveCountryFlagCode(countryName);
-            return countryCode ? createFlagEmoji(countryCode) : "";
-        }
-
         function renderCountryCell(cell, countryName) {
-            const marker = getCountryMarker(countryName);
-
-            cell.append(countryName);
-
-            if (marker) {
-                const markerSpan = document.createElement("span");
-                markerSpan.className = "country-flag";
-                markerSpan.setAttribute("aria-hidden", "true");
-                markerSpan.textContent = marker;
-                cell.append(markerSpan);
-            }
+            CountryFlagUtils.appendCountryWithMarker(cell, countryName, countryFlagOptions);
         }
 
         function isTotalRow(row) {
@@ -570,7 +495,6 @@
         }
 
         function initializeTable() {
-            buildCountryFlagMatchers();
             memberRows = parseRawRows(window.bwaMemberRowsRaw).map((row, originalIndex) => ({
                 ...row,
                 membersCount: parseMemberCount(row.members),
