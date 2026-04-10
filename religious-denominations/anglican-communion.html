@@ -36,13 +36,16 @@
                             <th scope="col">Type</th>
                             <th scope="col">Member Church</th>
                             <th scope="col">Territorial Jurisdiction</th>
+                            <th scope="col">Leader</th>
+                            <th scope="col">Since</th>
+                            <th scope="col">Days Since</th>
                         </tr>
                     </thead>
                     <tbody id="ac-members-body"></tbody>
                 </table>
             </div>
             <p class="bwa-map-summary" id="ac-member-summary"></p>
-            <p class="source-note">Source: Province and extraprovincial church list adapted from the "<a href="https://en.wikipedia.org/wiki/Anglican_Communion#Organisation" target="_blank" rel="noopener noreferrer">Organisation</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Anglican_Communion" target="_blank" rel="noopener noreferrer">Anglican Communion</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+            <p class="source-note">Source: Province and extraprovincial church list adapted from the "<a href="https://en.wikipedia.org/wiki/Anglican_Communion#Organisation" target="_blank" rel="noopener noreferrer">Organisation</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Anglican_Communion" target="_blank" rel="noopener noreferrer">Anglican Communion</a>"; primate data adapted from "<a href="https://en.wikipedia.org/wiki/Primates_in_the_Anglican_Communion" target="_blank" rel="noopener noreferrer">Primates in the Anglican Communion</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
 
         <section class="info-card section-spacing">
@@ -163,8 +166,50 @@
                 .filter(Boolean)
                 .map((line) => {
                     const [type, church, jurisdiction] = line.split("|");
-                    return { church, jurisdiction, type };
+                    const leadership = window.acLeadershipByChurch?.[church] || {};
+                    return {
+                        church,
+                        jurisdiction,
+                        type,
+                        leader: leadership.leader || "n/a",
+                        since: leadership.since || "n/a"
+                    };
                 });
+        }
+
+        function hasExactDatePrecision(sinceDateStr) {
+            if (!sinceDateStr) {
+                return false;
+            }
+
+            return /^[A-Za-z]+\s+\d{1,2}(st|nd|rd|th)?\s+\d{4}$/.test(sinceDateStr.trim());
+        }
+
+        function calculateDaysSince(sinceDateStr) {
+            if (!sinceDateStr || sinceDateStr.toLowerCase() === "n/a" || !hasExactDatePrecision(sinceDateStr)) {
+                return Number.NaN;
+            }
+
+            const cleanDateStr = sinceDateStr.replace(/(\d+)(st|nd|rd|th)/, "$1");
+            const startDate = new Date(`${cleanDateStr} 12:00:00 UTC`);
+            const now = new Date();
+            const diffMs = now - startDate;
+
+            if (diffMs < 0) {
+                return 0;
+            }
+
+            return diffMs / (1000 * 60 * 60 * 24);
+        }
+
+        function formatDaysSince(sinceDateStr) {
+            const days = calculateDaysSince(sinceDateStr);
+
+            if (Number.isNaN(days)) {
+                return "n/a";
+            }
+
+            return Math.floor(days).toLocaleString();
         }
 
         function parseMapTerritories(raw) {
@@ -186,12 +231,18 @@
                 const typeTd = document.createElement("td");
                 const churchTd = document.createElement("td");
                 const jurisdictionTd = document.createElement("td");
+                const leaderTd = document.createElement("td");
+                const sinceTd = document.createElement("td");
+                const daysSinceTd = document.createElement("td");
 
                 typeTd.textContent = row.type;
                 churchTd.textContent = row.church;
                 renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
+                leaderTd.textContent = row.leader;
+                sinceTd.textContent = row.since;
+                daysSinceTd.textContent = formatDaysSince(row.since);
 
-                tr.append(typeTd, churchTd, jurisdictionTd);
+                tr.append(typeTd, churchTd, jurisdictionTd, leaderTd, sinceTd, daysSinceTd);
                 fragment.appendChild(tr);
             });
 
