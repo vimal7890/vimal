@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Methodist Council</title>
+    <link rel="stylesheet" href="denomination-page.css">
+</head>
+<body>
+    <div class="container wide-container">
+        <a href="../religious-tracker.html" class="back-link">&larr; Back to Religious Leader Tracker</a>
+        <div class="page-title-row">
+            <h1 class="page-title">World Methodist Council</h1>
+            <img
+                class="title-logo"
+                src="https://upload.wikimedia.org/wikipedia/en/thumb/9/9f/World-methodist-council-logo.png/250px-World-methodist-council-logo.png"
+                alt="World Methodist Council logo"
+                loading="lazy"
+                width="300"
+                height="300"
+            >
+        </div>
+
+        <section class="info-card">
+            <h2 class="section-title">Intro</h2>
+            <p class="intro-text">The World Methodist Council is a global consultative body founded in 1881 that connects Methodist and related united churches, supports cooperation among member denominations, and represents member churches across many countries and territories.</p>
+            <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/World_Methodist_Council" target="_blank" rel="noopener noreferrer">World Methodist Council</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+        </section>
+
+        <section class="info-card section-spacing">
+            <h2 class="section-title">List of members</h2>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Country</th>
+                            <th scope="col">Denominational Subfamily</th>
+                            <th scope="col">Denomination</th>
+                            <th scope="col">Year</th>
+                            <th scope="col" id="members-header" aria-sort="none">
+                                <button type="button" class="sort-button" id="members-sort-button">
+                                    <span>Number of Members</span>
+                                    <span class="sort-indicator" id="members-sort-indicator" aria-hidden="true">↕</span>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="wmc-members-body"></tbody>
+                </table>
+            </div>
+            <p class="table-hint">Click "Number of Members" to sort denomination rows by membership.</p>
+            <p class="bwa-map-summary" id="wmc-member-summary"></p>
+            <p class="source-note">Source: Member list adapted from the "<a href="https://en.wikipedia.org/wiki/World_Methodist_Council#Members" target="_blank" rel="noopener noreferrer">Members</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/World_Methodist_Council" target="_blank" rel="noopener noreferrer">World Methodist Council</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+        </section>
+
+        <section class="info-card section-spacing">
+            <h2 class="section-title">Member map</h2>
+            <p class="intro-text">Countries and territories represented in the member list are highlighted in red. Hover anywhere on the map to see the country or territory name.</p>
+            <div class="bwa-map-meta">
+                <div class="bwa-map-legend" aria-label="Map legend">
+                    <span class="bwa-map-legend-swatch" aria-hidden="true"></span>
+                    <span>Has an associated member denomination</span>
+                </div>
+                <p class="bwa-map-hover-name" id="wmc-map-hover-name" aria-live="polite">Hover over a country or territory to see its name.</p>
+            </div>
+            <p class="bwa-map-summary" id="wmc-map-summary"></p>
+            <div class="bwa-map-frame">
+                <object
+                    class="bwa-world-map-object"
+                    id="wmc-world-map-object"
+                    data="baptist-world-alliance-world-map.svg"
+                    type="image/svg+xml"
+                    aria-label="World map showing World Methodist Council member territories"
+                >
+                    <p class="error-text">The world map could not be loaded.</p>
+                </object>
+                <div class="bwa-map-loading loading-text" id="wmc-map-loading">Loading world map...</div>
+            </div>
+            <p class="source-note">Base map adapted from <a href="https://commons.wikimedia.org/wiki/File:BlankMap-World.svg" target="_blank" rel="noopener noreferrer">BlankMap-World.svg</a> on Wikimedia Commons and released to the public domain.</p>
+        </section>
+
+        <p class="source-note page-footer-note">Logo from <a href="https://en.wikipedia.org/wiki/File:World-methodist-council-logo.png" target="_blank" rel="noopener noreferrer">Wikipedia file page</a> (marked non-free on Wikipedia), used here for identification.</p>
+    </div>
+
+    <script src="country-flag-utils.js"></script>
+    <script src="world-methodist-council-data.js"></script>
+    <script>
+        const mapRegionOverrides = {
+            "China (People's Republic of China)": "cn",
+            "Congo (Democratic Republic of Congo)": "cd",
+            "South Korea": "kr",
+            "Taiwan (Republic of China)": "tw",
+            "United Kingdom": "gb",
+            "United States of America": "us"
+        };
+        const countryFlagCodeOverrides = {
+            "China (People's Republic of China)": "CN",
+            "Congo (Democratic Republic of Congo)": "CD",
+            "South Korea": "KR",
+            "Taiwan (Republic of China)": "TW",
+            "United Kingdom": "GB",
+            "United States of America": "US"
+        };
+        const countryFlagEmojiOverrides = {
+            Caribbean: "🌴"
+        };
+        const countryFlagOptions = {
+            codeOverrides: countryFlagCodeOverrides,
+            emojiOverrides: countryFlagEmojiOverrides,
+            extraStopWords: ["republic", "people"],
+            exactThreshold: 0.95,
+            compactThreshold: 0.3
+        };
+
+        let memberRows = [];
+        let mapTerritories = [];
+        let membersSortDirection = null;
+        let activeMapRegion = null;
+
+        function parseRawRows(raw) {
+            return raw
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const [country, subfamily, denomination, members, year] = line.split("|");
+                    return { country, subfamily, denomination, members, year };
+                });
+        }
+
+        function parseMapTerritories(raw) {
+            return [...new Set(
+                raw
+                    .split("\n")
+                    .map((line) => line.trim())
+                    .filter(Boolean)
+            )];
+        }
+
+        function parseMemberCount(value) {
+            const memberCount = Number.parseInt(String(value || "").replace(/,/g, ""), 10);
+            return Number.isNaN(memberCount) ? -Infinity : memberCount;
+        }
+
+        function isSummaryRow(row) {
+            return row.country === "Global";
+        }
+
+        function getCountrySegments(countryName) {
+            if (!countryName || ["Global", "International", "Caribbean"].includes(countryName)) {
+                return [countryName];
+            }
+
+            const commaParts = countryName.split(",").map((part) => part.trim()).filter(Boolean);
+            const segments = [];
+
+            commaParts.forEach((part) => {
+                if (part === "Trinidad and Tobago" || part === "Bosnia and Herzegovina") {
+                    segments.push(part);
+                    return;
+                }
+
+                const andParts = part.split(/\s+and\s+/).map((segment) => segment.trim()).filter(Boolean);
+                if (andParts.length > 1) {
+                    segments.push(...andParts);
+                    return;
+                }
+
+                segments.push(part);
+            });
+
+            return segments;
+        }
+
+        function renderCountryCell(cell, countryName) {
+            const segments = getCountrySegments(countryName);
+
+            segments.forEach((segment, index) => {
+                CountryFlagUtils.appendCountryWithMarker(cell, segment, countryFlagOptions);
+                if (index < segments.length - 1) {
+                    cell.append(", ");
+                }
+            });
+        }
+
+        function updateMembersSortHeader() {
+            const membersHeader = document.getElementById("members-header");
+            const sortIndicator = document.getElementById("members-sort-indicator");
+
+            if (membersSortDirection === "desc") {
+                membersHeader.setAttribute("aria-sort", "descending");
+                sortIndicator.textContent = "↓";
+                return;
+            }
+
+            if (membersSortDirection === "asc") {
+                membersHeader.setAttribute("aria-sort", "ascending");
+                sortIndicator.textContent = "↑";
+                return;
+            }
+
+            membersHeader.setAttribute("aria-sort", "none");
+            sortIndicator.textContent = "↕";
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("wmc-members-body");
+            const fragment = document.createDocumentFragment();
+
+            memberRows.forEach((row) => {
+                const tr = document.createElement("tr");
+                const countryTd = document.createElement("td");
+                const subfamilyTd = document.createElement("td");
+                const denominationTd = document.createElement("td");
+                const yearTd = document.createElement("td");
+                const membersTd = document.createElement("td");
+
+                if (isSummaryRow(row)) {
+                    tr.classList.add("total-row");
+                }
+
+                renderCountryCell(countryTd, row.country);
+                subfamilyTd.textContent = row.subfamily;
+                denominationTd.textContent = row.denomination;
+                yearTd.textContent = row.year;
+                membersTd.textContent = row.members;
+
+                tr.append(countryTd, subfamilyTd, denominationTd, yearTd, membersTd);
+                fragment.appendChild(tr);
+            });
+
+            tbody.replaceChildren(fragment);
+            updateMembersSortHeader();
+
+            const summaryRowCount = memberRows.filter((row) => isSummaryRow(row)).length;
+            const denominationRowCount = memberRows.length - summaryRowCount;
+            document.getElementById("wmc-member-summary").textContent = `${denominationRowCount} denomination rows are listed, followed by ${summaryRowCount} global summary rows.`;
+        }
+
+        function sortByMembers() {
+            if (membersSortDirection === null || membersSortDirection === "asc") {
+                membersSortDirection = "desc";
+            } else {
+                membersSortDirection = "asc";
+            }
+
+            const summaryRows = memberRows
+                .filter((row) => isSummaryRow(row))
+                .sort((a, b) => a.originalIndex - b.originalIndex);
+
+            const denominationRows = memberRows.filter((row) => !isSummaryRow(row));
+
+            denominationRows.sort((a, b) => {
+                if (a.membersCount === b.membersCount) {
+                    return a.originalIndex - b.originalIndex;
+                }
+
+                return membersSortDirection === "desc"
+                    ? b.membersCount - a.membersCount
+                    : a.membersCount - b.membersCount;
+            });
+
+            memberRows = [...denominationRows, ...summaryRows];
+            renderTable();
+        }
+
+        function normalizeAscii(value) {
+            return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function tokenize(value) {
+            return normalizeAscii(value)
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, " ")
+                .split(/\s+/)
+                .filter((token) => token && !["of", "the", "and", "in", "republic", "people", "s"].includes(token));
+        }
+
+        function normalizeCompact(value) {
+            return tokenize(value).join("");
+        }
+
+        function jaccardScore(a, b) {
+            const aSet = new Set(a);
+            const bSet = new Set(b);
+            let intersection = 0;
+
+            for (const token of aSet) {
+                if (bSet.has(token)) {
+                    intersection += 1;
+                }
+            }
+
+            const union = new Set([...aSet, ...bSet]).size;
+            return union === 0 ? 0 : intersection / union;
+        }
+
+        function setMapHoverLabel(label) {
+            document.getElementById("wmc-map-hover-name").textContent = label || "Hover over a country or territory to see its name.";
+        }
+
+        function setMapLoadingState(message, isError = false) {
+            const loadingElement = document.getElementById("wmc-map-loading");
+
+            if (!loadingElement) {
+                return;
+            }
+
+            if (!message) {
+                loadingElement.hidden = true;
+                loadingElement.textContent = "";
+                return;
+            }
+
+            loadingElement.hidden = false;
+            loadingElement.textContent = message;
+            loadingElement.classList.toggle("loading-text", !isError);
+            loadingElement.classList.toggle("error-text", isError);
+        }
+
+        function buildMapRegionMatchers(svgRoot) {
+            const titleElements = Array.from(svgRoot.querySelectorAll("[id] > title"));
+
+            return titleElements
+                .map((titleElement) => {
+                    const root = titleElement.parentElement;
+
+                    if (!root || !/^[a-z]{2,3}-?$/.test(root.id)) {
+                        return null;
+                    }
+
+                    const title = titleElement.textContent.trim();
+                    return {
+                        compact: normalizeCompact(title),
+                        id: root.id,
+                        root,
+                        title,
+                        tokens: tokenize(title)
+                    };
+                })
+                .filter(Boolean);
+        }
+
+        function resolveMapRegionId(territoryName, mapMatchers) {
+            if (Object.prototype.hasOwnProperty.call(mapRegionOverrides, territoryName)) {
+                return mapRegionOverrides[territoryName];
+            }
+
+            const territoryTokens = tokenize(territoryName);
+            const territoryCompact = normalizeCompact(territoryName);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const matcher of mapMatchers) {
+                const score = jaccardScore(territoryTokens, matcher.tokens);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = matcher;
+                }
+            }
+
+            if (!bestMatch) {
+                return null;
+            }
+
+            const compactMatch = bestMatch.compact.includes(territoryCompact) || territoryCompact.includes(bestMatch.compact);
+
+            if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.25)) {
+                return bestMatch.id;
+            }
+
+            return null;
+        }
+
+        function setActiveMapRegion(region) {
+            if (activeMapRegion === region) {
+                return;
+            }
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.remove("is-hovered");
+            }
+
+            activeMapRegion = region;
+
+            if (activeMapRegion) {
+                activeMapRegion.classList.add("is-hovered");
+                setMapHoverLabel(activeMapRegion.dataset.regionName);
+                return;
+            }
+
+            setMapHoverLabel(null);
+        }
+
+        function createMapStyleElement(svgDocument) {
+            const styleElement = svgDocument.createElementNS("http://www.w3.org/2000/svg", "style");
+
+            styleElement.textContent = `
+                .oceanxx {
+                    fill: #e6f1fb;
+                }
+
+                .landxx {
+                    fill: #dbe5ef;
+                    stroke: #ffffff;
+                    stroke-width: 0.7;
+                }
+
+                .circlexx,
+                .subxx {
+                    opacity: 1;
+                    fill: #dbe5ef;
+                    stroke: #ffffff;
+                }
+
+                .wmc-map-region,
+                .wmc-map-region * {
+                    cursor: pointer;
+                    transition: fill 0.16s ease, opacity 0.16s ease, stroke 0.16s ease, stroke-width 0.16s ease;
+                }
+
+                .wmc-map-member-region.landxx,
+                .wmc-map-member-region .landxx,
+                .wmc-map-member-region.circlexx,
+                .wmc-map-member-region .circlexx,
+                .wmc-map-member-region.subxx,
+                .wmc-map-member-region .subxx {
+                    fill: #c62828;
+                }
+
+                .wmc-map-region.is-hovered.landxx,
+                .wmc-map-region.is-hovered .landxx,
+                .wmc-map-region.is-hovered.circlexx,
+                .wmc-map-region.is-hovered .circlexx,
+                .wmc-map-region.is-hovered.subxx,
+                .wmc-map-region.is-hovered .subxx {
+                    stroke: #4c1212;
+                    stroke-width: 1.15;
+                }
+
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region).landxx,
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region) .landxx,
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region).circlexx,
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region) .circlexx,
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region).subxx,
+                .wmc-map-region.is-hovered:not(.wmc-map-member-region) .subxx {
+                    fill: #c5d3e2;
+                }
+
+                .wmc-map-member-region.is-hovered.landxx,
+                .wmc-map-member-region.is-hovered .landxx,
+                .wmc-map-member-region.is-hovered.circlexx,
+                .wmc-map-member-region.is-hovered .circlexx,
+                .wmc-map-member-region.is-hovered.subxx,
+                .wmc-map-member-region.is-hovered .subxx {
+                    fill: #a91e1e;
+                }
+            `;
+
+            return styleElement;
+        }
+
+        function initializeMemberMap() {
+            const mapObject = document.getElementById("wmc-world-map-object");
+            const mapSummary = document.getElementById("wmc-map-summary");
+
+            if (!mapObject) {
+                return;
+            }
+
+            mapSummary.textContent = `${mapTerritories.length} countries and territories in the member list are highlighted in red.`;
+
+            function handleMapReady() {
+                if (mapObject.dataset.initialized === "true") {
+                    return;
+                }
+
+                const mapDocument = mapObject.contentDocument;
+                const svgRoot = mapDocument?.querySelector("svg");
+
+                if (!svgRoot) {
+                    setMapLoadingState("The world map could not be loaded.", true);
+                    return;
+                }
+
+                mapObject.dataset.initialized = "true";
+                svgRoot.setAttribute("role", "img");
+
+                if (!svgRoot.hasAttribute("viewBox")) {
+                    const declaredWidth = Number.parseFloat(svgRoot.getAttribute("width") || mapObject.getAttribute("width") || "0");
+                    const declaredHeight = Number.parseFloat(svgRoot.getAttribute("height") || mapObject.getAttribute("height") || "0");
+
+                    if (declaredWidth > 0 && declaredHeight > 0) {
+                        svgRoot.setAttribute("viewBox", `0 0 ${declaredWidth} ${declaredHeight}`);
+                    }
+                }
+
+                if (!svgRoot.hasAttribute("preserveAspectRatio")) {
+                    svgRoot.setAttribute("preserveAspectRatio", "xMidYMid meet");
+                }
+
+                svgRoot.insertBefore(createMapStyleElement(mapDocument), svgRoot.firstChild);
+
+                const mapMatchers = buildMapRegionMatchers(svgRoot);
+                const matcherById = new Map(mapMatchers.map((matcher) => [matcher.id, matcher]));
+                const unmatchedTerritories = [];
+
+                mapMatchers.forEach((matcher) => {
+                    matcher.root.classList.add("wmc-map-region");
+                    matcher.root.dataset.regionName = matcher.title;
+                });
+
+                mapTerritories.forEach((territoryName) => {
+                    const regionId = resolveMapRegionId(territoryName, mapMatchers);
+                    const matcher = regionId ? matcherById.get(regionId) : null;
+
+                    if (!matcher) {
+                        unmatchedTerritories.push(territoryName);
+                        return;
+                    }
+
+                    matcher.root.classList.add("wmc-map-member-region");
+                    matcher.root.dataset.memberTerritory = territoryName;
+                });
+
+                svgRoot.addEventListener("pointerover", (event) => {
+                    const region = event.target.closest("[data-region-name]");
+                    setActiveMapRegion(region);
+                });
+
+                svgRoot.addEventListener("pointerleave", () => {
+                    setActiveMapRegion(null);
+                });
+
+                if (unmatchedTerritories.length > 0) {
+                    console.warn("Unmatched World Methodist Council map territories:", unmatchedTerritories);
+                }
+
+                setMapLoadingState("");
+            }
+
+            mapObject.addEventListener("load", handleMapReady, { once: true });
+            mapObject.addEventListener("error", () => {
+                setMapLoadingState("The world map could not be loaded.", true);
+            }, { once: true });
+
+            if (mapObject.contentDocument?.querySelector("svg")) {
+                handleMapReady();
+                return;
+            }
+
+            setMapLoadingState("Loading world map...");
+        }
+
+        function initializePage() {
+            memberRows = parseRawRows(window.wmcMemberRowsRaw).map((row, originalIndex) => ({
+                ...row,
+                membersCount: parseMemberCount(row.members),
+                originalIndex
+            }));
+            mapTerritories = parseMapTerritories(window.wmcMapTerritoriesRaw);
+
+            renderTable();
+            document.getElementById("members-sort-button").addEventListener("click", sortByMembers);
+            initializeMemberMap();
+        }
+
+        initializePage();
+    </script>
+    <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
+</body>
+</html>
