@@ -22,9 +22,16 @@
             <p class="intro-text">Roman Catholic usually refers to the Catholic Church, the world's largest Christian church, a global communion made up of the Latin Church and 23 Eastern Catholic Churches under the pope in Rome.</p>
             <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Catholic_Church" target="_blank" rel="noopener noreferrer">Catholic Church</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
-        <section class="info-card section-spacing">
-            <h2 class="section-title">Dioceses</h2>
-            <div class="dioceses-content">
+        <div class="roman-catholic-layout section-spacing">
+            <aside class="info-card roman-catholic-toc-card" aria-labelledby="roman-catholic-contents-title">
+                <h2 class="roman-catholic-toc-title" id="roman-catholic-contents-title">Contents</h2>
+                <nav class="roman-catholic-toc-nav" aria-label="Roman Catholic page contents">
+                    <ol class="roman-catholic-toc-list" id="roman-catholic-contents-list"></ol>
+                </nav>
+            </aside>
+            <section class="info-card roman-catholic-main-card">
+                <h2 class="section-title">Dioceses</h2>
+                <div class="dioceses-content">
                 <p>As of June 21, 2024, the <a href="https://en.wikipedia.org/wiki/Catholic_Church" target="_blank" rel="noopener noreferrer">Catholic Church</a> comprises 3,172 <a href="https://en.wikipedia.org/wiki/Ecclesiastical_jurisdiction" target="_blank" rel="noopener noreferrer">ecclesiastical jurisdictions</a> worldwide, including over 652 <a href="https://en.wikipedia.org/wiki/Diocese#Archdiocese" target="_blank" rel="noopener noreferrer">archdioceses</a> and 2,250 <a href="https://en.wikipedia.org/wiki/Diocese" target="_blank" rel="noopener noreferrer">dioceses</a>. It also includes various other jurisdictions such as <a href="https://en.wikipedia.org/wiki/Apostolic_vicariate" target="_blank" rel="noopener noreferrer">apostolic vicariates</a>, <a href="https://en.wikipedia.org/wiki/Apostolic_exarchate" target="_blank" rel="noopener noreferrer">apostolic exarchates</a>, <a href="https://en.wikipedia.org/wiki/Apostolic_administration" target="_blank" rel="noopener noreferrer">apostolic administrations</a>, <a href="https://en.wikipedia.org/wiki/Apostolic_prefect" target="_blank" rel="noopener noreferrer">apostolic prefectures</a>, <a href="https://en.wikipedia.org/wiki/Military_ordinariate" target="_blank" rel="noopener noreferrer">military ordinariates</a>, <a href="https://en.wikipedia.org/wiki/Personal_ordinariate" target="_blank" rel="noopener noreferrer">personal ordinariates</a>, <a href="https://en.wikipedia.org/wiki/Personal_prelature" target="_blank" rel="noopener noreferrer">personal prelatures</a>, <a href="https://en.wikipedia.org/wiki/Territorial_prelate" target="_blank" rel="noopener noreferrer">territorial prelatures</a>, <a href="https://en.wikipedia.org/wiki/Territorial_abbacy" target="_blank" rel="noopener noreferrer">territorial abbacies</a>, and <a href="https://en.wikipedia.org/wiki/Mission_sui_juris" target="_blank" rel="noopener noreferrer">missions <i>sui juris</i></a>.
                 </p><p>In addition, there are 2,100 <a href="https://en.wikipedia.org/wiki/Titular_see" target="_blank" rel="noopener noreferrer">titular sees</a>, encompassing bishoprics, archbishoprics, and metropolitanates.
                 </p><p>This structural list outlines how each <a href="https://en.wikipedia.org/wiki/Diocese" target="_blank" rel="noopener noreferrer">diocese</a> is organized within its <a href="https://en.wikipedia.org/wiki/Ecclesiastical_province" target="_blank" rel="noopener noreferrer">ecclesiastical province</a>, under the framework of <a href="https://en.wikipedia.org/wiki/Episcopal_conference" target="_blank" rel="noopener noreferrer">episcopal conferences</a>, grouped by continent or region.
@@ -5203,6 +5210,7 @@
             </div>
             <p class="source-note">Source: Text adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Catholic_dioceses" target="_blank" rel="noopener noreferrer">List of Catholic dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
+        </div>
     </div>
     <script src="country-flag-utils.js"></script>
     <script>
@@ -5347,6 +5355,162 @@
             }
 
             textNodes.forEach(decorateTextNode);
+        })();
+    </script>
+    <script>
+        (function buildRomanCatholicContents() {
+            const contentRoot = document.querySelector(".dioceses-content");
+            const tocRoot = document.getElementById("roman-catholic-contents-list");
+            const tocCard = document.querySelector(".roman-catholic-toc-card");
+
+            if (!contentRoot || !tocRoot || !tocCard) {
+                return;
+            }
+
+            const headings = Array.from(contentRoot.querySelectorAll("h2, h3, h4"))
+                .filter((heading) => heading.textContent.trim());
+
+            if (!headings.length) {
+                tocCard.hidden = true;
+                return;
+            }
+
+            const levelMap = { H2: 0, H3: 1, H4: 2 };
+            const counters = [0, 0, 0];
+            const listStack = [tocRoot];
+            const tocLinks = new Map();
+            const activeHeadings = new Set();
+            const usedIds = new Set(Array.from(document.querySelectorAll("[id]"), (element) => element.id));
+            let currentLevel = 0;
+
+            function slugify(value) {
+                return value
+                    .normalize("NFKD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, "") || "section";
+            }
+
+            function ensureHeadingId(heading) {
+                if (heading.id) {
+                    usedIds.add(heading.id);
+                    return heading.id;
+                }
+
+                const baseId = slugify(heading.textContent);
+                let candidateId = baseId;
+                let suffix = 2;
+
+                while (usedIds.has(candidateId)) {
+                    candidateId = `${baseId}-${suffix}`;
+                    suffix += 1;
+                }
+
+                heading.id = candidateId;
+                usedIds.add(candidateId);
+                return candidateId;
+            }
+
+            function setActiveLink(activeId) {
+                tocLinks.forEach((link, linkId) => {
+                    const isActive = linkId === activeId;
+                    link.classList.toggle("is-active", isActive);
+
+                    if (isActive) {
+                        link.setAttribute("aria-current", "true");
+                    } else {
+                        link.removeAttribute("aria-current");
+                    }
+                });
+            }
+
+            headings.forEach((heading) => {
+                const level = levelMap[heading.tagName];
+                const headingId = ensureHeadingId(heading);
+
+                counters[level] += 1;
+                for (let index = level + 1; index < counters.length; index += 1) {
+                    counters[index] = 0;
+                }
+
+                while (currentLevel < level) {
+                    const parentList = listStack[listStack.length - 1];
+                    const parentItem = parentList.lastElementChild;
+
+                    if (!parentItem) {
+                        break;
+                    }
+
+                    const nestedList = document.createElement("ol");
+                    nestedList.className = "roman-catholic-toc-sublist";
+                    parentItem.appendChild(nestedList);
+                    listStack.push(nestedList);
+                    currentLevel += 1;
+                }
+
+                while (currentLevel > level) {
+                    listStack.pop();
+                    currentLevel -= 1;
+                }
+
+                const item = document.createElement("li");
+                item.className = "roman-catholic-toc-item";
+
+                const link = document.createElement("a");
+                link.className = "roman-catholic-toc-link";
+                link.href = `#${headingId}`;
+
+                const number = document.createElement("span");
+                number.className = "roman-catholic-toc-number";
+                number.textContent = counters.slice(0, level + 1).filter(Boolean).join(".");
+
+                const text = document.createElement("span");
+                text.className = "roman-catholic-toc-text";
+                text.textContent = heading.textContent.trim();
+
+                link.append(number, text);
+                item.appendChild(link);
+                listStack[listStack.length - 1].appendChild(item);
+                tocLinks.set(headingId, link);
+            });
+
+            function updateActiveHeading() {
+                const firstVisibleHeading = headings.find((heading) => activeHeadings.has(heading));
+
+                if (firstVisibleHeading) {
+                    setActiveLink(firstVisibleHeading.id);
+                    return;
+                }
+
+                let fallbackHeading = headings[0];
+
+                headings.forEach((heading) => {
+                    if (heading.getBoundingClientRect().top <= 140) {
+                        fallbackHeading = heading;
+                    }
+                });
+
+                setActiveLink(fallbackHeading.id);
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        activeHeadings.add(entry.target);
+                    } else {
+                        activeHeadings.delete(entry.target);
+                    }
+                });
+
+                updateActiveHeading();
+            }, {
+                rootMargin: "-18% 0px -70% 0px",
+                threshold: 0
+            });
+
+            headings.forEach((heading) => observer.observe(heading));
+            setActiveLink(headings[0].id);
         })();
     </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
