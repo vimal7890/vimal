@@ -117,7 +117,8 @@ body {
     }
 }
 .wide-container {
-    max-width: 1220px;
+    width: min(1720px, calc(100vw - 24px));
+    max-width: none;
 }
 .page-title-row {
     display: flex;
