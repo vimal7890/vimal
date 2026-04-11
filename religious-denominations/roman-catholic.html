@@ -5204,6 +5204,151 @@
             <p class="source-note">Source: Text adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Catholic_dioceses" target="_blank" rel="noopener noreferrer">List of Catholic dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
     </div>
+    <script src="country-flag-utils.js"></script>
+    <script>
+        (function decorateRomanCatholicCountryMentions() {
+            const root = document.querySelector(".dioceses-content");
+
+            if (!root || !window.CountryFlagUtils || typeof Intl === "undefined" || typeof Intl.DisplayNames !== "function") {
+                return;
+            }
+
+            const countryFlagCodeOverrides = {
+                "Bosnia and Herzegovina": "BA",
+                "Czech Republic": "CZ",
+                England: "GB",
+                "Faroe Islands": "FO",
+                "Great Britain": "GB",
+                "Great-Britain": "GB",
+                Greenland: "GL",
+                "Holy See": "VA",
+                Ireland: "IE",
+                Macau: "MO",
+                "North Korea": "KP",
+                "Northern Ireland": "GB",
+                Palestine: "PS",
+                "Republic of Ireland": "IE",
+                Scotland: "GB",
+                "South Georgia and the South Sandwich Islands": "GS",
+                "South Korea": "KR",
+                UK: "GB",
+                USA: "US",
+                "United States": "US",
+                "United States of America": "US",
+                Vatican: "VA",
+                "Vatican City": "VA",
+                "Vatican City State": "VA",
+                Wales: "GB",
+                "Åland": "AX"
+            };
+            const countryFlagOptions = {
+                codeOverrides: countryFlagCodeOverrides,
+                exactThreshold: 0.95,
+                compactThreshold: 0.3
+            };
+
+            function escapeRegExp(value) {
+                return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            }
+
+            function isWordCharacter(value) {
+                return Boolean(value) && /[\p{L}\p{N}]/u.test(value);
+            }
+
+            function collectCountryLabels() {
+                const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
+                const labels = new Set(Object.keys(countryFlagCodeOverrides));
+
+                for (let firstCodePoint = 65; firstCodePoint <= 90; firstCodePoint += 1) {
+                    for (let secondCodePoint = 65; secondCodePoint <= 90; secondCodePoint += 1) {
+                        const code = String.fromCharCode(firstCodePoint, secondCodePoint);
+                        const label = displayNames.of(code);
+
+                        if (!label || label === code) {
+                            continue;
+                        }
+
+                        labels.add(label);
+                    }
+                }
+
+                return Array.from(labels).sort((a, b) => b.length - a.length);
+            }
+
+            const countryPattern = new RegExp(collectCountryLabels().map(escapeRegExp).join("|"), "gu");
+
+            function decorateTextNode(textNode) {
+                const textContent = textNode.nodeValue;
+                let fragment = null;
+                let lastIndex = 0;
+
+                countryPattern.lastIndex = 0;
+
+                for (const match of textContent.matchAll(countryPattern)) {
+                    const matchedCountry = match[0];
+                    const startIndex = match.index;
+                    const endIndex = startIndex + matchedCountry.length;
+                    const previousCharacter = startIndex === 0 ? "" : textContent[startIndex - 1];
+                    const nextCharacter = endIndex >= textContent.length ? "" : textContent[endIndex];
+
+                    if (isWordCharacter(previousCharacter) || isWordCharacter(nextCharacter)) {
+                        continue;
+                    }
+
+                    const marker = CountryFlagUtils.getCountryMarker(matchedCountry, countryFlagOptions);
+
+                    if (!marker) {
+                        continue;
+                    }
+
+                    if (!fragment) {
+                        fragment = document.createDocumentFragment();
+                    }
+
+                    fragment.append(textContent.slice(lastIndex, startIndex));
+                    fragment.append(matchedCountry);
+
+                    const markerSpan = document.createElement("span");
+                    markerSpan.className = "country-flag";
+                    markerSpan.setAttribute("aria-hidden", "true");
+                    markerSpan.textContent = marker;
+                    fragment.append(markerSpan);
+
+                    lastIndex = endIndex;
+                }
+
+                if (!fragment) {
+                    return;
+                }
+
+                fragment.append(textContent.slice(lastIndex));
+                textNode.parentNode.replaceChild(fragment, textNode);
+            }
+
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    if (!node.nodeValue || !node.nodeValue.trim()) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+
+                    const parent = node.parentElement;
+
+                    if (!parent || parent.closest("script, style, .country-flag")) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            const textNodes = [];
+
+            while (walker.nextNode()) {
+                textNodes.push(walker.currentNode);
+            }
+
+            textNodes.forEach(decorateTextNode);
+        })();
+    </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
 </body>
 </html>
