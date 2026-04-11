@@ -45,6 +45,7 @@
                 </table>
             </div>
             <p class="bwa-map-summary" id="ac-member-summary"></p>
+            <p class="source-note"><strong>*</strong> Church of South India is also a member of the <a href="https://worldmethodistcouncil.org/" target="_blank" rel="noopener noreferrer">World Methodist Council</a>.</p>
             <p class="source-note">Source: Province and extraprovincial church list adapted from the "<a href="https://en.wikipedia.org/wiki/Anglican_Communion#Organisation" target="_blank" rel="noopener noreferrer">Organisation</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Anglican_Communion" target="_blank" rel="noopener noreferrer">Anglican Communion</a>"; primate data adapted from "<a href="https://en.wikipedia.org/wiki/Primates_in_the_Anglican_Communion" target="_blank" rel="noopener noreferrer">Primates in the Anglican Communion</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
 
@@ -236,7 +237,7 @@
                 const daysSinceTd = document.createElement("td");
 
                 typeTd.textContent = row.type;
-                churchTd.textContent = row.church;
+                churchTd.textContent = row.church === "Church of South India" ? `${row.church}*` : row.church;
                 renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
                 leaderTd.textContent = row.leader;
                 sinceTd.textContent = row.since;
