@@ -557,6 +557,26 @@
             return churchName;
         }
 
+        function formatLeaderRoleForTracker(leaderValue) {
+            const trimmedValue = (leaderValue || '').trim();
+            if (!trimmedValue || trimmedValue.toLowerCase() === 'n/a') {
+                return trimmedValue;
+            }
+
+            const slashCount = (trimmedValue.match(/\//g) || []).length;
+            if (slashCount !== 1) {
+                return trimmedValue;
+            }
+
+            const match = trimmedValue.match(/^([^/]+?)\s*\/\s*(.+)$/);
+            if (!match) {
+                return trimmedValue;
+            }
+
+            const [, leaderName, positionName] = match;
+            return `${positionName.trim()} ${leaderName.trim()}`;
+        }
+
         function updateTableValues() {
             const rows = document.querySelectorAll('#table-body tr');
             rows.forEach((row, index) => {
@@ -730,6 +750,9 @@
                                 subDenomination,
                                 churchName: content
                             });
+                        }
+                        if (cell.type === 'csv' && cell.index === leaderIdx) {
+                            content = formatLeaderRoleForTracker(content);
                         }
                         if (cell.type === 'members') {
                             td.classList.add('members-cell');
