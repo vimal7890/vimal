@@ -50,6 +50,7 @@
             </div>
             <p class="table-hint">Click "Number of Members" to sort denomination rows by membership.</p>
             <p class="bwa-map-summary" id="wmc-member-summary"></p>
+            <p class="table-hint" id="wmc-anglican-note">* The Church of South India is also a member of the Anglican Communion.</p>
             <p class="source-note">Source: Member list adapted from the "<a href="https://en.wikipedia.org/wiki/World_Methodist_Council#Members" target="_blank" rel="noopener noreferrer">Members</a>" section of the Wikipedia article "<a href="https://en.wikipedia.org/wiki/World_Methodist_Council" target="_blank" rel="noopener noreferrer">World Methodist Council</a>." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
 
@@ -221,7 +222,12 @@
 
                 renderCountryCell(countryTd, row.country);
                 subfamilyTd.textContent = row.subfamily;
-                denominationTd.textContent = row.denomination;
+                if (row.denomination === "Church of South India") {
+                    denominationTd.textContent = `${row.denomination}*`;
+                    denominationTd.setAttribute("aria-describedby", "wmc-anglican-note");
+                } else {
+                    denominationTd.textContent = row.denomination;
+                }
                 yearTd.textContent = row.year;
                 membersTd.textContent = row.members;
 
