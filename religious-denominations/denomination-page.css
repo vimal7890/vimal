@@ -66,6 +66,26 @@ body {
     color: #555;
     font-size: 1.08rem;
 }
+.structure-list {
+    margin-top: 14px;
+    margin-left: 1.35rem;
+    padding-left: 0.25rem;
+    color: #555;
+    font-size: 1.03rem;
+    list-style: disc;
+}
+.structure-list li {
+    margin-bottom: 8px;
+}
+.structure-list li:last-child {
+    margin-bottom: 0;
+}
+.structure-list .structure-list {
+    margin-top: 8px;
+    margin-left: 1.15rem;
+    font-size: 0.99rem;
+    list-style: circle;
+}
 .source-note {
     margin-top: 18px;
     font-size: 0.95rem;
@@ -86,6 +106,14 @@ body {
     }
     .intro-text {
         font-size: 1rem;
+    }
+    .structure-list {
+        font-size: 0.96rem;
+        margin-left: 1.1rem;
+    }
+    .structure-list .structure-list {
+        font-size: 0.94rem;
+        margin-left: 1rem;
     }
 }
 .wide-container {
