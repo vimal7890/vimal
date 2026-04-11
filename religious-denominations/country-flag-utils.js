@@ -4,6 +4,7 @@
     const BASE_STOP_WORDS = ["of", "the", "and", "in"];
     const COUNTRY_FLAG_MATCHER_CACHE = new Map();
     const canUseDisplayNames = typeof Intl !== "undefined" && typeof Intl.DisplayNames === "function";
+    const canUseLocaleCanonicalization = typeof Intl !== "undefined" && typeof Intl.Locale === "function";
 
     function normalizeAscii(value) {
         return String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
@@ -45,6 +46,25 @@
 
         const union = new Set([...aSet, ...bSet]).size;
         return union === 0 ? 0 : intersection / union;
+    }
+
+    function canonicalizeCountryCode(countryCode) {
+        const normalizedCode = String(countryCode || "").toUpperCase().trim();
+
+        if (!/^[A-Z]{2}$/.test(normalizedCode)) {
+            return "";
+        }
+
+        if (!canUseLocaleCanonicalization) {
+            return normalizedCode;
+        }
+
+        try {
+            const canonicalLocale = new Intl.Locale(`und-${normalizedCode}`);
+            return canonicalLocale.region || normalizedCode;
+        } catch {
+            return normalizedCode;
+        }
     }
 
     function getMatcherCacheKey(stopWordSet) {
@@ -96,7 +116,8 @@
         const codeOverrides = options.codeOverrides || {};
 
         if (Object.prototype.hasOwnProperty.call(codeOverrides, normalizedName)) {
-            return codeOverrides[normalizedName];
+            const overriddenCode = canonicalizeCountryCode(codeOverrides[normalizedName]);
+            return overriddenCode || null;
         }
 
         const stopWordSet = buildStopWordSet(options.extraStopWords);
@@ -129,16 +150,17 @@
         const compactThreshold = typeof options.compactThreshold === "number" ? options.compactThreshold : 0.3;
 
         if (bestScore >= exactThreshold || (compactMatch && bestScore >= compactThreshold)) {
-            return bestMatch.code;
+            const resolvedCode = canonicalizeCountryCode(bestMatch.code);
+            return resolvedCode || null;
         }
 
         return null;
     }
 
     function createFlagEmoji(countryCode) {
-        const normalizedCode = String(countryCode || "").toUpperCase().trim();
+        const normalizedCode = canonicalizeCountryCode(countryCode);
 
-        if (!/^[A-Z]{2}$/.test(normalizedCode)) {
+        if (!normalizedCode) {
             return "";
         }
 
