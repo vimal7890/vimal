@@ -16,3 +16,7 @@ Manual commands:
 - Run one-time injection: `node scripts/home-button-manager.mjs`
 - Run watcher manually: `node scripts/home-button-manager.mjs --watch`
 
+## Country Flag Audit
+
+- Run `node scripts/audit-country-flag-codes.mjs` to verify country flag code resolution stays canonical across denomination pages that use `country-flag-utils.js`.
+- The audit also fails if a new page starts using `country-flag-utils.js` without being added to the script scenarios.
