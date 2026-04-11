@@ -222,6 +222,20 @@
             )];
         }
 
+        function formatLeaderRole(leaderValue) {
+            if (!leaderValue || leaderValue.toLowerCase() === "n/a") {
+                return "n/a";
+            }
+
+            const match = leaderValue.match(/^([^/]+?)\s*\/\s*(.+)$/);
+            if (!match) {
+                return leaderValue;
+            }
+
+            const [, leaderName, positionName] = match;
+            return `${positionName.trim()} ${leaderName.trim()}`;
+        }
+
         function renderTable() {
             const tbody = document.getElementById("ac-members-body");
             const fragment = document.createDocumentFragment();
@@ -239,7 +253,7 @@
                 typeTd.textContent = row.type;
                 churchTd.textContent = row.church === "Church of South India" ? `${row.church}*` : row.church;
                 renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
-                leaderTd.textContent = row.leader;
+                leaderTd.textContent = formatLeaderRole(row.leader);
                 sinceTd.textContent = row.since;
                 daysSinceTd.textContent = formatDaysSince(row.since);
 
