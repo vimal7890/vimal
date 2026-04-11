@@ -20,3 +20,4 @@ Manual commands:
 
 - Run `node scripts/audit-country-flag-codes.mjs` to verify country flag code resolution stays canonical across denomination pages that use `country-flag-utils.js`.
 - The audit also fails if a new page starts using `country-flag-utils.js` without being added to the script scenarios.
+- GitHub Actions runs this audit automatically on pushes and pull requests to `main` via `.github/workflows/country-flag-audit.yml`.
