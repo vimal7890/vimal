@@ -1,5 +1,5 @@
 window.wmcMemberRowsRaw = `
-International|Methodist|United Methodist Church (Central African Conference; Central and Southern European Central Conference; Congo Central Conference; German Central Conference; Northern Europe Central Conference; Philippines Central Conference; West Africa Central Conference; US Conferences; Liberia Conference)|7,607,194|2024
+International|Methodist|United Methodist Church|7,607,194|2024
 International|Methodist|Church of the Nazarene|2,666,845|2021
 International|Methodist|African Methodist Episcopal Zion Church|1,432,795|2014
 International|Methodist|Wesleyan Church|140,954|2017
