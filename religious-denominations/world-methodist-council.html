@@ -33,9 +33,9 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th scope="col">Country</th>
                             <th scope="col">Denominational Subfamily</th>
                             <th scope="col">Denomination</th>
+                            <th scope="col">Country</th>
                             <th scope="col">Year</th>
                             <th scope="col" id="members-header" aria-sort="none">
                                 <button type="button" class="sort-button" id="members-sort-button">
@@ -231,7 +231,7 @@
                 yearTd.textContent = row.year;
                 membersTd.textContent = row.members;
 
-                tr.append(countryTd, subfamilyTd, denominationTd, yearTd, membersTd);
+                tr.append(subfamilyTd, denominationTd, countryTd, yearTd, membersTd);
                 fragment.appendChild(tr);
             });
 
