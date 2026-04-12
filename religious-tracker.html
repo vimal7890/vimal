@@ -334,8 +334,10 @@
             islam: '☪',
             judaism: '✡'
         };
+        const churchOfEnglandPageLabel = 'Church of England';
+        const churchOfEnglandPagePath = 'religious-denominations/church-of-england.html';
         const churchOfEnglandEffectiveLeadershipLabel = 'Church of England / Effective leadership (also head of Anglican Communion)';
-        const churchOfEnglandEffectiveLeadershipPrefix = 'Church of England / Effective leadership (also head of ';
+        const churchOfEnglandEffectiveLeadershipSuffix = ' / Effective leadership (also head of ';
         const anglicanCommunionPagePath = 'religious-denominations/anglican-communion.html';
         const easternOrthodoxyFlags = {
             "Albanian Orthodox Church": "🇦🇱",
@@ -773,19 +775,35 @@
                             cell.index === subDenomination2Idx &&
                             content === churchOfEnglandEffectiveLeadershipLabel;
 
-                        if (isChurchOfEnglandEffectiveLeadershipCell) {
-                            td.append(churchOfEnglandEffectiveLeadershipPrefix);
+                        const isChurchOfEnglandLeadershipCell =
+                            cell.type === 'csv' &&
+                            cell.index === subDenomination2Idx &&
+                            content.startsWith(`${churchOfEnglandPageLabel} / `);
 
-                            const link = document.createElement('a');
-                            link.href = anglicanCommunionPagePath;
-                            link.className = 'denomination-link';
+                        if (isChurchOfEnglandLeadershipCell) {
+                            const churchLink = document.createElement('a');
+                            churchLink.href = churchOfEnglandPagePath;
+                            churchLink.className = 'denomination-link';
+                            churchLink.textContent = churchOfEnglandPageLabel;
+                            td.appendChild(churchLink);
 
-                            const boldText = document.createElement('strong');
-                            boldText.textContent = 'Anglican Communion';
+                            if (isChurchOfEnglandEffectiveLeadershipCell) {
+                                td.append(churchOfEnglandEffectiveLeadershipSuffix);
 
-                            link.appendChild(boldText);
-                            td.appendChild(link);
-                            td.append(')');
+                                const link = document.createElement('a');
+                                link.href = anglicanCommunionPagePath;
+                                link.className = 'denomination-link';
+
+                                const boldText = document.createElement('strong');
+                                boldText.textContent = 'Anglican Communion';
+
+                                link.appendChild(boldText);
+                                td.appendChild(link);
+                                td.append(')');
+                            } else {
+                                td.append(content.slice(churchOfEnglandPageLabel.length));
+                            }
+
                             tr.appendChild(td);
                             continue;
                         }
