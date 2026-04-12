@@ -262,6 +262,9 @@
                     const churchLink = document.createElement("a");
                     churchLink.href = memberChurchPage;
                     churchLink.textContent = churchLabel;
+                    churchLink.style.color = "#000";
+                    churchLink.style.fontWeight = "700";
+                    churchLink.style.textDecoration = "none";
                     churchTd.appendChild(churchLink);
                 } else {
                     churchTd.textContent = churchLabel;
