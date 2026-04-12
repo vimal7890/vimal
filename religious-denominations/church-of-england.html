@@ -46,7 +46,12 @@
                                 <th>Province</th>
                                 <th>Territory</th>
                                 <th>Cathedral</th>
-                                <th>Founded</th>
+                                <th scope="col" id="founded-header" aria-sort="none">
+                                    <button type="button" class="sort-button" id="founded-sort-button">
+                                        <span>Founded</span>
+                                        <span class="sort-indicator" id="founded-sort-indicator" aria-hidden="true">↕</span>
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -347,11 +352,79 @@
                         </tbody>
                     </table>
                 </div>
+                <p class="table-hint">Click "Founded" to sort dioceses by their earliest listed founding year, then reverse the order on the next click.</p>
             </div>
             <p class="source-note">Source: Structure summary and dioceses table adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Church_of_England_dioceses" target="_blank" rel="noopener noreferrer">List of Church of England dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
         <p class="source-note page-footer-note">Logo from <a href="https://commons.wikimedia.org/wiki/File:Logo_of_the_Church_of_England.svg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> ("Logo of the Church of England.svg"), sourced from the Church of England and marked public domain there as a simple text logo.</p>
     </div>
+    <script>
+        (() => {
+            const foundedHeader = document.getElementById("founded-header");
+            const sortButton = document.getElementById("founded-sort-button");
+            const sortIndicator = document.getElementById("founded-sort-indicator");
+            const diocesesTableBody = document.querySelector(".dioceses-table tbody");
+
+            if (!foundedHeader || !sortButton || !sortIndicator || !diocesesTableBody) {
+                return;
+            }
+
+            const diocesesRows = Array.from(diocesesTableBody.rows).map((row, originalIndex) => ({
+                row,
+                originalIndex,
+                foundedYear: getEarliestFoundedYear(row)
+            }));
+            let foundedSortDirection = null;
+
+            function getEarliestFoundedYear(row) {
+                const foundedCell = row.cells[row.cells.length - 1];
+                const yearMatches = foundedCell?.textContent.match(/\b\d{3,4}\b/g) ?? [];
+
+                if (yearMatches.length === 0) {
+                    return Number.POSITIVE_INFINITY;
+                }
+
+                return Math.min(...yearMatches.map(Number));
+            }
+
+            function updateFoundedSortHeader() {
+                if (foundedSortDirection === "asc") {
+                    foundedHeader.setAttribute("aria-sort", "ascending");
+                    sortIndicator.textContent = "↑";
+                    return;
+                }
+
+                if (foundedSortDirection === "desc") {
+                    foundedHeader.setAttribute("aria-sort", "descending");
+                    sortIndicator.textContent = "↓";
+                    return;
+                }
+
+                foundedHeader.setAttribute("aria-sort", "none");
+                sortIndicator.textContent = "↕";
+            }
+
+            function sortByFoundedYear() {
+                foundedSortDirection = foundedSortDirection === "asc" ? "desc" : "asc";
+
+                const sortedRows = [...diocesesRows].sort((a, b) => {
+                    if (a.foundedYear === b.foundedYear) {
+                        return a.originalIndex - b.originalIndex;
+                    }
+
+                    return foundedSortDirection === "asc"
+                        ? a.foundedYear - b.foundedYear
+                        : b.foundedYear - a.foundedYear;
+                });
+
+                diocesesTableBody.replaceChildren(...sortedRows.map(({ row }) => row));
+                updateFoundedSortHeader();
+            }
+
+            sortButton.addEventListener("click", sortByFoundedYear);
+            updateFoundedSortHeader();
+        })();
+    </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
 </body>
 </html>
