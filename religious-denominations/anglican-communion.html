@@ -155,6 +155,9 @@
             compactThreshold: 0.3
         };
 
+        const memberChurchPages = {
+            "Church of England": "church-of-england.html"
+        };
         const ignoredMapTerritories = new Set(["Crown Dependencies", "Europe"]);
         let memberRows = [];
         let mapTerritories = [];
@@ -251,7 +254,19 @@
                 const daysSinceTd = document.createElement("td");
 
                 typeTd.textContent = row.type;
-                churchTd.textContent = row.church === "Church of South India" ? `${row.church}*` : row.church;
+
+                const churchLabel = row.church === "Church of South India" ? `${row.church}*` : row.church;
+                const memberChurchPage = memberChurchPages[row.church];
+
+                if (memberChurchPage) {
+                    const churchLink = document.createElement("a");
+                    churchLink.href = memberChurchPage;
+                    churchLink.textContent = churchLabel;
+                    churchTd.appendChild(churchLink);
+                } else {
+                    churchTd.textContent = churchLabel;
+                }
+
                 renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
                 leaderTd.textContent = formatLeaderRole(row.leader);
                 sinceTd.textContent = row.since;
