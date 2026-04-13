@@ -5,6 +5,173 @@
     var homeHref = (script && script.dataset && script.dataset.homeHref) ? script.dataset.homeHref : "index.html";
     var scrollStorageKey = "page-scroll:" + window.location.pathname + window.location.search;
     var isRestoringScroll = false;
+    var lastEditedOwner = "vimal7890";
+    var lastEditedRepo = "vimal";
+    var lastEditedBranch = "main";
+    var lastEditedFormatter = new Intl.DateTimeFormat("en", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC"
+    });
+
+    function getDenominationPageRepoPath() {
+        var pathname = window.location.pathname || "";
+        var marker = "/religious-denominations/";
+        var markerIndex = pathname.lastIndexOf(marker);
+        var repoPath = "";
+
+        if (markerIndex === -1) {
+            return "";
+        }
+
+        repoPath = pathname.slice(markerIndex + 1);
+
+        try {
+            return decodeURIComponent(repoPath);
+        } catch (error) {
+            return repoPath;
+        }
+    }
+
+    function buildLastEditedCommitsUrl(badge) {
+        var owner = badge.dataset.lastEditedOwner;
+        var repo = badge.dataset.lastEditedRepo;
+        var branch = badge.dataset.lastEditedBranch || "main";
+        var path = badge.dataset.lastEditedPath;
+
+        if (!owner || !repo || !path) {
+            return null;
+        }
+
+        var params = new URLSearchParams({
+            sha: branch,
+            path: path,
+            per_page: "1"
+        });
+
+        return "https://api.github.com/repos/" + encodeURIComponent(owner) + "/" + encodeURIComponent(repo) + "/commits?" + params.toString();
+    }
+
+    function renderLastEditedBadge(badge, isoDate) {
+        var timeElement = badge.querySelector("time");
+        var parsedDate = new Date(isoDate);
+
+        if (!timeElement || Number.isNaN(parsedDate.getTime())) {
+            return;
+        }
+
+        timeElement.dateTime = parsedDate.toISOString();
+        timeElement.textContent = lastEditedFormatter.format(parsedDate);
+        badge.hidden = false;
+    }
+
+    function loadLastEditedDate(badge) {
+        var commitsUrl = buildLastEditedCommitsUrl(badge);
+
+        if (!commitsUrl) {
+            return;
+        }
+
+        fetch(commitsUrl, {
+            headers: {
+                Accept: "application/vnd.github+json"
+            }
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Unable to load last edited date");
+                }
+
+                return response.json();
+            })
+            .then(function (commits) {
+                var latestCommit = Array.isArray(commits) ? commits[0] : null;
+                var isoDate = latestCommit && latestCommit.commit && latestCommit.commit.committer && latestCommit.commit.committer.date;
+
+                if (isoDate) {
+                    renderLastEditedBadge(badge, isoDate);
+                }
+            })
+            .catch(function () {
+                // Leave the badge hidden when the commit date cannot be loaded.
+            });
+    }
+
+    function createLastEditedBadge(repoPath) {
+        var badge = document.createElement("p");
+        var label = document.createElement("span");
+        var time = document.createElement("time");
+
+        badge.className = "last-edited-badge";
+        badge.hidden = true;
+        badge.dataset.lastEditedOwner = lastEditedOwner;
+        badge.dataset.lastEditedRepo = lastEditedRepo;
+        badge.dataset.lastEditedBranch = lastEditedBranch;
+        badge.dataset.lastEditedPath = repoPath;
+
+        label.className = "last-edited-label";
+        label.textContent = "Last edited";
+
+        badge.appendChild(label);
+        badge.appendChild(time);
+
+        return badge;
+    }
+
+    function ensureDenominationLastEditedBadge() {
+        var repoPath = getDenominationPageRepoPath();
+        var container = null;
+        var meta = null;
+        var badge = null;
+        var child = null;
+
+        if (!repoPath) {
+            return null;
+        }
+
+        container = document.querySelector(".container");
+        if (!container) {
+            return null;
+        }
+
+        badge = container.querySelector(".last-edited-badge");
+        if (badge) {
+            if (!badge.dataset.lastEditedOwner) {
+                badge.dataset.lastEditedOwner = lastEditedOwner;
+            }
+            if (!badge.dataset.lastEditedRepo) {
+                badge.dataset.lastEditedRepo = lastEditedRepo;
+            }
+            if (!badge.dataset.lastEditedBranch) {
+                badge.dataset.lastEditedBranch = lastEditedBranch;
+            }
+            if (!badge.dataset.lastEditedPath) {
+                badge.dataset.lastEditedPath = repoPath;
+            }
+
+            return badge;
+        }
+
+        child = container.firstElementChild;
+        while (child) {
+            if (child.classList && child.classList.contains("page-top-meta")) {
+                meta = child;
+                break;
+            }
+            child = child.nextElementSibling;
+        }
+
+        if (!meta) {
+            meta = document.createElement("div");
+            meta.className = "page-top-meta";
+            container.insertBefore(meta, container.firstChild);
+        }
+
+        badge = createLastEditedBadge(repoPath);
+        meta.appendChild(badge);
+        return badge;
+    }
 
     function normalizePageUrl(url) {
         try {
@@ -373,6 +540,11 @@
     restoreScrollPosition(loadSavedScrollPosition());
     initializeGlobalDaysSinceSorting();
     window.addEventListener("load", initializeGlobalDaysSinceSorting);
+
+    var lastEditedBadge = ensureDenominationLastEditedBadge();
+    if (lastEditedBadge) {
+        loadLastEditedDate(lastEditedBadge);
+    }
 
     // Skip injection if a page-specific home button already exists.
     if (document.querySelector("a.home-button, a.global-home-button, a[aria-label='Go to home page']")) {
