@@ -155,13 +155,25 @@
             compactThreshold: 0.3
         };
 
-        const memberChurchPages = {
+        const memberChurchPageOverrides = {
             "Church of England": "church-of-england.html"
         };
         const ignoredMapTerritories = new Set(["Crown Dependencies", "Europe"]);
         let memberRows = [];
         let mapTerritories = [];
         let activeMapRegion = null;
+
+        function slugifyMemberChurchName(churchName) {
+            return churchName
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+
+        function getMemberChurchPage(churchName) {
+            return memberChurchPageOverrides[churchName] || `${slugifyMemberChurchName(churchName)}.html`;
+        }
 
         function parseRawRows(raw) {
             return raw
@@ -256,19 +268,13 @@
                 typeTd.textContent = row.type;
 
                 const churchLabel = row.church === "Church of South India" ? `${row.church}*` : row.church;
-                const memberChurchPage = memberChurchPages[row.church];
-
-                if (memberChurchPage) {
-                    const churchLink = document.createElement("a");
-                    churchLink.href = memberChurchPage;
-                    churchLink.textContent = churchLabel;
-                    churchLink.style.color = "#000";
-                    churchLink.style.fontWeight = "700";
-                    churchLink.style.textDecoration = "none";
-                    churchTd.appendChild(churchLink);
-                } else {
-                    churchTd.textContent = churchLabel;
-                }
+                const churchLink = document.createElement("a");
+                churchLink.href = getMemberChurchPage(row.church);
+                churchLink.textContent = churchLabel;
+                churchLink.style.color = "#000";
+                churchLink.style.fontWeight = "700";
+                churchLink.style.textDecoration = "none";
+                churchTd.appendChild(churchLink);
 
                 renderJurisdictionCell(jurisdictionTd, row.jurisdiction, territorySet);
                 leaderTd.textContent = formatLeaderRole(row.leader);
