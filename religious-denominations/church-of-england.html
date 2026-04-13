@@ -43,7 +43,12 @@
                         <thead>
                             <tr>
                                 <th>Diocese</th>
-                                <th>Province</th>
+                                <th scope="col" id="province-header" aria-sort="none">
+                                    <button type="button" class="sort-button" id="province-sort-button">
+                                        <span>Province</span>
+                                        <span class="sort-indicator" id="province-sort-indicator" aria-hidden="true">↕</span>
+                                    </button>
+                                </th>
                                 <th>Territory</th>
                                 <th>Cathedral</th>
                                 <th scope="col" id="founded-header" aria-sort="none">
@@ -352,7 +357,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="table-hint">Click "Founded" to sort dioceses by their earliest listed founding year, then reverse the order on the next click.</p>
+                <p class="table-hint">Click "Province" to sort dioceses alphabetically and "Founded" to sort by earliest listed founding year. Click the same header again to reverse the order.</p>
             </div>
             <p class="source-note">Source: Structure summary and dioceses table adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Church_of_England_dioceses" target="_blank" rel="noopener noreferrer">List of Church of England dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
@@ -360,21 +365,30 @@
     </div>
     <script>
         (() => {
+            const provinceHeader = document.getElementById("province-header");
+            const provinceSortButton = document.getElementById("province-sort-button");
+            const provinceSortIndicator = document.getElementById("province-sort-indicator");
             const foundedHeader = document.getElementById("founded-header");
-            const sortButton = document.getElementById("founded-sort-button");
-            const sortIndicator = document.getElementById("founded-sort-indicator");
+            const foundedSortButton = document.getElementById("founded-sort-button");
+            const foundedSortIndicator = document.getElementById("founded-sort-indicator");
             const diocesesTableBody = document.querySelector(".dioceses-table tbody");
 
-            if (!foundedHeader || !sortButton || !sortIndicator || !diocesesTableBody) {
+            if (!provinceHeader || !provinceSortButton || !provinceSortIndicator || !foundedHeader || !foundedSortButton || !foundedSortIndicator || !diocesesTableBody) {
                 return;
             }
 
             const diocesesRows = Array.from(diocesesTableBody.rows).map((row, originalIndex) => ({
                 row,
                 originalIndex,
+                province: getProvinceName(row),
                 foundedYear: getEarliestFoundedYear(row)
             }));
+            let provinceSortDirection = null;
             let foundedSortDirection = null;
+
+            function getProvinceName(row) {
+                return row.cells[1]?.textContent.trim() ?? "";
+            }
 
             function getEarliestFoundedYear(row) {
                 const foundedCell = row.cells[row.cells.length - 1];
@@ -387,25 +401,62 @@
                 return Math.min(...yearMatches.map(Number));
             }
 
+            function updateProvinceSortHeader() {
+                if (provinceSortDirection === "asc") {
+                    provinceHeader.setAttribute("aria-sort", "ascending");
+                    provinceSortIndicator.textContent = "↑";
+                    return;
+                }
+
+                if (provinceSortDirection === "desc") {
+                    provinceHeader.setAttribute("aria-sort", "descending");
+                    provinceSortIndicator.textContent = "↓";
+                    return;
+                }
+
+                provinceHeader.setAttribute("aria-sort", "none");
+                provinceSortIndicator.textContent = "↕";
+            }
+
             function updateFoundedSortHeader() {
                 if (foundedSortDirection === "asc") {
                     foundedHeader.setAttribute("aria-sort", "ascending");
-                    sortIndicator.textContent = "↑";
+                    foundedSortIndicator.textContent = "↑";
                     return;
                 }
 
                 if (foundedSortDirection === "desc") {
                     foundedHeader.setAttribute("aria-sort", "descending");
-                    sortIndicator.textContent = "↓";
+                    foundedSortIndicator.textContent = "↓";
                     return;
                 }
 
                 foundedHeader.setAttribute("aria-sort", "none");
-                sortIndicator.textContent = "↕";
+                foundedSortIndicator.textContent = "↕";
+            }
+
+            function sortByProvince() {
+                provinceSortDirection = provinceSortDirection === "asc" ? "desc" : "asc";
+                foundedSortDirection = null;
+
+                const sortedRows = [...diocesesRows].sort((a, b) => {
+                    const provinceComparison = a.province.localeCompare(b.province, undefined, { sensitivity: "base" });
+
+                    if (provinceComparison === 0) {
+                        return a.originalIndex - b.originalIndex;
+                    }
+
+                    return provinceSortDirection === "asc" ? provinceComparison : -provinceComparison;
+                });
+
+                diocesesTableBody.replaceChildren(...sortedRows.map(({ row }) => row));
+                updateProvinceSortHeader();
+                updateFoundedSortHeader();
             }
 
             function sortByFoundedYear() {
                 foundedSortDirection = foundedSortDirection === "asc" ? "desc" : "asc";
+                provinceSortDirection = null;
 
                 const sortedRows = [...diocesesRows].sort((a, b) => {
                     if (a.foundedYear === b.foundedYear) {
@@ -418,10 +469,13 @@
                 });
 
                 diocesesTableBody.replaceChildren(...sortedRows.map(({ row }) => row));
+                updateProvinceSortHeader();
                 updateFoundedSortHeader();
             }
 
-            sortButton.addEventListener("click", sortByFoundedYear);
+            provinceSortButton.addEventListener("click", sortByProvince);
+            foundedSortButton.addEventListener("click", sortByFoundedYear);
+            updateProvinceSortHeader();
             updateFoundedSortHeader();
         })();
     </script>
