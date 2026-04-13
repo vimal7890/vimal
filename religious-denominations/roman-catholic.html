@@ -5207,6 +5207,32 @@
                 <ul><li><a href="http://www.catholic-hierarchy.org/diocese/qview.html" target="_blank" rel="noopener noreferrer">Catholic-hierarchy.org</a></li>
                 <li><a href="http://www.gcatholic.org/dioceses/types.htm" target="_blank" rel="noopener noreferrer">GCatholic (here: dioceses by type)</a></li>
                 <li><a href="http://www.fabc.org/mem.html" target="_blank" rel="noopener noreferrer">Federation of Asian Bishops&#x27; Conferences</a> <a href="https://web.archive.org/web/20140712100938/http://www.fabc.org/mem.html" target="_blank" rel="noopener noreferrer">Archived</a> 2014-07-12 at the <a href="https://en.wikipedia.org/wiki/Wayback_Machine" target="_blank" rel="noopener noreferrer">Wayback Machine</a></li></ul>
+                <h2>Structure</h2>
+                <p>The Holy See maintains diplomatic missions around the world through apostolic nunciatures, delegations, and permanent representatives. The table below is sourced from the current list of mission heads and includes nomination or vacancy dates.</p>
+                <div class="data-table-wrapper">
+                    <table class="dioceses-table" id="holy-see-missions-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Country</th>
+                                <th scope="col">Type of mission</th>
+                                <th scope="col">Representative</th>
+                                <th scope="col" id="holy-see-date-header" aria-sort="none">
+                                    <button type="button" class="sort-button" id="holy-see-date-sort-button" disabled>
+                                        <span>Nomination / vacancy date</span>
+                                        <span class="sort-indicator" id="holy-see-date-sort-indicator" aria-hidden="true">↕</span>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="holy-see-missions-table-body">
+                            <tr>
+                                <td class="loading-text" colspan="4">Loading diplomatic missions table...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="table-hint">Click "Nomination / vacancy date" to sort from oldest to newest, then newest to oldest.</p>
+                <p class="source-note">Source: Table data adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_heads_of_the_diplomatic_missions_of_the_Holy_See" target="_blank" rel="noopener noreferrer">List of heads of the diplomatic missions of the Holy See</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             </div>
             <p class="source-note">Source: Text adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Catholic_dioceses" target="_blank" rel="noopener noreferrer">List of Catholic dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
@@ -5511,6 +5537,222 @@
 
             headings.forEach((heading) => observer.observe(heading));
             setActiveLink(headings[0].id);
+        })();
+    </script>
+    <script>
+        (function loadHolySeeDiplomaticMissions() {
+            const tableBody = document.getElementById("holy-see-missions-table-body");
+            const dateHeader = document.getElementById("holy-see-date-header");
+            const dateSortButton = document.getElementById("holy-see-date-sort-button");
+            const dateSortIndicator = document.getElementById("holy-see-date-sort-indicator");
+
+            if (!tableBody || !dateHeader || !dateSortButton || !dateSortIndicator) {
+                return;
+            }
+
+            const sourceApiUrl = "https://en.wikipedia.org/w/api.php?action=parse&page=List_of_heads_of_the_diplomatic_missions_of_the_Holy_See&prop=text&format=json&formatversion=2&origin=*";
+            const sourcePageUrl = "https://en.wikipedia.org/wiki/List_of_heads_of_the_diplomatic_missions_of_the_Holy_See";
+            const missionRows = [];
+            let sortDirection = null;
+
+            function normalizeText(value) {
+                return value
+                    .replace(/\[[^\]]*]/g, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+            function resolveWikipediaUrl(href) {
+                if (!href) {
+                    return sourcePageUrl;
+                }
+
+                if (href.startsWith("http://") || href.startsWith("https://")) {
+                    return href;
+                }
+
+                if (href.startsWith("/")) {
+                    return `https://en.wikipedia.org${href}`;
+                }
+
+                return `${sourcePageUrl}${href.startsWith("#") ? "" : "/"}${href}`;
+            }
+
+            function createLinkedCell(sourceCell) {
+                const cell = document.createElement("td");
+                const clone = sourceCell.cloneNode(true);
+                clone.querySelectorAll("sup, .reference, .mw-ref, img, .flagicon").forEach((element) => element.remove());
+
+                const text = normalizeText(clone.textContent) || "—";
+                const link = clone.querySelector("a[href]");
+
+                if (link) {
+                    const anchor = document.createElement("a");
+                    anchor.href = resolveWikipediaUrl(link.getAttribute("href"));
+                    anchor.target = "_blank";
+                    anchor.rel = "noopener noreferrer";
+                    anchor.textContent = text;
+                    cell.appendChild(anchor);
+                    return { cell, text };
+                }
+
+                cell.textContent = text;
+                return { cell, text };
+            }
+
+            function parseNominationDate(value) {
+                const normalized = value.replace(/\u00a0/g, " ").trim();
+                const timestamp = Date.parse(normalized);
+
+                if (!Number.isNaN(timestamp)) {
+                    return timestamp;
+                }
+
+                const match = normalized.match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+                if (!match) {
+                    return Number.POSITIVE_INFINITY;
+                }
+
+                const months = {
+                    january: 0,
+                    february: 1,
+                    march: 2,
+                    april: 3,
+                    may: 4,
+                    june: 5,
+                    july: 6,
+                    august: 7,
+                    september: 8,
+                    october: 9,
+                    november: 10,
+                    december: 11
+                };
+                const monthIndex = months[match[2].toLowerCase()];
+
+                if (monthIndex === undefined) {
+                    return Number.POSITIVE_INFINITY;
+                }
+
+                return Date.UTC(Number(match[3]), monthIndex, Number(match[1]));
+            }
+
+            function setStatusRow(message, className) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 4;
+                cell.className = className;
+                cell.textContent = message;
+                row.appendChild(cell);
+                tableBody.replaceChildren(row);
+            }
+
+            function updateDateSortHeader() {
+                if (sortDirection === "asc") {
+                    dateHeader.setAttribute("aria-sort", "ascending");
+                    dateSortIndicator.textContent = "↑";
+                    return;
+                }
+
+                if (sortDirection === "desc") {
+                    dateHeader.setAttribute("aria-sort", "descending");
+                    dateSortIndicator.textContent = "↓";
+                    return;
+                }
+
+                dateHeader.setAttribute("aria-sort", "none");
+                dateSortIndicator.textContent = "↕";
+            }
+
+            function renderRows(rowsToRender) {
+                tableBody.replaceChildren(...rowsToRender.map(({ row }) => row));
+            }
+
+            function sortByNominationDate() {
+                if (!missionRows.length) {
+                    return;
+                }
+
+                sortDirection = sortDirection === "asc" ? "desc" : "asc";
+
+                const sortedRows = [...missionRows].sort((a, b) => {
+                    if (a.nominationDate === b.nominationDate) {
+                        return a.originalIndex - b.originalIndex;
+                    }
+
+                    return sortDirection === "asc"
+                        ? a.nominationDate - b.nominationDate
+                        : b.nominationDate - a.nominationDate;
+                });
+
+                renderRows(sortedRows);
+                updateDateSortHeader();
+            }
+
+            async function loadRows() {
+                try {
+                    const response = await fetch(sourceApiUrl);
+                    if (!response.ok) {
+                        throw new Error(`Wikipedia API request failed with status ${response.status}.`);
+                    }
+
+                    const payload = await response.json();
+                    const parsedHtml = payload?.parse?.text;
+
+                    if (typeof parsedHtml !== "string") {
+                        throw new Error("Wikipedia API returned an unexpected response payload.");
+                    }
+
+                    const parser = new DOMParser();
+                    const sourceDocument = parser.parseFromString(parsedHtml, "text/html");
+                    const sourceTable = Array.from(sourceDocument.querySelectorAll("table.wikitable"))
+                        .find((table) => {
+                            const headerText = table.querySelector("tr")?.textContent?.toLowerCase() ?? "";
+                            return headerText.includes("nomination / vacancy date");
+                        });
+
+                    if (!sourceTable) {
+                        throw new Error("Could not locate the diplomatic missions table in the source page.");
+                    }
+
+                    const sourceRows = Array.from(sourceTable.querySelectorAll("tbody tr"))
+                        .filter((row) => row.querySelectorAll("td").length >= 4);
+
+                    if (!sourceRows.length) {
+                        throw new Error("No diplomatic mission rows were found in the source table.");
+                    }
+
+                    sourceRows.forEach((sourceRow, originalIndex) => {
+                        const sourceCells = sourceRow.querySelectorAll("td");
+                        const row = document.createElement("tr");
+
+                        const countryCell = createLinkedCell(sourceCells[0]);
+                        const missionCell = createLinkedCell(sourceCells[1]);
+                        const representativeCell = createLinkedCell(sourceCells[2]);
+                        const nominationCell = document.createElement("td");
+                        const nominationText = normalizeText(sourceCells[3].textContent) || "—";
+                        nominationCell.textContent = nominationText;
+
+                        row.append(countryCell.cell, missionCell.cell, representativeCell.cell, nominationCell);
+
+                        missionRows.push({
+                            row,
+                            originalIndex,
+                            nominationDate: parseNominationDate(nominationText)
+                        });
+                    });
+
+                    renderRows(missionRows);
+                    dateSortButton.disabled = false;
+                    updateDateSortHeader();
+                } catch (error) {
+                    console.error(error);
+                    setStatusRow("Could not load the diplomatic missions table from Wikipedia.", "error-text");
+                }
+            }
+
+            dateSortButton.addEventListener("click", sortByNominationDate);
+            setStatusRow("Loading diplomatic missions table...", "loading-text");
+            loadRows();
         })();
     </script>
     <script src="../home-button-loader.js" data-home-href="../index.html" defer></script>
