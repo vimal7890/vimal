@@ -5191,23 +5191,7 @@
                 <li><a href="https://en.wikipedia.org/wiki/Syriac_Catholic_Church#Organization" target="_blank" rel="noopener noreferrer">Syriac Catholic dioceses</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Syro-Malabar#Eparchies" target="_blank" rel="noopener noreferrer">Syro-Malabar Catholic dioceses</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Ukrainian_Greek_Catholic_Church" target="_blank" rel="noopener noreferrer">Ukrainian Greek Catholic dioceses</a></li></ul>
-                <h2>References</h2>
-                
-                <ol>
-                <li><b><a href="#cite_ref-1">^</a></b> <a href="http://www.gcatholic.org/dioceses/types.htm" target="_blank" rel="noopener noreferrer">&quot;Dioceses by Type&quot;</a>.<sup>[<i><a href="https://en.wikipedia.org/wiki/Wikipedia:Verifiability#Self-published_sources" target="_blank" rel="noopener noreferrer">self-published source</a></i>]</sup>
-                </li>
-                <li><b><a href="#cite_ref-2">^</a></b> Beal, John P.; Coriden, James A.; Green, Thomas J. (2000). <a href="https://archive.org/details/newcommentaryonc0000unse" target="_blank" rel="noopener noreferrer"><i>New Commentary on the Code of Canon Law</i></a>. Paulist Press. p. 571. <a href="https://en.wikipedia.org/wiki/ISBN_(identifier)" target="_blank" rel="noopener noreferrer">ISBN</a> <a href="https://en.wikipedia.org/wiki/Special:BookSources/9780809140664" target="_blank" rel="noopener noreferrer">9780809140664</a>. Retrieved 18 Jun 2015.
-                </li>
-                <li><b><a href="#cite_ref-USCCB_3-0">^</a></b> <a href="http://www.usccb.org/issues-and-action/cultural-diversity/hispanic-latino/hispanic-ministry-network-region-xiii-leaders.cfm" target="_blank" rel="noopener noreferrer">&quot;Hispanic Ministry Network Region XI Leaders&quot;</a>. United States Conference of Catholic Bishops. Retrieved 14 Apr 2012.
-                </li>
-                <li><b><a href="#cite_ref-usccb_4-0">^</a></b> <a href="http://www.usccb.org/about/bishops-and-dioceses/" target="_blank" rel="noopener noreferrer">&quot;Bishops and Dioceses&quot;</a>. United States Conference of Catholic Bishops. Retrieved 23 March 2013.
-                </li>
-                </ol>
-                <h2>External links</h2>
-                <ul><li><a href="http://www.catholic-hierarchy.org/diocese/qview.html" target="_blank" rel="noopener noreferrer">Catholic-hierarchy.org</a></li>
-                <li><a href="http://www.gcatholic.org/dioceses/types.htm" target="_blank" rel="noopener noreferrer">GCatholic (here: dioceses by type)</a></li>
-                <li><a href="http://www.fabc.org/mem.html" target="_blank" rel="noopener noreferrer">Federation of Asian Bishops&#x27; Conferences</a> <a href="https://web.archive.org/web/20140712100938/http://www.fabc.org/mem.html" target="_blank" rel="noopener noreferrer">Archived</a> 2014-07-12 at the <a href="https://en.wikipedia.org/wiki/Wayback_Machine" target="_blank" rel="noopener noreferrer">Wayback Machine</a></li></ul>
-                <h2>Structure</h2>
+                <h2>Diplomatic missions</h2>
                 <p>The Holy See maintains diplomatic missions around the world through apostolic nunciatures, delegations, and permanent representatives. The table below is sourced from the current list of mission heads and includes nomination or vacancy dates.</p>
                 <div class="data-table-wrapper">
                     <table class="dioceses-table" id="holy-see-missions-table">
@@ -5553,6 +5537,24 @@
             const sourceApiUrl = "https://en.wikipedia.org/w/api.php?action=parse&page=List_of_heads_of_the_diplomatic_missions_of_the_Holy_See&prop=text&format=json&formatversion=2&origin=*";
             const sourcePageUrl = "https://en.wikipedia.org/wiki/List_of_heads_of_the_diplomatic_missions_of_the_Holy_See";
             const missionRows = [];
+            const missionCountryFlagOptions = {
+                codeOverrides: {
+                    "Bosnia and Herzegovina": "BA",
+                    "Czech Republic": "CZ",
+                    "Holy See": "VA",
+                    Palestine: "PS",
+                    Taiwan: "TW",
+                    UK: "GB",
+                    USA: "US",
+                    "United States": "US",
+                    "United States of America": "US",
+                    Vatican: "VA",
+                    "Vatican City": "VA",
+                    "Vatican City State": "VA"
+                },
+                exactThreshold: 0.95,
+                compactThreshold: 0.3
+            };
             let sortDirection = null;
 
             function normalizeText(value) {
@@ -5578,7 +5580,16 @@
                 return `${sourcePageUrl}${href.startsWith("#") ? "" : "/"}${href}`;
             }
 
-            function createLinkedCell(sourceCell) {
+            function appendCountryName(targetNode, countryName) {
+                if (!window.CountryFlagUtils?.appendCountryWithMarker) {
+                    targetNode.textContent = countryName;
+                    return;
+                }
+
+                CountryFlagUtils.appendCountryWithMarker(targetNode, countryName, missionCountryFlagOptions);
+            }
+
+            function createLinkedCell(sourceCell, options = {}) {
                 const cell = document.createElement("td");
                 const clone = sourceCell.cloneNode(true);
                 clone.querySelectorAll("sup, .reference, .mw-ref, img, .flagicon").forEach((element) => element.remove());
@@ -5591,12 +5602,23 @@
                     anchor.href = resolveWikipediaUrl(link.getAttribute("href"));
                     anchor.target = "_blank";
                     anchor.rel = "noopener noreferrer";
-                    anchor.textContent = text;
+
+                    if (options.appendCountryFlag) {
+                        appendCountryName(anchor, text);
+                    } else {
+                        anchor.textContent = text;
+                    }
+
                     cell.appendChild(anchor);
                     return { cell, text };
                 }
 
-                cell.textContent = text;
+                if (options.appendCountryFlag) {
+                    appendCountryName(cell, text);
+                } else {
+                    cell.textContent = text;
+                }
+
                 return { cell, text };
             }
 
@@ -5725,7 +5747,7 @@
                         const sourceCells = sourceRow.querySelectorAll("td");
                         const row = document.createElement("tr");
 
-                        const countryCell = createLinkedCell(sourceCells[0]);
+                        const countryCell = createLinkedCell(sourceCells[0], { appendCountryFlag: true });
                         const missionCell = createLinkedCell(sourceCells[1]);
                         const representativeCell = createLinkedCell(sourceCells[2]);
                         const nominationCell = document.createElement("td");
