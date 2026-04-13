@@ -20,10 +20,35 @@
                 height="300"
             >
         </div>
+        <!-- leader-image:start -->
+        <figure class="leader-figure">
+            <img class="leader-image" src="https://baptistworld.org/wp-content/uploads/2023/03/BWA_General-Secretary.jpg" alt="Portrait of Elijah M. Brown" loading="lazy" width="960" height="540">
+            <figcaption class="leader-caption">General Secretary and CEO Elijah M. Brown (2018-<em>present</em>)</figcaption>
+            <p class="source-note leader-source-note">Source: Image from the Baptist World Alliance <a href="https://baptistworld.org/general-secretary/" target="_blank" rel="noopener noreferrer">General Secretary profile page</a>, used for identification.</p>
+        </figure>
+        <!-- leader-image:end -->
         <section class="info-card">
             <h2 class="section-title">Intro</h2>
             <p class="intro-text">The Baptist World Alliance is an international Baptist communion that links member bodies across more than 130 countries and territories and represents tens of millions of Baptists worldwide.</p>
             <p class="source-note">Source: Intro adapted from the Wikipedia article "Baptist World Alliance." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+        </section>
+        <section class="info-card section-spacing">
+            <h2 class="section-title">Structure</h2>
+            <p class="intro-text">The Baptist World Alliance is structured as a fellowship of national and regional Baptist conventions, unions, and associations. The table below groups all member denominations in this page's data by country or territory.</p>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Country</th>
+                            <th scope="col">Member denominations</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bwa-structure-body"></tbody>
+                </table>
+            </div>
+            <p class="bwa-map-summary" id="bwa-structure-summary"></p>
+            <p class="source-note">Source: Structure table compiled from the member list adapted from the Wikipedia article "Baptist World Alliance." Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
         </section>
         <section class="info-card section-spacing">
             <h2 class="section-title">List of members</h2>
@@ -165,8 +190,12 @@
             return row.country === "World" && row.denomination === "Baptist World Alliance";
         }
 
+        function getMemberRowsExcludingTotal() {
+            return memberRows.filter((row) => !isTotalRow(row));
+        }
+
         function getUniqueMemberCountries() {
-            return [...new Set(memberRows.filter((row) => !isTotalRow(row)).map((row) => row.country))];
+            return [...new Set(getMemberRowsExcludingTotal().map((row) => row.country))];
         }
 
         function updateMembersSortHeader() {
@@ -213,6 +242,68 @@
 
             tbody.replaceChildren(fragment);
             updateMembersSortHeader();
+        }
+
+        function buildStructureRows() {
+            const countryStructureMap = new Map();
+
+            getMemberRowsExcludingTotal().forEach((row) => {
+                if (!countryStructureMap.has(row.country)) {
+                    countryStructureMap.set(row.country, new Set());
+                }
+
+                countryStructureMap.get(row.country).add(row.denomination);
+            });
+
+            return [...countryStructureMap.entries()]
+                .map(([country, denominationSet]) => {
+                    const denominations = [...denominationSet].sort((a, b) => a.localeCompare(b));
+                    return {
+                        country,
+                        denominationCount: denominations.length,
+                        denominations
+                    };
+                })
+                .sort((a, b) => a.country.localeCompare(b.country));
+        }
+
+        function renderStructureTable() {
+            const tbody = document.getElementById("bwa-structure-body");
+            const summary = document.getElementById("bwa-structure-summary");
+
+            if (!tbody || !summary) {
+                return;
+            }
+
+            const structureRows = buildStructureRows();
+            let totalDenominationCount = 0;
+            const fragment = document.createDocumentFragment();
+
+            structureRows.forEach((row) => {
+                const tr = document.createElement("tr");
+                const countryTd = document.createElement("td");
+                const denominationsTd = document.createElement("td");
+                const countTd = document.createElement("td");
+                const denominationList = document.createElement("ul");
+
+                totalDenominationCount += row.denominationCount;
+                renderCountryCell(countryTd, row.country);
+                countTd.textContent = row.denominationCount.toLocaleString();
+
+                denominationList.className = "structure-list structure-list-compact";
+                row.denominations.forEach((denominationName) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = denominationName;
+                    denominationList.appendChild(listItem);
+                });
+
+                denominationsTd.appendChild(denominationList);
+                tr.append(countryTd, denominationsTd, countTd);
+                fragment.appendChild(tr);
+            });
+
+            tbody.replaceChildren(fragment);
+            summary.textContent = `${totalDenominationCount.toLocaleString()} member denominations across ${structureRows.length.toLocaleString()} countries and territories are shown in this structure table.`;
         }
 
         function setMapHoverLabel(label) {
@@ -501,6 +592,7 @@
                 originalIndex
             }));
 
+            renderStructureTable();
             renderTable();
             document.getElementById("members-sort-button").addEventListener("click", sortByMembers);
             initializeMemberMap();
