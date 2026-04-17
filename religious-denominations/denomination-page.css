@@ -100,6 +100,11 @@ body {
     margin-bottom: 14px;
     color: #333;
 }
+.source-heading {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #777;
+}
 .intro-text {
     color: #555;
     font-size: 1.08rem;
