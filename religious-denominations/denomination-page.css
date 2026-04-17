@@ -1,6 +1,13 @@
+@font-face {
+    font-family: 'Bagnard';
+    src: url('https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Bagnard', serif;
     line-height: 1.6;
     color: #333;
     background: #f5f1e8;
