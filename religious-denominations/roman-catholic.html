@@ -4280,7 +4280,7 @@
                 const text = normalizeText(clone.textContent) || "—";
                 const link = clone.querySelector("a[href]");
 
-                if (link) {
+                if (link && options.link !== false) {
                     const anchor = document.createElement("a");
                     anchor.href = resolveWikipediaUrl(link.getAttribute("href"));
                     anchor.target = "_blank";
@@ -4430,7 +4430,7 @@
                         const sourceCells = sourceRow.querySelectorAll("td");
                         const row = document.createElement("tr");
 
-                        const countryCell = createLinkedCell(sourceCells[0], { appendCountryFlag: true });
+                        const countryCell = createLinkedCell(sourceCells[0], { appendCountryFlag: true, link: false });
                         const missionCell = createLinkedCell(sourceCells[1]);
                         const representativeCell = createLinkedCell(sourceCells[2]);
                         const nominationCell = document.createElement("td");
