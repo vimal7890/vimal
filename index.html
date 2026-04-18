@@ -185,43 +185,7 @@
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
         .footer a { color: #333; text-decoration: none; }
         .footer a:hover { text-decoration: none; }
-        .side-ornament {
-            position: fixed;
-            top: 50%;
-            width: clamp(92px, 10vw, 144px);
-            transform: translateY(-50%);
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.72;
-        }
-        .side-ornament.left {
-            left: clamp(2px, 0.8vw, 12px);
-        }
-        .side-ornament.right {
-            right: clamp(2px, 0.8vw, 12px);
-        }
-        .side-ornament svg {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-        .side-ornament.right svg {
-            transform: scaleX(-1);
-        }
         @media (max-width: 820px) {
-            .side-ornament {
-                position: absolute;
-                top: 18px;
-                width: 52px;
-                transform: none;
-                opacity: 0.18;
-            }
-            .side-ornament.left {
-                left: 8px;
-            }
-            .side-ornament.right {
-                right: 8px;
-            }
             .header {
                 padding-top: 72px;
             }
@@ -248,11 +212,6 @@
             }
             .song-description {
                 font-size: 0.96rem;
-            }
-            .side-ornament {
-                width: 38px;
-                top: 12px;
-                opacity: 0.12;
             }
         }
         @media (max-width: 420px) {
@@ -352,58 +311,6 @@
                 </div>
             </section>
         </div>
-    </div>
-    <div class="side-ornament left" aria-hidden="true">
-        <svg viewBox="0 0 160 320" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="#9e3b2f" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M80 24 L80 60" stroke-width="4" />
-                <circle cx="80" cy="92" r="42" stroke-width="3.5" />
-                <circle cx="80" cy="92" r="28" stroke-width="2.5" opacity="0.82" />
-                <circle cx="80" cy="92" r="7" fill="#9e3b2f" stroke="none" />
-                <path d="M80 46 C68 58 68 74 80 84 C92 74 92 58 80 46 Z" stroke-width="3" />
-                <path d="M126 92 C114 80 98 80 88 92 C98 104 114 104 126 92 Z" stroke-width="3" />
-                <path d="M80 138 C92 126 92 110 80 100 C68 110 68 126 80 138 Z" stroke-width="3" />
-                <path d="M34 92 C46 104 62 104 72 92 C62 80 46 80 34 92 Z" stroke-width="3" />
-                <path d="M112 60 C102 60 94 66 92 76 C102 78 110 72 112 60 Z" stroke-width="2.5" />
-                <path d="M112 124 C110 112 102 106 92 108 C94 118 102 124 112 124 Z" stroke-width="2.5" />
-                <path d="M48 124 C58 124 66 118 68 108 C58 106 50 112 48 124 Z" stroke-width="2.5" />
-                <path d="M48 60 C50 72 58 78 68 76 C66 66 58 60 48 60 Z" stroke-width="2.5" />
-                <path d="M80 136 L80 286" stroke-width="3" opacity="0.8" />
-                <path d="M80 164 C64 164 52 176 52 192 C68 192 80 180 80 164 Z" stroke-width="2.5" />
-                <path d="M80 164 C96 164 108 176 108 192 C92 192 80 180 80 164 Z" stroke-width="2.5" />
-                <path d="M80 202 C62 202 48 216 48 234 C66 234 80 220 80 202 Z" stroke-width="2.5" />
-                <path d="M80 202 C98 202 112 216 112 234 C94 234 80 220 80 202 Z" stroke-width="2.5" />
-                <path d="M80 242 C66 242 56 252 56 266 C70 266 80 256 80 242 Z" stroke-width="2.5" />
-                <path d="M80 242 C94 242 104 252 104 266 C90 266 80 256 80 242 Z" stroke-width="2.5" />
-                <circle cx="80" cy="292" r="10" stroke-width="2.5" />
-            </g>
-        </svg>
-    </div>
-    <div class="side-ornament right" aria-hidden="true">
-        <svg viewBox="0 0 160 320" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="#9e3b2f" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M80 24 L80 60" stroke-width="4" />
-                <circle cx="80" cy="92" r="42" stroke-width="3.5" />
-                <circle cx="80" cy="92" r="28" stroke-width="2.5" opacity="0.82" />
-                <circle cx="80" cy="92" r="7" fill="#9e3b2f" stroke="none" />
-                <path d="M80 46 C68 58 68 74 80 84 C92 74 92 58 80 46 Z" stroke-width="3" />
-                <path d="M126 92 C114 80 98 80 88 92 C98 104 114 104 126 92 Z" stroke-width="3" />
-                <path d="M80 138 C92 126 92 110 80 100 C68 110 68 126 80 138 Z" stroke-width="3" />
-                <path d="M34 92 C46 104 62 104 72 92 C62 80 46 80 34 92 Z" stroke-width="3" />
-                <path d="M112 60 C102 60 94 66 92 76 C102 78 110 72 112 60 Z" stroke-width="2.5" />
-                <path d="M112 124 C110 112 102 106 92 108 C94 118 102 124 112 124 Z" stroke-width="2.5" />
-                <path d="M48 124 C58 124 66 118 68 108 C58 106 50 112 48 124 Z" stroke-width="2.5" />
-                <path d="M48 60 C50 72 58 78 68 76 C66 66 58 60 48 60 Z" stroke-width="2.5" />
-                <path d="M80 136 L80 286" stroke-width="3" opacity="0.8" />
-                <path d="M80 164 C64 164 52 176 52 192 C68 192 80 180 80 164 Z" stroke-width="2.5" />
-                <path d="M80 164 C96 164 108 176 108 192 C92 192 80 180 80 164 Z" stroke-width="2.5" />
-                <path d="M80 202 C62 202 48 216 48 234 C66 234 80 220 80 202 Z" stroke-width="2.5" />
-                <path d="M80 202 C98 202 112 216 112 234 C94 234 80 220 80 202 Z" stroke-width="2.5" />
-                <path d="M80 242 C66 242 56 252 56 266 C70 266 80 256 80 242 Z" stroke-width="2.5" />
-                <path d="M80 242 C94 242 104 252 104 266 C90 266 80 256 80 242 Z" stroke-width="2.5" />
-                <circle cx="80" cy="292" r="10" stroke-width="2.5" />
-            </g>
-        </svg>
     </div>
     <script>
         const names = ['Vimal', 'விமல்'];
