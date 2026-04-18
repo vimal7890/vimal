@@ -290,6 +290,8 @@
         var restoreTimer = 0;
         var restoreObserver = null;
         var restoreFrame = 0;
+        var lastMaxScrollY = -1;
+        var stalledRestoreAttempts = 0;
 
         function stopRestoring() {
             if (restoreTimer) {
@@ -307,8 +309,21 @@
                 restoreFrame = 0;
             }
 
+            window.removeEventListener("wheel", handleUserScrollIntent);
+            window.removeEventListener("touchstart", handleUserScrollIntent);
+            window.removeEventListener("touchmove", handleUserScrollIntent);
+            window.removeEventListener("keydown", handleUserScrollIntent);
+            window.removeEventListener("mousedown", handleUserScrollIntent);
             isRestoringScroll = false;
             saveScrollPosition();
+        }
+
+        function handleUserScrollIntent() {
+            if (!isRestoringScroll) {
+                return;
+            }
+
+            stopRestoring();
         }
 
         function attemptRestore() {
@@ -321,9 +336,20 @@
             var targetY = Math.max(0, savedPosition.y);
             var appliedY = Math.min(targetY, maxScrollY);
 
+            if (Math.abs(maxScrollY - lastMaxScrollY) <= 2) {
+                stalledRestoreAttempts += 1;
+            } else {
+                stalledRestoreAttempts = 0;
+                lastMaxScrollY = maxScrollY;
+            }
+
             window.scrollTo(targetX, appliedY);
 
-            if ((maxScrollY >= targetY && Math.abs(window.scrollY - targetY) <= 2) || restoreAttempts >= maxRestoreAttempts) {
+            if (
+                (maxScrollY >= targetY && Math.abs(window.scrollY - targetY) <= 2) ||
+                (appliedY === maxScrollY && stalledRestoreAttempts >= 10) ||
+                restoreAttempts >= maxRestoreAttempts
+            ) {
                 stopRestoring();
             }
         }
@@ -342,6 +368,11 @@
             }
 
             isRestoringScroll = true;
+            window.addEventListener("wheel", handleUserScrollIntent, { passive: true });
+            window.addEventListener("touchstart", handleUserScrollIntent, { passive: true });
+            window.addEventListener("touchmove", handleUserScrollIntent, { passive: true });
+            window.addEventListener("keydown", handleUserScrollIntent);
+            window.addEventListener("mousedown", handleUserScrollIntent);
             attemptRestore();
             restoreTimer = window.setInterval(attemptRestore, 100);
 
