@@ -152,6 +152,9 @@
             font-weight: 600;
             text-decoration: none;
         }
+        .sub-denomination-link {
+            font-weight: 700;
+        }
         .denomination-link:hover,
         .denomination-link:focus-visible {
             color: #d93025;
@@ -815,7 +818,7 @@
                         if (isChurchOfEnglandLeadershipCell) {
                             const churchLink = document.createElement('a');
                             churchLink.href = churchOfEnglandPagePath;
-                            churchLink.className = 'denomination-link';
+                            churchLink.className = 'denomination-link sub-denomination-link';
                             churchLink.textContent = churchOfEnglandPageLabel;
                             td.appendChild(churchLink);
 
@@ -824,7 +827,7 @@
 
                                 const link = document.createElement('a');
                                 link.href = anglicanCommunionPagePath;
-                                link.className = 'denomination-link';
+                                link.className = 'denomination-link sub-denomination-link';
 
                                 const boldText = document.createElement('strong');
                                 boldText.textContent = 'Anglican Communion';
@@ -843,7 +846,9 @@
                         if ((shouldLinkSubDenomination || shouldLinkSubDenomination2 || shouldLinkDenomination) && denominationPageMatch?.page) {
                             const link = document.createElement('a');
                             link.href = denominationPageMatch.page;
-                            link.className = 'denomination-link';
+                            link.className = shouldLinkSubDenomination || shouldLinkSubDenomination2
+                                ? 'denomination-link sub-denomination-link'
+                                : 'denomination-link';
                             link.textContent = content;
                             td.appendChild(link);
                         } else {
