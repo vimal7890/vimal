@@ -727,7 +727,10 @@
                     const subDenomination = columns[subDenominationIdx] ? columns[subDenominationIdx].trim() : '';
                     const subDenomination2 = columns[subDenomination2Idx] ? columns[subDenomination2Idx].trim() : '';
 
-                    if (subDenomination2 === 'Cooperative Baptist Fellowship') {
+                    if (
+                        subDenomination2 === 'Cooperative Baptist Fellowship' ||
+                        subDenomination2 === 'Baptist Joint Committee for Religious Liberty'
+                    ) {
                         return;
                     }
 
