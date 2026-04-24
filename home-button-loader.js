@@ -577,59 +577,90 @@
         loadLastEditedDate(lastEditedBadge);
     }
 
-    // Skip injection if a page-specific home button already exists.
-    if (document.querySelector("a.home-button, a.global-home-button, a[aria-label='Go to home page']")) {
-        return;
-    }
-
     if (!document.getElementById("global-home-button-style")) {
         var style = document.createElement("style");
         style.id = "global-home-button-style";
         style.textContent = [
+            ".home-button,",
             ".global-home-button {",
             "    position: fixed;",
-            "    top: 14px;",
-            "    left: 14px;",
+            "    top: clamp(14px, 2vw, 22px);",
+            "    left: clamp(14px, 2vw, 22px);",
             "    z-index: 2000;",
             "    display: inline-flex;",
             "    align-items: center;",
-            "    gap: 8px;",
-            "    padding: 8px 14px;",
-            "    border-radius: 999px;",
-            "    border: 1px solid rgba(51, 51, 51, 0.2);",
-            "    background: rgba(255, 255, 255, 0.92);",
+            "    gap: 7px;",
+            "    padding: 0;",
+            "    border: 0;",
+            "    border-radius: 0;",
+            "    background: transparent;",
             "    color: #333;",
             "    text-decoration: none;",
             "    font-size: 0.95rem;",
             "    font-weight: 600;",
-            "    line-height: 1;",
-            "    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);",
-            "    backdrop-filter: blur(2px);",
-            "    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;",
+            "    line-height: 1.1;",
+            "    box-shadow: none;",
+            "    backdrop-filter: none;",
+            "    transition: color 0.2s ease;",
             "}",
+            ".home-button svg,",
             ".global-home-button svg {",
-            "    width: 16px;",
-            "    height: 16px;",
+            "    width: 15px;",
+            "    height: 15px;",
             "    flex-shrink: 0;",
             "}",
+            ".home-button:hover,",
+            ".home-button:focus-visible,",
             ".global-home-button:hover,",
             ".global-home-button:focus-visible {",
             "    color: #d93025;",
-            "    border-color: rgba(217, 48, 37, 0.45);",
-            "    background: #fff;",
-            "    transform: translateY(-1px);",
+            "    background: transparent;",
+            "    transform: none;",
             "    text-decoration: none;",
             "}",
+            ".home-button:focus-visible,",
             ".global-home-button:focus-visible {",
             "    outline: 2px solid rgba(217, 48, 37, 0.55);",
-            "    outline-offset: 2px;",
+            "    outline-offset: 4px;",
+            "}",
+            ".page-top-meta {",
+            "    min-height: 24px;",
+            "}",
+            ".last-edited-badge {",
+            "    display: inline-flex;",
+            "    flex-wrap: wrap;",
+            "    justify-content: flex-end;",
+            "    align-items: baseline;",
+            "    gap: 5px;",
+            "    max-width: min(100%, 320px);",
+            "    padding: 0;",
+            "    border: 0;",
+            "    border-radius: 0;",
+            "    background: transparent;",
+            "    color: #666;",
+            "    font-size: 0.86rem;",
+            "    line-height: 1.3;",
+            "    text-align: right;",
+            "    box-shadow: none;",
+            "}",
+            ".last-edited-label {",
+            "    color: #666;",
+            "    font-weight: 400;",
+            "}",
+            ".last-edited-label::after {",
+            "    content: ':';",
+            "}",
+            ".last-edited-badge time {",
+            "    color: #333;",
+            "    font-weight: 500;",
             "}",
             "@media (max-width: 640px) {",
+            "    .home-button,",
             "    .global-home-button {",
             "        gap: 6px;",
-            "        padding: 7px 12px;",
             "        font-size: 0.9rem;",
             "    }",
+            "    .home-button svg,",
             "    .global-home-button svg {",
             "        width: 14px;",
             "        height: 14px;",
@@ -637,6 +668,11 @@
             "}"
         ].join("\n");
         document.head.appendChild(style);
+    }
+
+    // Skip injection if a page-specific home button already exists.
+    if (document.querySelector("a.home-button, a.global-home-button, a[aria-label='Go to home page']")) {
+        return;
     }
 
     var homeButton = document.createElement("a");

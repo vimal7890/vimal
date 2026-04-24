@@ -18,40 +18,33 @@
         .container { max-width: 1200px; margin: 0 auto; padding: clamp(14px, 3.8vw, 20px); position: relative; z-index: 1; }
         .home-button {
             position: fixed;
-            top: clamp(12px, 2vw, 22px);
-            left: clamp(12px, 2vw, 22px);
+            top: clamp(14px, 2vw, 22px);
+            left: clamp(14px, 2vw, 22px);
             z-index: 1000;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(51, 51, 51, 0.2);
-            background: rgba(255, 255, 255, 0.9);
+            gap: 7px;
+            padding: 0;
             color: #333;
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 600;
-            line-height: 1;
-            backdrop-filter: blur(2px);
-            transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+            line-height: 1.1;
+            transition: color 0.2s ease;
         }
         .home-button svg {
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             flex-shrink: 0;
         }
         .home-button:hover,
         .home-button:focus-visible {
             color: #d93025;
-            border-color: rgba(217, 48, 37, 0.45);
-            background: #fff;
-            transform: translateY(-1px);
             text-decoration: none;
         }
         .home-button:focus-visible {
             outline: 2px solid rgba(217, 48, 37, 0.55);
-            outline-offset: 2px;
+            outline-offset: 4px;
         }
         .header { text-align: center; padding: clamp(44px, 8vw, 60px) 0; color: #333; }
         .header h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); font-weight: 700; margin-bottom: 10px; transition: opacity 0.5s ease; }
@@ -196,7 +189,6 @@
         @media (max-width: 640px) {
             .home-button {
                 gap: 6px;
-                padding: 7px 12px;
                 font-size: 0.9rem;
             }
             .home-button svg {
