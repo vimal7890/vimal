@@ -80,6 +80,24 @@ function getHtmlPagesUsingCountryFlagUtils() {
         .filter((fileName) => readUtf8(path.join(denominationsDir, fileName)).includes("country-flag-utils.js"));
 }
 
+function extractObjectLiteralFromHtmlScript(htmlFile, variableName) {
+    const raw = readUtf8(path.join(denominationsDir, htmlFile));
+    const pattern = new RegExp(`const\\s+${variableName}\\s*=\\s*({[\\s\\S]*?\\n\\s*});`);
+    const match = raw.match(pattern);
+
+    if (!match) {
+        throw new Error(`Could not find ${variableName} in ${htmlFile}`);
+    }
+
+    return vm.runInNewContext(`(${match[1]})`, {}, {
+        filename: `${htmlFile}:${variableName}`
+    });
+}
+
+function getRomanCatholicCountryFlagCodeOverrides() {
+    return extractObjectLiteralFromHtmlScript("roman-catholic.html", "countryFlagCodeOverrides");
+}
+
 const scenarioDefinitions = [
     {
         id: "world-methodist-council",
@@ -213,6 +231,16 @@ const scenarioDefinitions = [
             exactThreshold: 0.95,
             extraStopWords: ["islands", "saint"]
         }
+    },
+    {
+        id: "roman-catholic",
+        htmlFile: "roman-catholic.html",
+        getCountries: () => Object.keys(getRomanCatholicCountryFlagCodeOverrides()),
+        options: {
+            codeOverrides: getRomanCatholicCountryFlagCodeOverrides(),
+            compactThreshold: 0.3,
+            exactThreshold: 0.95
+        }
     }
 ];
 
@@ -250,7 +278,9 @@ if (staleScenarioFiles.length > 0) {
 }
 
 for (const scenario of scenarioDefinitions) {
-    const dataWindow = loadWindowScript(path.join(denominationsDir, scenario.dataFile));
+    const dataWindow = scenario.dataFile
+        ? loadWindowScript(path.join(denominationsDir, scenario.dataFile))
+        : {};
     const countryNames = unique(scenario.getCountries(dataWindow).map((value) => String(value || "").trim()).filter(Boolean));
     const allowedUnresolved = new Set(scenario.allowedUnresolved || []);
     const failures = [];

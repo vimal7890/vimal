@@ -417,6 +417,27 @@ body {
     display: none;
     pointer-events: none;
 }
+.roman-catholic-conference-map {
+    margin-top: 6px;
+    margin-bottom: 26px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #ece6d7;
+}
+.roman-catholic-map-title {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.12rem;
+    line-height: 1.3;
+}
+.roman-catholic-map-frame {
+    width: min(100%, 1040px);
+}
+.dioceses-content h2.is-map-targeted,
+.dioceses-content h3.is-map-targeted,
+.dioceses-content h4.is-map-targeted {
+    color: #a91e1e;
+    transition: color 0.2s ease;
+}
 .roman-catholic-layout {
     display: grid;
     gap: 28px;

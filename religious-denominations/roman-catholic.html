@@ -29,6 +29,29 @@
             </aside>
             <section class="info-card roman-catholic-main-card">
                 <h2 class="section-title">Dioceses</h2>
+                <div class="roman-catholic-conference-map" aria-labelledby="roman-catholic-conference-map-title">
+                    <h3 class="roman-catholic-map-title" id="roman-catholic-conference-map-title">Episcopal conference map</h3>
+                    <div class="bwa-map-meta">
+                        <div class="bwa-map-legend" aria-label="Map legend">
+                            <span class="bwa-map-legend-swatch" aria-hidden="true"></span>
+                            <span>Links to a conference section</span>
+                        </div>
+                        <p class="bwa-map-hover-name" id="roman-catholic-map-hover-name" aria-live="polite">Highlighted countries link to episcopal conference sections.</p>
+                    </div>
+                    <p class="bwa-map-summary" id="roman-catholic-map-summary"></p>
+                    <div class="bwa-map-frame roman-catholic-map-frame">
+                        <object
+                            class="bwa-world-map-object"
+                            id="roman-catholic-world-map-object"
+                            data="baptist-world-alliance-world-map.svg"
+                            type="image/svg+xml"
+                            aria-label="World map linking countries to Roman Catholic episcopal conference sections"
+                        >
+                            <p class="error-text">The world map could not be loaded.</p>
+                        </object>
+                        <div class="bwa-map-loading loading-text" id="roman-catholic-map-loading">Loading world map...</div>
+                    </div>
+                </div>
                 <div class="dioceses-content">
                 <h2>Types of Latin Church jurisdictions</h2>
                 <p>This page focuses on the Latin Church and its territorial structure, including metropolitan archdioceses, dioceses, territorial prelatures, territorial abbacies, apostolic vicariates, apostolic prefectures, apostolic administrations, military ordinariates, personal ordinariates, personal prelatures, and missions <i>sui juris</i>.</p>
@@ -3894,6 +3917,7 @@
             <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Catholic_Church" target="_blank" rel="noopener noreferrer">Catholic Church</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             <p class="source-note">Source: Table data adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_heads_of_the_diplomatic_missions_of_the_Holy_See" target="_blank" rel="noopener noreferrer">List of heads of the diplomatic missions of the Holy See</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             <p class="source-note">Source: Text adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Catholic_dioceses" target="_blank" rel="noopener noreferrer">List of Catholic dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+            <p class="source-note">Base map adapted from <a href="https://commons.wikimedia.org/wiki/File:BlankMap-World.svg" target="_blank" rel="noopener noreferrer">BlankMap-World.svg</a> on Wikimedia Commons and released to the public domain.</p>
         </section>
     </div>
     <script src="country-flag-utils.js"></script>
@@ -4195,6 +4219,619 @@
 
             headings.forEach((heading) => observer.observe(heading));
             setActiveLink(headings[0].id);
+        })();
+    </script>
+    <script>
+        (function initializeRomanCatholicConferenceMap() {
+            const contentRoot = document.querySelector(".dioceses-content");
+            const mapObject = document.getElementById("roman-catholic-world-map-object");
+            const mapHoverName = document.getElementById("roman-catholic-map-hover-name");
+            const mapSummary = document.getElementById("roman-catholic-map-summary");
+
+            if (!contentRoot || !mapObject || !mapHoverName || !mapSummary) {
+                return;
+            }
+
+            const defaultMapLabel = "Highlighted countries link to episcopal conference sections.";
+            const mapRegionOverrides = {
+                "Bosnia and Herzegovina": "ba",
+                "British Virgin Islands": "vg",
+                "Cape Verde": "cv",
+                China: "cnx",
+                "Czech Republic": "cz",
+                "Democratic Republic of the Congo": "cd",
+                "East Timor": "tl",
+                France: "frx",
+                "Guinea-Bissau": "gw",
+                "Guinée-Bissau": "gw",
+                "Ivory Coast": "ci",
+                Laos: "la",
+                Macau: "mo",
+                Macao: "mo",
+                "North Korea": "kp",
+                Netherlands: "nlx",
+                Palestine: "ps",
+                Reunion: "re",
+                "Republic of the Congo": "cg",
+                Russia: "ru",
+                "Russian Federation": "ru",
+                "Saint Barthélemy": "bl",
+                "Saint Barthelemy": "bl",
+                "Saint Martin (French Part)": "mf",
+                "Saint Vincent and the Grenadines": "vc",
+                "Sao Tome and Principe": "st",
+                "São Tomé and Príncipe": "st",
+                "South Korea": "kr",
+                "South Sudan": "ss",
+                Syria: "sy",
+                "Timor-Leste": "tl",
+                "United Kingdom": "gb",
+                "United States": "us",
+                "United States of America": "us",
+                "U.S. Virgin Islands": "vi",
+                "Vatican City": "va",
+                "Virgin Islands, U.S.": "vi",
+                "Wallis and Futuna": "wf"
+            };
+            const conferenceTargets = [
+                { heading: "Episcopal Conference of Austria", countries: ["Austria"] },
+                { heading: "Episcopal Conference of Belgium", countries: ["Belgium"] },
+                { heading: "Episcopal Conference of England and Wales", countries: ["United Kingdom"] },
+                { heading: "Episcopal Conference of France", countries: ["France"] },
+                { heading: "Episcopal Conference of Germany", countries: ["Germany"] },
+                { heading: "Episcopal Conference of Ireland", countries: ["Ireland"] },
+                { heading: "Episcopal Conference of Italy", countries: ["Italy", "San Marino", "Vatican City"] },
+                { heading: "Episcopal Conference of Malta", countries: ["Malta"] },
+                { heading: "Episcopal Conference of the Netherlands", countries: ["Netherlands"] },
+                { heading: "Episcopal Conference of Portugal", countries: ["Portugal"] },
+                { heading: "Episcopal Conference of Scandinavia", countries: ["Denmark", "Finland", "Iceland", "Norway", "Sweden", "Faroe Islands", "Greenland"] },
+                { heading: "Episcopal Conference of Spain", countries: ["Spain", "Andorra"] },
+                { heading: "Episcopal Conference of Switzerland", countries: ["Switzerland"] },
+                { heading: "Episcopal Conference of Albania", countries: ["Albania"] },
+                { heading: "Episcopal Conference of Saints Cyril and Methodius", countries: ["North Macedonia", "Montenegro", "Serbia"] },
+                { heading: "Episcopal Conference of Belarus", countries: ["Belarus"] },
+                { heading: "Episcopal Conference of Bosnia and Herzegovina", countries: ["Bosnia and Herzegovina"] },
+                { heading: "Episcopal Conference of Bulgaria", countries: ["Bulgaria"] },
+                { heading: "Episcopal Conference of Croatia", countries: ["Croatia"] },
+                { heading: "Episcopal Conference of the Czech Republic", countries: ["Czech Republic"] },
+                { heading: "Episcopal Conference of Greece", countries: ["Greece"] },
+                { heading: "Episcopal Conference of Hungary", countries: ["Hungary"] },
+                { heading: "Episcopal Conference of Latvia", countries: ["Latvia"] },
+                { heading: "Episcopal Conference of Lithuania", countries: ["Lithuania"] },
+                { heading: "Episcopal Conference of Poland", countries: ["Poland"] },
+                { heading: "Episcopal Conference of Romania", countries: ["Romania"] },
+                { heading: "Episcopal Conference of the Russian Federation", countries: ["Russia"] },
+                { heading: "Episcopal Conference of Slovakia", countries: ["Slovakia"] },
+                { heading: "Episcopal Conference of Slovenia", countries: ["Slovenia"] },
+                { heading: "Episcopal Conference of Ukraine", countries: ["Ukraine"] },
+                { heading: "Episcopal Conference of Canada", countries: ["Canada"] },
+                { heading: "Episcopal Conference of Mexico", countries: ["Mexico"] },
+                { heading: "Episcopal Conference of Costa Rica", countries: ["Costa Rica"] },
+                { heading: "Episcopal Conference of El Salvador", countries: ["El Salvador"] },
+                { heading: "Episcopal Conference of Guatemala", countries: ["Guatemala"] },
+                { heading: "Episcopal Conference of Honduras", countries: ["Honduras"] },
+                { heading: "Episcopal Conference of Nicaragua", countries: ["Nicaragua"] },
+                { heading: "Episcopal Conference of Panama", countries: ["Panama"] },
+                { heading: "Episcopal Conference of the (Lesser) Antilles", countries: ["Antigua and Barbuda", "Anguilla", "Aruba", "Bahamas", "Barbados", "Belize", "Bermuda", "Bonaire, Sint Eustatius and Saba", "British Virgin Islands", "Cayman Islands", "Curaçao", "Dominica", "French Guiana", "Grenada", "Guadeloupe", "Guyana", "Jamaica", "Martinique", "Montserrat", "Saint Barthélemy", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin (French Part)", "Saint Vincent and the Grenadines", "Sint Maarten", "Suriname", "Trinidad and Tobago", "Turks and Caicos Islands", "Virgin Islands, U.S."] },
+                { heading: "Episcopal Conference of Cuba", countries: ["Cuba"] },
+                { heading: "Episcopal Conference of the Dominican Republic", countries: ["Dominican Republic"] },
+                { heading: "Episcopal Conference of Haiti", countries: ["Haiti"] },
+                { heading: "Episcopal Conference of Puerto Rico", countries: ["Puerto Rico"] },
+                { heading: "Episcopal Conference of the United States of America", countries: ["United States of America"] },
+                { heading: "Episcopal Conference of Argentina", countries: ["Argentina"] },
+                { heading: "Episcopal Conference of Bolivia", countries: ["Bolivia"] },
+                { heading: "Episcopal Conference of Brazil", countries: ["Brazil"] },
+                { heading: "Episcopal Conference of Chile", countries: ["Chile"] },
+                { heading: "Episcopal Conference of Colombia", countries: ["Colombia"] },
+                { heading: "Episcopal Conference of Ecuador", countries: ["Ecuador"] },
+                { heading: "Episcopal Conference of Paraguay", countries: ["Paraguay"] },
+                { heading: "Episcopal Conference of Peru", countries: ["Peru"] },
+                { heading: "Episcopal Conference of Uruguay", countries: ["Uruguay"] },
+                { heading: "Episcopal Conference of Venezuela", countries: ["Venezuela"] },
+                { heading: "Episcopal conference of the Arab region Latin bishops", countries: ["Israel", "Palestine", "Jordan", "Cyprus", "Iraq", "Syria", "Lebanon", "Kuwait", "Bahrain", "Saudi Arabia", "Qatar", "Oman", "United Arab Emirates", "Yemen", "Djibouti", "Somalia"] },
+                { heading: "Episcopal Conference of Iran", countries: ["Iran"] },
+                { heading: "Episcopal Conference of Kazakhstan", countries: ["Kazakhstan"] },
+                { heading: "Episcopal Conference of Turkey", countries: ["Turkey"] },
+                { heading: "Episcopal Conference of Bangladesh", countries: ["Bangladesh"] },
+                { heading: "Episcopal Conference of Myanmar", countries: ["Myanmar"] },
+                { heading: "Episcopal Conference of East Timor", countries: ["Timor-Leste"] },
+                { heading: "Episcopal Conference of India", countries: ["India", "Bhutan"] },
+                { heading: "Episcopal Conference of Indonesia", countries: ["Indonesia"] },
+                { heading: "Episcopal Conference of Laos and Cambodia", countries: ["Laos", "Cambodia"] },
+                { heading: "Episcopal Conference of Malaysia, Singapore and Brunei", countries: ["Malaysia", "Singapore", "Brunei"] },
+                { heading: "Episcopal Conference of Pakistan", countries: ["Pakistan"] },
+                { heading: "Episcopal Conference of the Philippines", countries: ["Philippines"] },
+                { heading: "Episcopal Conference of Sri Lanka", countries: ["Sri Lanka", "Maldives"] },
+                { heading: "Episcopal Conference of Thailand", countries: ["Thailand"] },
+                { heading: "Episcopal Conference of Vietnam", countries: ["Vietnam"] },
+                { heading: "Episcopal Conference of Taiwan", countries: ["Taiwan"] },
+                { heading: "Episcopal Conference of China", countries: ["China", "Hong Kong", "Macao"] },
+                { heading: "Episcopal Conference of Japan", countries: ["Japan"] },
+                { heading: "Episcopal Conference of Korea", countries: ["North Korea", "South Korea"] },
+                { heading: "Episcopal Conference of Australia", countries: ["Australia"] },
+                { heading: "Episcopal Conference of New Zealand", countries: ["New Zealand"] },
+                { heading: "Episcopal Conference of the Pacific", countries: ["Tonga", "Guam", "Federated States of Micronesia", "Palau", "Northern Mariana Islands", "Marshall Islands", "New Caledonia", "Vanuatu", "Wallis and Futuna", "French Polynesia", "Pitcairn Islands", "Samoa", "American Samoa", "Tokelau", "Fiji", "Cook Islands", "Niue", "Kiribati", "Nauru", "Tuvalu"] },
+                { heading: "Episcopal Conference of Papua New Guinea and the Solomon Islands", countries: ["Papua New Guinea", "Solomon Islands"] },
+                { heading: "Assembly of Catholic Ordinaries of Egypt", countries: ["Egypt"] },
+                { heading: "Episcopal Conference of Nigeria", countries: ["Nigeria"] },
+                { heading: "Episcopal Conference of Gambia and Sierra Leone", countries: ["Gambia", "Sierra Leone"] },
+                { heading: "Episcopal Conference of Ghana", countries: ["Ghana"] },
+                { heading: "Episcopal Conference of Liberia", countries: ["Liberia"] },
+                { heading: "Ecclesiastical Conference of Benin", countries: ["Benin"] },
+                { heading: "Ecclesiastical Conference of Burkina Faso and Niger", countries: ["Burkina Faso", "Niger"] },
+                { heading: "Episcopal Conference of Ivory Coast", countries: ["Ivory Coast"] },
+                { heading: "Episcopal Conference of Guinea", countries: ["Guinea"] },
+                { heading: "Episcopal Conference of Mali", countries: ["Mali"] },
+                { heading: "Episcopal Conference of Togo", countries: ["Togo"] },
+                { heading: "Episcopal Conference of Senegal, Cape Verde, Mauritania", countries: ["Senegal", "Cape Verde", "Mauritania", "Guinea-Bissau"] },
+                { heading: "Episcopal Conference of Ethiopia and Eritrea", countries: ["Ethiopia", "Eritrea"] },
+                { heading: "Episcopal Conference of Kenya", countries: ["Kenya"] },
+                { heading: "Episcopal Conference of Malawi", countries: ["Malawi"] },
+                { heading: "Episcopal Conference of Sudan", countries: ["Sudan", "South Sudan"] },
+                { heading: "Episcopal Conference of Tanzania", countries: ["Tanzania"] },
+                { heading: "Episcopal Conference of Uganda", countries: ["Uganda"] },
+                { heading: "Episcopal Conference of Zambia", countries: ["Zambia"] },
+                { heading: "Ecclesiastical Conference of Burundi", countries: ["Burundi"] },
+                { heading: "Episcopal Conference of the Congo (-Kinshasa", countries: ["Democratic Republic of the Congo"] },
+                { heading: "Episcopal Conference of Rwanda", countries: ["Rwanda"] },
+                { heading: "Ecclesiastical Conference of Cameroon", countries: ["Cameroon"] },
+                { heading: "Episcopal Conference of the Central African Republic", countries: ["Central African Republic"] },
+                { heading: "Episcopal Conference of Chad", countries: ["Chad"] },
+                { heading: "Episcopal Conference of the Congo (Brazzaville)", countries: ["Republic of the Congo"] },
+                { heading: "Episcopal Conference of Equatorial Guinea", countries: ["Equatorial Guinea"] },
+                { heading: "Episcopal Conference of Gabon", countries: ["Gabon"] },
+                { heading: "Episcopal Conference of Angola", countries: ["Angola", "Sao Tome and Principe"] },
+                { heading: "Episcopal Conference of the Indian Ocean", countries: ["Comoros", "Mauritius", "British Indian Ocean Territory", "Seychelles", "Reunion", "Mayotte"] },
+                { heading: "Episcopal Conference of Lesotho", countries: ["Lesotho"] },
+                { heading: "Episcopal Conference of Madagascar", countries: ["Madagascar"] },
+                { heading: "Episcopal Conference of Mozambique", countries: ["Mozambique"] },
+                { heading: "Episcopal Conference of Namibia", countries: ["Namibia"] },
+                { heading: "Episcopal Conference of South Africa, Botswana and Eswatini", countries: ["South Africa", "Botswana", "Eswatini"] },
+                { heading: "Episcopal Conference of Zimbabwe", countries: ["Zimbabwe"] }
+            ];
+            let activeMapRegion = null;
+
+            function normalizeAscii(value) {
+                return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+            }
+
+            function normalizeLookupText(value) {
+                return normalizeAscii(value)
+                    .toLowerCase()
+                    .replace(/&/g, " and ")
+                    .replace(/[^a-z0-9]+/g, " ")
+                    .trim();
+            }
+
+            function tokenize(value) {
+                return normalizeLookupText(value)
+                    .split(/\s+/)
+                    .filter((token) => token && !["of", "the", "and", "in", "pr", "republic", "federated"].includes(token));
+            }
+
+            function normalizeCompact(value) {
+                return tokenize(value).join("");
+            }
+
+            function jaccardScore(a, b) {
+                const aSet = new Set(a);
+                const bSet = new Set(b);
+                let intersection = 0;
+
+                for (const token of aSet) {
+                    if (bSet.has(token)) {
+                        intersection += 1;
+                    }
+                }
+
+                const union = new Set([...aSet, ...bSet]).size;
+                return union === 0 ? 0 : intersection / union;
+            }
+
+            function slugify(value) {
+                return normalizeAscii(value)
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, "") || "section";
+            }
+
+            function ensureHeadingId(heading) {
+                if (heading.id) {
+                    return heading.id;
+                }
+
+                const usedIds = new Set(Array.from(document.querySelectorAll("[id]"), (element) => element.id));
+                const baseId = slugify(heading.textContent);
+                let candidateId = baseId;
+                let suffix = 2;
+
+                while (usedIds.has(candidateId)) {
+                    candidateId = `${baseId}-${suffix}`;
+                    suffix += 1;
+                }
+
+                heading.id = candidateId;
+                return candidateId;
+            }
+
+            function findConferenceHeading(label, headings) {
+                const normalizedLabel = normalizeLookupText(label);
+                return headings.find((heading) => normalizeLookupText(heading.textContent) === normalizedLabel)
+                    || headings.find((heading) => normalizeLookupText(heading.textContent).startsWith(normalizedLabel))
+                    || headings.find((heading) => normalizeLookupText(heading.textContent).includes(normalizedLabel));
+            }
+
+            function resolveConferenceTargets() {
+                const headings = Array.from(contentRoot.querySelectorAll("h3, h4"));
+                const targets = [];
+                const missingHeadings = [];
+
+                conferenceTargets.forEach((definition) => {
+                    const heading = findConferenceHeading(definition.heading, headings);
+
+                    if (!heading) {
+                        missingHeadings.push(definition.heading);
+                        return;
+                    }
+
+                    const target = {
+                        heading,
+                        headingId: ensureHeadingId(heading),
+                        headingText: heading.textContent.trim()
+                    };
+
+                    definition.countries.forEach((country) => {
+                        targets.push({ ...target, country });
+                    });
+                });
+
+                if (missingHeadings.length > 0) {
+                    console.warn("Unmatched Roman Catholic conference headings:", missingHeadings);
+                }
+
+                return targets;
+            }
+
+            function setMapHoverLabel(region) {
+                if (!region) {
+                    mapHoverName.textContent = defaultMapLabel;
+                    return;
+                }
+
+                if (region.dataset.conferenceHeadingText) {
+                    mapHoverName.textContent = `${region.dataset.regionName}: ${region.dataset.conferenceHeadingText}`;
+                    return;
+                }
+
+                mapHoverName.textContent = region.dataset.regionName || defaultMapLabel;
+            }
+
+            function setMapLoadingState(message, isError = false) {
+                const loadingElement = document.getElementById("roman-catholic-map-loading");
+
+                if (!loadingElement) {
+                    return;
+                }
+
+                if (!message) {
+                    loadingElement.hidden = true;
+                    loadingElement.textContent = "";
+                    return;
+                }
+
+                loadingElement.hidden = false;
+                loadingElement.textContent = message;
+                loadingElement.classList.toggle("loading-text", !isError);
+                loadingElement.classList.toggle("error-text", isError);
+            }
+
+            function buildMapRegionMatchers(svgRoot) {
+                const titleElements = Array.from(svgRoot.querySelectorAll("[id] > title"));
+
+                return titleElements
+                    .map((titleElement) => {
+                        const root = titleElement.parentElement;
+
+                        if (!root || !/^[a-z]{2,3}-?$/.test(root.id)) {
+                            return null;
+                        }
+
+                        const title = titleElement.textContent.trim();
+                        return {
+                            compact: normalizeCompact(title),
+                            id: root.id,
+                            root,
+                            title,
+                            tokens: tokenize(title)
+                        };
+                    })
+                    .filter(Boolean);
+            }
+
+            function resolveMapRegionId(countryName, mapMatchers) {
+                if (Object.prototype.hasOwnProperty.call(mapRegionOverrides, countryName)) {
+                    return mapRegionOverrides[countryName];
+                }
+
+                const countryTokens = tokenize(countryName);
+                const countryCompact = normalizeCompact(countryName);
+                let bestMatch = null;
+                let bestScore = 0;
+
+                for (const matcher of mapMatchers) {
+                    const score = jaccardScore(countryTokens, matcher.tokens);
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMatch = matcher;
+                    }
+                }
+
+                if (!bestMatch) {
+                    return null;
+                }
+
+                const compactMatch = bestMatch.compact.includes(countryCompact) || countryCompact.includes(bestMatch.compact);
+
+                if (bestScore >= 0.95 || (compactMatch && bestScore >= 0.25)) {
+                    return bestMatch.id;
+                }
+
+                return null;
+            }
+
+            function setActiveMapRegion(region) {
+                if (activeMapRegion === region) {
+                    return;
+                }
+
+                if (activeMapRegion) {
+                    activeMapRegion.classList.remove("is-hovered");
+                }
+
+                activeMapRegion = region;
+
+                if (activeMapRegion) {
+                    activeMapRegion.classList.add("is-hovered");
+                }
+
+                setMapHoverLabel(activeMapRegion);
+            }
+
+            function highlightHeading(heading) {
+                heading.classList.add("is-map-targeted");
+                window.setTimeout(() => {
+                    heading.classList.remove("is-map-targeted");
+                }, 1800);
+            }
+
+            function scrollToConference(region) {
+                const heading = document.getElementById(region.dataset.conferenceHeadingId);
+
+                if (!heading) {
+                    return;
+                }
+
+                setMapHoverLabel(region);
+                heading.scrollIntoView({ behavior: "smooth", block: "start" });
+                highlightHeading(heading);
+
+                if (window.history?.replaceState) {
+                    window.history.replaceState(null, "", `#${heading.id}`);
+                }
+            }
+
+            function createMapStyleElement(svgDocument) {
+                const styleElement = svgDocument.createElementNS("http://www.w3.org/2000/svg", "style");
+
+                styleElement.textContent = `
+                    .oceanxx {
+                        fill: #e6f1fb;
+                    }
+
+                    .landxx {
+                        fill: #dbe5ef;
+                        stroke: #ffffff;
+                        stroke-width: 0.7;
+                    }
+
+                    .circlexx,
+                    .subxx {
+                        opacity: 1;
+                        fill: #dbe5ef;
+                        stroke: #ffffff;
+                    }
+
+                    .rc-map-region,
+                    .rc-map-region * {
+                        transition: fill 0.16s ease, opacity 0.16s ease, stroke 0.16s ease, stroke-width 0.16s ease;
+                    }
+
+                    .rc-map-conference-region,
+                    .rc-map-conference-region * {
+                        cursor: pointer;
+                    }
+
+                    .rc-map-conference-region.landxx,
+                    .rc-map-conference-region .landxx,
+                    .rc-map-conference-region.circlexx,
+                    .rc-map-conference-region .circlexx,
+                    .rc-map-conference-region.subxx,
+                    .rc-map-conference-region .subxx {
+                        fill: #c62828;
+                    }
+
+                    .rc-map-region.is-hovered.landxx,
+                    .rc-map-region.is-hovered .landxx,
+                    .rc-map-region.is-hovered.circlexx,
+                    .rc-map-region.is-hovered .circlexx,
+                    .rc-map-region.is-hovered.subxx,
+                    .rc-map-region.is-hovered .subxx,
+                    .rc-map-conference-region:focus.landxx,
+                    .rc-map-conference-region:focus .landxx,
+                    .rc-map-conference-region:focus.circlexx,
+                    .rc-map-conference-region:focus .circlexx,
+                    .rc-map-conference-region:focus.subxx,
+                    .rc-map-conference-region:focus .subxx {
+                        stroke: #4c1212;
+                        stroke-width: 1.15;
+                    }
+
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region).landxx,
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region) .landxx,
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region).circlexx,
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region) .circlexx,
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region).subxx,
+                    .rc-map-region.is-hovered:not(.rc-map-conference-region) .subxx {
+                        fill: #c5d3e2;
+                    }
+
+                    .rc-map-conference-region.is-hovered.landxx,
+                    .rc-map-conference-region.is-hovered .landxx,
+                    .rc-map-conference-region.is-hovered.circlexx,
+                    .rc-map-conference-region.is-hovered .circlexx,
+                    .rc-map-conference-region.is-hovered.subxx,
+                    .rc-map-conference-region.is-hovered .subxx,
+                    .rc-map-conference-region:focus.landxx,
+                    .rc-map-conference-region:focus .landxx,
+                    .rc-map-conference-region:focus.circlexx,
+                    .rc-map-conference-region:focus .circlexx,
+                    .rc-map-conference-region:focus.subxx,
+                    .rc-map-conference-region:focus .subxx {
+                        fill: #a91e1e;
+                    }
+
+                    .rc-map-conference-region:focus {
+                        outline: none;
+                    }
+                `;
+
+                return styleElement;
+            }
+
+            function initializeMap() {
+                mapSummary.textContent = "Preparing conference links...";
+
+                function handleMapReady() {
+                    if (mapObject.dataset.initialized === "true") {
+                        return;
+                    }
+
+                    const mapDocument = mapObject.contentDocument;
+                    const svgRoot = mapDocument?.querySelector("svg");
+
+                    if (!svgRoot) {
+                        setMapLoadingState("The world map could not be loaded.", true);
+                        return;
+                    }
+
+                    mapObject.dataset.initialized = "true";
+                    svgRoot.setAttribute("role", "img");
+
+                    if (!svgRoot.hasAttribute("viewBox")) {
+                        const declaredWidth = Number.parseFloat(svgRoot.getAttribute("width") || mapObject.getAttribute("width") || "0");
+                        const declaredHeight = Number.parseFloat(svgRoot.getAttribute("height") || mapObject.getAttribute("height") || "0");
+
+                        if (declaredWidth > 0 && declaredHeight > 0) {
+                            svgRoot.setAttribute("viewBox", `0 0 ${declaredWidth} ${declaredHeight}`);
+                        }
+                    }
+
+                    if (!svgRoot.hasAttribute("preserveAspectRatio")) {
+                        svgRoot.setAttribute("preserveAspectRatio", "xMidYMid meet");
+                    }
+
+                    svgRoot.insertBefore(createMapStyleElement(mapDocument), svgRoot.firstChild);
+
+                    const mapMatchers = buildMapRegionMatchers(svgRoot);
+                    const matcherById = new Map(mapMatchers.map((matcher) => [matcher.id, matcher]));
+                    const resolvedTargets = resolveConferenceTargets();
+                    const linkedRegionIds = new Set();
+                    const unmatchedCountries = [];
+
+                    mapMatchers.forEach((matcher) => {
+                        matcher.root.classList.add("rc-map-region");
+                        matcher.root.dataset.regionName = matcher.title;
+                    });
+
+                    resolvedTargets.forEach((target) => {
+                        const regionId = resolveMapRegionId(target.country, mapMatchers);
+                        const matcher = regionId ? matcherById.get(regionId) : null;
+                        const root = matcher?.root || (regionId ? mapDocument.getElementById(regionId) : null);
+
+                        if (!root || !regionId) {
+                            unmatchedCountries.push(target.country);
+                            return;
+                        }
+
+                        root.classList.add("rc-map-region", "rc-map-conference-region");
+                        root.dataset.regionName = matcher?.title || target.country;
+                        root.dataset.conferenceCountry = target.country;
+                        root.dataset.conferenceHeadingId = target.headingId;
+                        root.dataset.conferenceHeadingText = target.headingText;
+                        root.setAttribute("tabindex", "0");
+                        root.setAttribute("role", "link");
+                        root.setAttribute("aria-label", `${root.dataset.regionName}: ${target.headingText}`);
+                        linkedRegionIds.add(regionId);
+                    });
+
+                    svgRoot.addEventListener("pointerover", (event) => {
+                        const region = event.target.closest("[data-region-name]");
+                        setActiveMapRegion(region);
+                    });
+
+                    svgRoot.addEventListener("pointerleave", () => {
+                        setActiveMapRegion(null);
+                    });
+
+                    svgRoot.addEventListener("click", (event) => {
+                        const region = event.target.closest("[data-conference-heading-id]");
+
+                        if (!region) {
+                            return;
+                        }
+
+                        scrollToConference(region);
+                    });
+
+                    svgRoot.addEventListener("keydown", (event) => {
+                        if (event.key !== "Enter" && event.key !== " ") {
+                            return;
+                        }
+
+                        const region = event.target.closest("[data-conference-heading-id]");
+
+                        if (!region) {
+                            return;
+                        }
+
+                        event.preventDefault();
+                        scrollToConference(region);
+                    });
+
+                    mapSummary.textContent = `${linkedRegionIds.size.toLocaleString()} highlighted countries and territories link to conference sections.`;
+
+                    if (unmatchedCountries.length > 0) {
+                        console.warn("Unmatched Roman Catholic map regions:", unmatchedCountries);
+                    }
+
+                    setMapLoadingState("");
+                }
+
+                mapObject.addEventListener("load", handleMapReady, { once: true });
+                mapObject.addEventListener("error", () => {
+                    setMapLoadingState("The world map could not be loaded.", true);
+                }, { once: true });
+
+                if (mapObject.contentDocument?.querySelector("svg")) {
+                    handleMapReady();
+                    return;
+                }
+
+                setMapLoadingState("Loading world map...");
+            }
+
+            initializeMap();
         })();
     </script>
     <script>
