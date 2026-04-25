@@ -3602,10 +3602,12 @@
                 <ul><li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Alindao" target="_blank" rel="noopener noreferrer">Diocese of Alindao</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Bambari" target="_blank" rel="noopener noreferrer">Diocese of Bambari</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Bangassou" target="_blank" rel="noopener noreferrer">Diocese of Bangassou</a></li>
-                <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Berb%C3%A9rati" target="_blank" rel="noopener noreferrer">Diocese of Berbérati</a></li>
-                <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Bossangoa" target="_blank" rel="noopener noreferrer">Diocese of Bossangoa</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Kaga-Bandoro" target="_blank" rel="noopener noreferrer">Diocese of Kaga-Bandoro</a></li></ul></li></ul>
+                <p><b>Ecclesiastical Province of Berbérati</b>
+                </p>
+                <ul><li><a href="https://en.wikipedia.org/wiki/Archdiocese_of_Berb%C3%A9rati" target="_blank" rel="noopener noreferrer">Metropolitan Archdiocese of Berbérati</a>
+                <ul><li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Bossangoa" target="_blank" rel="noopener noreferrer">Diocese of Bossangoa</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Bouar" target="_blank" rel="noopener noreferrer">Diocese of Bouar</a></li>
-                <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Kaga-Bandoro" target="_blank" rel="noopener noreferrer">Diocese of Kaga-Bandoro</a></li>
                 <li><a href="https://en.wikipedia.org/wiki/Roman_Catholic_Diocese_of_Mba%C3%AFki" target="_blank" rel="noopener noreferrer">Diocese of Mbaïki</a></li></ul></li></ul>
                 <h3>Episcopal Conference of Chad</h3>
                 <p><b>Exempt, immediately subject to the Holy See</b>
@@ -3853,6 +3855,7 @@
             <p class="source-note">Source: Image from <a href="https://commons.wikimedia.org/wiki/File:Pope_Leo_XIV_3_%283x4_cropped%29.png" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> by Edgar Beltrán, The Pillar. Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             <p class="source-note">Source: Intro adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/Catholic_Church" target="_blank" rel="noopener noreferrer">Catholic Church</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             <p class="source-note">Source: Table data adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_heads_of_the_diplomatic_missions_of_the_Holy_See" target="_blank" rel="noopener noreferrer">List of heads of the diplomatic missions of the Holy See</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
+            <p class="source-note">Source: Latest updates for the apostolic nunciatures in El Salvador and Libya, and for the ecclesiastical province of Berbérati, from the Holy See Press Office bulletin of <a href="https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2026/04/25/260425b.html" target="_blank" rel="noopener noreferrer">25 April 2026</a>.</p>
             <p class="source-note">Source: Text adapted from the Wikipedia article "<a href="https://en.wikipedia.org/wiki/List_of_Catholic_dioceses" target="_blank" rel="noopener noreferrer">List of Catholic dioceses</a>". Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</p>
             <p class="source-note">Base map adapted from <a href="https://commons.wikimedia.org/wiki/File:BlankMap-World.svg" target="_blank" rel="noopener noreferrer">BlankMap-World.svg</a> on Wikimedia Commons and released to the public domain.</p>
         </section>
@@ -4832,6 +4835,16 @@
                 exactThreshold: 0.95,
                 compactThreshold: 0.3
             };
+            const missionOverrides = {
+                "El Salvador": {
+                    representative: "Apostolic nuncio",
+                    nominationDateText: "25 April 2026"
+                },
+                Libya: {
+                    representative: "Apostolic nuncio",
+                    nominationDateText: "25 April 2026"
+                }
+            };
             let sortDirection = null;
 
             function normalizeText(value) {
@@ -5028,7 +5041,14 @@
                         const missionCell = createLinkedCell(sourceCells[1], { link: false });
                         const representativeCell = createLinkedCell(sourceCells[2]);
                         const nominationCell = document.createElement("td");
-                        const nominationText = normalizeText(sourceCells[3].textContent) || "—";
+                        const countryName = countryCell.text;
+                        const override = missionOverrides[countryName];
+                        const nominationText = override?.nominationDateText || normalizeText(sourceCells[3].textContent) || "—";
+
+                        if (override?.representative) {
+                            representativeCell.cell.textContent = override.representative;
+                        }
+
                         nominationCell.textContent = nominationText;
 
                         row.append(countryCell.cell, missionCell.cell, representativeCell.cell, nominationCell);
