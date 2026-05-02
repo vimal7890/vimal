@@ -39,7 +39,6 @@ python scripts/enrich_denomination_leader_images.py      # fetch leader images f
 
 ### Shared JS loaders (loaded via `<script>` tags)
 - `home-button-loader.js` — injects a home navigation button into every page
-- `last-edited-loader.js` — calls the GitHub API to fetch last-commit date and renders a badge
 
 ### Data files
 - `leaders.csv` — primary leadership database (source of truth for all denomination pages)
@@ -55,5 +54,5 @@ python scripts/enrich_denomination_leader_images.py      # fetch leader images f
 1. Research recorded in `leaders.csv`
 2. Python scripts enrich data (Wikipedia/Wikimedia APIs)
 3. Denomination HTML pages are authored/updated manually from the CSV data
-4. JS loaders inject navigation and last-edited badges at runtime
+4. JS loader injects navigation at runtime
 5. CI audits flag codes on every push
