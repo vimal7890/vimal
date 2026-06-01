@@ -3831,7 +3831,12 @@
                             <tr>
                                 <th scope="col">Country</th>
                                 <th scope="col">Type of mission</th>
-                                <th scope="col">Representative</th>
+                                <th scope="col" id="holy-see-representative-header" aria-sort="none">
+                                    <button type="button" class="sort-button" id="holy-see-representative-sort-button" disabled>
+                                        <span>Representative</span>
+                                        <span class="sort-indicator" id="holy-see-representative-sort-indicator" aria-hidden="true">↕</span>
+                                    </button>
+                                </th>
                                 <th scope="col" id="holy-see-date-header" aria-sort="none">
                                     <button type="button" class="sort-button" id="holy-see-date-sort-button" disabled>
                                         <span>Nomination / vacancy date</span>
@@ -3847,7 +3852,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="table-hint">Click "Nomination / vacancy date" to sort from oldest to newest, then newest to oldest.</p>
+                <p class="table-hint">Click "Nomination / vacancy date" to sort from oldest to newest, then newest to oldest. Click "Representative" to sort from A-Z, then Z-A.</p>
             </div>
         </section>
         </div>
@@ -4810,11 +4815,14 @@
     <script>
         (function loadHolySeeDiplomaticMissions() {
             const tableBody = document.getElementById("holy-see-missions-table-body");
+            const representativeHeader = document.getElementById("holy-see-representative-header");
+            const representativeSortButton = document.getElementById("holy-see-representative-sort-button");
+            const representativeSortIndicator = document.getElementById("holy-see-representative-sort-indicator");
             const dateHeader = document.getElementById("holy-see-date-header");
             const dateSortButton = document.getElementById("holy-see-date-sort-button");
             const dateSortIndicator = document.getElementById("holy-see-date-sort-indicator");
 
-            if (!tableBody || !dateHeader || !dateSortButton || !dateSortIndicator) {
+            if (!tableBody || !representativeHeader || !representativeSortButton || !representativeSortIndicator || !dateHeader || !dateSortButton || !dateSortIndicator) {
                 return;
             }
 
@@ -4861,13 +4869,28 @@
                     nominationDateText: "25 May 2026"
                 }
             };
-            let sortDirection = null;
+            let dateSortDirection = null;
+            let representativeSortDirection = null;
 
             function normalizeText(value) {
                 return value
                     .replace(/\[[^\]]*]/g, "")
                     .replace(/\s+/g, " ")
                     .trim();
+            }
+
+            function normalizeSortKey(value) {
+                if (!value) {
+                    return "";
+                }
+
+                const normalized = normalizeText(value);
+
+                if (!normalized || normalized === "—") {
+                    return "";
+                }
+
+                return normalized;
             }
 
             function resolveWikipediaUrl(href) {
@@ -4975,13 +4998,13 @@
             }
 
             function updateDateSortHeader() {
-                if (sortDirection === "asc") {
+                if (dateSortDirection === "asc") {
                     dateHeader.setAttribute("aria-sort", "ascending");
                     dateSortIndicator.textContent = "↑";
                     return;
                 }
 
-                if (sortDirection === "desc") {
+                if (dateSortDirection === "desc") {
                     dateHeader.setAttribute("aria-sort", "descending");
                     dateSortIndicator.textContent = "↓";
                     return;
@@ -4989,6 +5012,23 @@
 
                 dateHeader.setAttribute("aria-sort", "none");
                 dateSortIndicator.textContent = "↕";
+            }
+
+            function updateRepresentativeSortHeader() {
+                if (representativeSortDirection === "asc") {
+                    representativeHeader.setAttribute("aria-sort", "ascending");
+                    representativeSortIndicator.textContent = "↑";
+                    return;
+                }
+
+                if (representativeSortDirection === "desc") {
+                    representativeHeader.setAttribute("aria-sort", "descending");
+                    representativeSortIndicator.textContent = "↓";
+                    return;
+                }
+
+                representativeHeader.setAttribute("aria-sort", "none");
+                representativeSortIndicator.textContent = "↕";
             }
 
             function renderRows(rowsToRender) {
@@ -5000,19 +5040,58 @@
                     return;
                 }
 
-                sortDirection = sortDirection === "asc" ? "desc" : "asc";
+                dateSortDirection = dateSortDirection === "asc" ? "desc" : "asc";
+                representativeSortDirection = null;
 
                 const sortedRows = [...missionRows].sort((a, b) => {
                     if (a.nominationDate === b.nominationDate) {
                         return a.originalIndex - b.originalIndex;
                     }
 
-                    return sortDirection === "asc"
+                    return dateSortDirection === "asc"
                         ? a.nominationDate - b.nominationDate
                         : b.nominationDate - a.nominationDate;
                 });
 
                 renderRows(sortedRows);
+                updateDateSortHeader();
+                updateRepresentativeSortHeader();
+            }
+
+            function sortByRepresentative() {
+                if (!missionRows.length) {
+                    return;
+                }
+
+                representativeSortDirection = representativeSortDirection === "asc" ? "desc" : "asc";
+                dateSortDirection = null;
+
+                const sortedRows = [...missionRows].sort((a, b) => {
+                    const aKey = a.representativeKey;
+                    const bKey = b.representativeKey;
+
+                    if (aKey === bKey) {
+                        return a.originalIndex - b.originalIndex;
+                    }
+
+                    if (!aKey) {
+                        return 1;
+                    }
+
+                    if (!bKey) {
+                        return -1;
+                    }
+
+                    const comparison = aKey.localeCompare(bKey, undefined, { sensitivity: "base" });
+                    if (comparison !== 0) {
+                        return representativeSortDirection === "asc" ? comparison : -comparison;
+                    }
+
+                    return a.originalIndex - b.originalIndex;
+                });
+
+                renderRows(sortedRows);
+                updateRepresentativeSortHeader();
                 updateDateSortHeader();
             }
 
@@ -5060,6 +5139,7 @@
                         const countryName = countryCell.text;
                         const override = missionOverrides[countryName];
                         const nominationText = override?.nominationDateText || normalizeText(sourceCells[3].textContent) || "—";
+                        const representativeText = override?.representative || representativeCell.text || "—";
 
                         if (override?.representative) {
                             representativeCell.cell.textContent = override.representative;
@@ -5072,13 +5152,16 @@
                         missionRows.push({
                             row,
                             originalIndex,
-                            nominationDate: parseNominationDate(nominationText)
+                            nominationDate: parseNominationDate(nominationText),
+                            representativeKey: normalizeSortKey(representativeText)
                         });
                     });
 
                     renderRows(missionRows);
                     dateSortButton.disabled = false;
                     updateDateSortHeader();
+                    representativeSortButton.disabled = false;
+                    updateRepresentativeSortHeader();
                 } catch (error) {
                     console.error(error);
                     setStatusRow("Could not load the diplomatic missions table from Wikipedia.", "error-text");
@@ -5086,6 +5169,7 @@
             }
 
             dateSortButton.addEventListener("click", sortByNominationDate);
+            representativeSortButton.addEventListener("click", sortByRepresentative);
             setStatusRow("Loading diplomatic missions table...", "loading-text");
             loadRows();
         })();
