@@ -147,6 +147,35 @@
                 opacity: 0.2;
             }
         }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            .header h1,
+            .back-link,
+            .home-button {
+                color: #eee5d8;
+            }
+            .content {
+                background: #1f1b16;
+                color: #b8ada0;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            }
+            .song-item {
+                border-bottom: 1px solid #2e2922;
+            }
+            .song-description {
+                color: #b8ada0;
+            }
+            .back-link:hover,
+            .back-link:focus-visible,
+            .home-button:hover,
+            .home-button:focus-visible {
+                color: #ff5b4f;
+            }
+        }
     </style>
 </head>
 <body>
@@ -249,8 +278,11 @@
             const baseReach = 1.25;
             const anchorAlpha = 0.08 + item.energy * 0.12;
 
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const strokeColor = isDark ? '240, 84, 79' : '158, 59, 47';
+
             rail.ctx.beginPath();
-            rail.ctx.strokeStyle = `rgba(158, 59, 47, ${anchorAlpha.toFixed(3)})`;
+            rail.ctx.strokeStyle = `rgba(${strokeColor}, ${anchorAlpha.toFixed(3)})`;
             rail.ctx.lineWidth = 1;
             rail.ctx.moveTo(innerEdge, 0);
             rail.ctx.lineTo(innerEdge, height);
@@ -268,7 +300,7 @@
                 const endX = rail.direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
 
                 rail.ctx.beginPath();
-                rail.ctx.strokeStyle = `rgba(158, 59, 47, ${alpha.toFixed(3)})`;
+                rail.ctx.strokeStyle = `rgba(${strokeColor}, ${alpha.toFixed(3)})`;
                 rail.ctx.lineWidth = 1.05;
                 rail.ctx.moveTo(innerEdge, y);
                 rail.ctx.lineTo(endX, y);

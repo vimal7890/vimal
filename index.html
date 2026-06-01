@@ -231,6 +231,63 @@
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            .header,
+            .header h1,
+            .section h2,
+            .work-title-link,
+            .work-link,
+            .home-button,
+            .footer a {
+                color: #eee5d8;
+            }
+            .home-button:hover,
+            .home-button:focus-visible,
+            .work-title-link:hover,
+            .work-title-link:focus-visible,
+            .work-link:hover,
+            .work-link:focus-visible,
+            .social-link:hover {
+                color: #ff5b4f;
+            }
+            .bio-content,
+            .work-item p,
+            .song-description,
+            .contact-info,
+            .footer {
+                color: #b8ada0;
+            }
+            .social-link {
+                color: #ff802b;
+            }
+            .social-link.linkedin-link {
+                color: #4da3ff;
+            }
+            .social-link.email-link {
+                color: #b8ada0;
+            }
+            .blue-underline {
+                text-decoration-color: #5190e8;
+            }
+            .tag {
+                background: #eee5d8;
+                color: #15130f;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            }
+            .resume-section {
+                background: #1f1b16;
+            }
+            .download-btn {
+                background: #eee5d8;
+                color: #15130f;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            }
+        }
     </style>
 </head>
 <body>
@@ -416,8 +473,11 @@
             const baseReach = 1.5;
             const anchorAlpha = visualizerState.isPlaying ? 0.16 : 0.08;
 
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const strokeColor = isDark ? '240, 84, 79' : '158, 59, 47';
+
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(158, 59, 47, ${anchorAlpha})`;
+            ctx.strokeStyle = `rgba(${strokeColor}, ${anchorAlpha})`;
             ctx.lineWidth = 1;
             ctx.moveTo(innerEdge, 0);
             ctx.lineTo(innerEdge, height);
@@ -436,7 +496,7 @@
                 const endX = direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
 
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(158, 59, 47, ${alpha.toFixed(3)})`;
+                ctx.strokeStyle = `rgba(${strokeColor}, ${alpha.toFixed(3)})`;
                 ctx.lineWidth = 1.15;
                 ctx.moveTo(innerEdge, y);
                 ctx.lineTo(endX, y);

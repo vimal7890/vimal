@@ -500,3 +500,95 @@ body {
         font-size: 0.94rem;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #15130f;
+        color: #eee5d8;
+    }
+    .back-link,
+    .page-title,
+    .section-title,
+    .roman-catholic-map-title,
+    .roman-catholic-toc-title,
+    .dioceses-content h2,
+    .dioceses-content h3,
+    .dioceses-content h4 {
+        color: #eee5d8;
+    }
+    .back-link:hover,
+    .back-link:focus-visible,
+    .source-note a:hover,
+    .dioceses-content a:hover,
+    .dioceses-content a:focus-visible,
+    .roman-catholic-toc-link:hover,
+    .roman-catholic-toc-link:focus-visible,
+    .roman-catholic-toc-link.is-active,
+    .dioceses-content h2.is-map-targeted,
+    .dioceses-content h3.is-map-targeted,
+    .dioceses-content h4.is-map-targeted {
+        color: #ff5b4f;
+    }
+    .leader-caption,
+    .intro-text,
+    .structure-list,
+    .source-note,
+    .table-hint,
+    .loading-text,
+    .dioceses-content,
+    .bwa-map-hover-name,
+    .bwa-map-summary {
+        color: #b8ada0;
+    }
+    .source-heading {
+        color: #8c7e6c;
+    }
+    .source-note a,
+    .dioceses-content a,
+    .roman-catholic-toc-link {
+        color: #eee5d8;
+    }
+    .info-card,
+    .roman-catholic-toc-card {
+        background: #1f1b16;
+        border-color: #2e2922;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+    }
+    .leader-image {
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    }
+    .data-table th,
+    .data-table td,
+    .dioceses-table th,
+    .dioceses-table td {
+        border-bottom: 1px solid #2e2922;
+    }
+    .data-table th,
+    .dioceses-table th {
+        background: #26221c;
+        color: #eee5d8;
+    }
+    .data-table tbody tr:hover,
+    .dioceses-table tbody tr:hover {
+        background: #2c2720;
+    }
+    .bwa-map-legend {
+        border: 1px solid #2e2922;
+        background: #1f1b16;
+        color: #eee5d8;
+    }
+    .bwa-map-frame {
+        border: 1px solid #2e2922;
+        background: linear-gradient(180deg, #1f2730 0%, #151c24 100%);
+    }
+    .bwa-map-loading {
+        background: rgba(21, 28, 36, 0.92);
+        color: #eee5d8;
+    }
+    .roman-catholic-toc-number {
+        color: #ff5b4f;
+    }
+    .error-text {
+        color: #ff6e6e;
+    }
+}
