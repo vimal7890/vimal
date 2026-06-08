@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial Deep Learning for London House Prices — Vimal Vivegananda</title>
+    <link rel="stylesheet" href="bagnard.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Bagnard', serif;
+            background: #f5f1e8;
+            color: #1a1a1a;
+            line-height: 1.75;
+        }
+        .home-button {
+            position: fixed;
+            top: clamp(14px, 2vw, 22px);
+            left: clamp(14px, 2vw, 22px);
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.1;
+            transition: color 0.2s ease;
+        }
+        .home-button svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+        .home-button:hover,
+        .home-button:focus-visible {
+            color: #d93025;
+            text-decoration: none;
+        }
+        .home-button:focus-visible {
+            outline: 2px solid rgba(217, 48, 37, 0.55);
+            outline-offset: 4px;
+        }
+        figure {
+            margin: 28px 0;
+        }
+        figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #e0dccf;
+            border-radius: 6px;
+            background: #fff;
+        }
+        figcaption {
+            font-size: 0.84em;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: clamp(56px, 7vw, 80px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
+        }
+        h1 {
+            font-size: clamp(1.6em, 4vw, 2.2em);
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        h2 {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 48px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #d93025;
+            color: #1a1a1a;
+        }
+        h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin: 28px 0 10px;
+            color: #333;
+        }
+        p { margin-bottom: 1.1em; }
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 28px;
+            font-size: 0.88em;
+        }
+        table.data-table th {
+            background: #1a1a1a;
+            color: #f5f1e8;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        table.data-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #ddd;
+        }
+        table.data-table tr:nth-child(even) td { background: #faf8f3; }
+        .references {
+            background: #fff;
+            border-left: 4px solid #d93025;
+            padding: 20px 24px;
+            margin-top: 32px;
+            font-size: 0.88em;
+            color: #444;
+        }
+        .references h3 { margin-top: 0; }
+        .references p { margin-bottom: 0.6em; }
+        @media (max-width: 600px) {
+            table.data-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="home-button" aria-label="Go to home page">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+    </svg>
+    <span>Home</span>
+</a>
+
+<div class="container">
+
+    <h1>Spatial Deep Learning for London House Price Prediction: A Graph Neural Network Approach</h1>
+
+    <h2>Background</h2>
+    <p>London's housing market is among the most spatially heterogeneous in Europe, with median sale prices varying by an order of magnitude between central and outer boroughs. Modelling this variation matters for affordability research, planning policy, and small-area valuation, and it is a canonical setting for spatial deep learning because property values exhibit two empirical regularities a non-spatial model cannot fully capture: strong spatial autocorrelation (Tobler, 1970) and local clustering of high- or low-value enclaves that crosses administrative boundaries. This study addresses one specific question: does adding an explicit LSOA adjacency graph, processed through a Graph Neural Network (GNN), improve median house-price prediction over a non-spatial Multilayer Perceptron (MLP) using the same node features? The motivation is methodological &mdash; it tests whether spatial structure adds information beyond what the same features already encode.</p>
+    <p>Two related literatures are relevant. The first concerns location representations in GeoAI. Mai et al. (2022) survey location encoding methods that map coordinates to continuous vectors, including Fourier-style positional encodings and pretrained satellite embeddings such as Google's AlphaEarth foundation embeddings (Brown et al., 2025). Such representations encode &ldquo;what each place looks like&rdquo; but not &ldquo;who its neighbours are&rdquo;. The second literature concerns Graph Neural Networks on spatial graphs. Kipf and Welling (2017) introduced the Graph Convolutional Network (GCN), which aggregates neighbours through normalised symmetric averaging. Hamilton et al. (2017) proposed GraphSAGE, which samples a subset of neighbours and concatenates self with aggregated-neighbour features, supporting inductive prediction on unseen nodes. Recent applications include GNN-based urban-analytics benchmarks showing that explicit spatial graphs outperform tabular baselines on tasks with strong neighbourhood spillovers (Klemmer et al., 2023). This pipeline extends AlphaEarth on London LSOAs and the GNN gravity model to a node-regression task on the full 4,833-LSOA London graph.</p>
+
+    <h2>Methodology</h2>
+    <p>The spatial unit is the 2011 LSOA. London comprises 4,835 LSOAs across 33 boroughs; 4,833 remain after dropping two LSOAs with missing 2014 price values. Three open data sources were combined.</p>
+    <p>First, LSOA polygons with Census 2011 fields were taken from the Greater London Authority's <code>statistical-gis-boundaries-london.zip</code> on the London Datastore, an extract from the ONS Open Geography Portal. The shapefile contains population density per hectare (POPDEN), number of households (HHOLDS), and average household size (AVHHOLDSZ).</p>
+    <p>Second, the prediction target is the LSOA-level median price paid for residential property in 2014, calculated by GLA from HM Land Registry price-paid data and published in <em>Average House Prices by Borough, Ward, MSOA and LSOA</em> (London Datastore). 2014 is the most recent year in this file. Median prices range from &pound;106,000 to &pound;4,750,000 with a city-wide median of &pound;358,000.</p>
+    <p>Third, ten node features were assembled per LSOA: POPDEN, HHOLDS and AVHHOLDSZ from above, plus the seven domain scores from the English Indices of Deprivation 2019 (Income, Employment, Education, Health, Crime, Barriers to Housing and Services, Living Environment), released by MHCLG and joined on LSOA11CD. IMD 2019 represents relative deprivation; we treat it as a stable proxy that correlates meaningfully with 2014 prices despite the year mismatch, which is standard practice in small-area price modelling.</p>
+
+    <h3>Spatial graph</h3>
+    <p>A queen-contiguity graph was constructed by treating two LSOAs as connected if their polygons share any non-empty intersection. The result is an undirected, unweighted graph with 26,552 directed edges and an average node degree of 5.5, consistent with what is expected for a planar polygon tessellation.</p>
+    <p>Four models were fitted in increasing order of spatial awareness:</p>
+    <p>
+        <strong>Linear regression</strong> &mdash; ordinary least squares baseline (scikit-learn).<br>
+        <strong>MLP</strong> &mdash; two hidden layers of dimension 64 with ReLU activations, dropout 0.2; no graph information.<br>
+        <strong>GCN</strong> &mdash; two GCNConv layers (Kipf and Welling, 2017) followed by a linear head; uses every neighbour with normalised symmetric aggregation.<br>
+        <strong>GraphSAGE</strong> &mdash; two SAGEConv layers (Hamilton et al., 2017) with mean aggregator and concatenation of self with neighbour mean.
+    </p>
+    <p>The 10 features were scaled to zero mean and unit variance using statistics computed only on the training partition; the target was log-transformed and standardised on the same partition. A random 70 / 15 / 15 train / validation / test split was used.</p>
+
+    <h2>Results</h2>
+    <p>Table 1 summarises test-set performance. The four models form a clear ordering: Linear (R&sup2; = 0.516) &lt; MLP (0.653) &lt; GCN (0.688) &lt; GraphSAGE (0.767). In monetary terms, the median absolute error drops from &pound;122,650 under linear regression to &pound;88,015 under GraphSAGE &mdash; a reduction of approximately &pound;35,000 achieved purely by combining a non-linear function class with explicit spatial structure on the same input features.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Test R&sup2;</th>
+                <th>Test MAE</th>
+                <th>Test RMSE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Linear</td><td>0.516</td><td>&pound;122,650</td><td>&pound;261,950</td></tr>
+            <tr><td>MLP</td><td>0.653</td><td>&pound;102,554</td><td>&pound;225,894</td></tr>
+            <tr><td>GCN</td><td>0.688</td><td>&pound;102,194</td><td>&pound;215,547</td></tr>
+            <tr><td>GraphSAGE</td><td>0.767</td><td>&pound;88,015</td><td>&pound;191,212</td></tr>
+        </tbody>
+    </table>
+    <p style="font-size:0.85em;color:#666;margin-top:-16px;margin-bottom:24px;">Table 1. Test-set performance for the four models on the held-out 15% partition.</p>
+
+    <p>GraphSAGE outperforms GCN by approximately 0.08 R&sup2; and &pound;14k MAE. The SAGE layer concatenates the node's own representation with the mean of its neighbours' representations before the linear transformation, preserving a clean separation between self and neighbour signals; the GCN's symmetric normalisation collapses them. Allowing different weights for self vs neighbour information is directly relevant when local context and own characteristics both contribute to price.</p>
+    <p>MLP's gain over the linear baseline (+0.14 R&sup2;) reflects the non-linear interactions in the demographic&ndash;deprivation&ndash;price relationship that ordinary least squares cannot capture. The GNNs' additional gain over MLP (+0.04 for GCN, +0.11 for GraphSAGE) is attributable purely to the queen-contiguity graph, since input features are identical &mdash; a clean experimental separation of the spatial-structure contribution.</p>
+
+    <h3>Training dynamics</h3>
+    <p>Figure 1 shows training and validation MSE on a log scale. The three neural models converge smoothly and the train&ndash;val gap is small for all of them, indicating no severe overfitting. The GNNs reach a substantially lower loss floor than the MLP, mirroring the held-out performance gap. Best-validation checkpoints were used for evaluation, providing a soft form of early stopping.</p>
+
+    <figure>
+        <img src="report-images/gnn-fig1-training-loss.png" alt="Training and validation MSE over epochs for MLP, GCN and GraphSAGE on a log scale" loading="lazy">
+        <figcaption>Figure 1. Training and validation loss (standardised log price, log scale) across epochs for the three neural models.</figcaption>
+    </figure>
+
+    <h3>Errors</h3>
+    <p>The observed-vs-predicted scatter plots in Figure 2 reveal that all models systematically under-predict the highest-value LSOAs (above &pound;2M). Linear regression collapses the upper tail towards the global mean; MLP corrects most of the curvature for mid-range prices but still flattens the top end. GCN and GraphSAGE both extend further along the diagonal, with GraphSAGE producing the tightest cloud and the fewest large errors, although the very top of the price distribution remains challenging for all four models.</p>
+
+    <figure>
+        <img src="report-images/gnn-fig2-observed-predicted.png" alt="Observed versus predicted median price scatter plots for the four models" loading="lazy">
+        <figcaption>Figure 2. Observed vs predicted median price (&pound;k) for Linear, MLP, GCN and GraphSAGE; the dashed red line is the 1:1 reference.</figcaption>
+    </figure>
+
+    <p>Figure 3 maps the spatial behaviour of the best model. Panel (a) shows the observed price surface with the well-known central-London peak (Westminster, Kensington-Chelsea, City) and outer high-value pockets in Hampstead, Highgate and Richmond. Panel (b) shows GraphSAGE predictions on the same scale; the model recovers both the gradient and the major outer-London pockets. Panel (c) shows residuals on a divergent scale: most LSOAs sit close to zero, but small clusters of positive residuals (red) appear in the most premium central wards, indicating the model under-predicts the very top of the London market &mdash; unsurprising given that demographic and deprivation indicators do not directly capture the prestige and rarity that drive prime central London prices.</p>
+
+    <figure>
+        <img src="report-images/gnn-fig3-spatial-maps.png" alt="Maps of observed prices, GraphSAGE predictions, and residuals across London LSOAs" loading="lazy">
+        <figcaption>Figure 3. (a) Observed median price 2014; (b) GraphSAGE prediction on the same scale; (c) residuals (observed &minus; predicted) on a divergent scale.</figcaption>
+    </figure>
+
+    <p>These results support the broader argument in the GeoAI literature that location-aware spatial graphs encode information complementary to tabular features. Even with informative demographic and deprivation features, an explicit adjacency graph cuts test MAE by &pound;15k. The practical implication is that small-area price models for affordability research, planning, or valuation can benefit from a GNN backbone without requiring any additional data inputs.</p>
+    <p>Several limitations should temper the headline numbers. The three datasets are from different years &mdash; 2011 Census features, 2014 prices, 2019 IMD &mdash; introducing temporal noise. MAUP also matters: switching from LSOAs to MSOAs or wards changes both graph topology and target variance. Edge effects mildly disadvantage the GNN at the periphery, where boundary LSOAs lose neighbours from outside London. Finally, the random node split allows local information to leak through the graph; a fairer benchmark would hold out contiguous regions, e.g. one borough at a time.</p>
+
+    <h2>Follow-up</h2>
+    <p>Several extensions follow naturally. Augmenting the 10 node features with the 64-dimensional Google AlphaEarth embeddings would let the model encode satellite-derived urban form alongside socioeconomic structure. A Graph Attention Network (GAT, Veli&ccaron;kovi&cacute; et al., 2018) variant would let the model learn neighbour weights rather than treating all neighbours equally. Inverse-distance edge weights, leave-one-borough-out cross-validation, and a temporal extension to year-on-year price changes would all sharpen the methodological claim.</p>
+
+    <h2>Conclusion</h2>
+    <p>This study built and compared four models for predicting median house prices across the 4,833 LSOAs of Greater London using real GLA / HM Land Registry, Census 2011, and IMD 2019 data. On the held-out test set GraphSAGE achieves R&sup2; = 0.767 and MAE &pound;88,015, substantially improving on the non-spatial MLP (R&sup2; = 0.653, MAE &pound;102,554) and the linear baseline (R&sup2; = 0.516, MAE &pound;122,650). The empirical findings support the methodological claim that an explicit spatial adjacency graph carries information that demographic and deprivation features alone do not capture, and that the choice of graph aggregator matters: GraphSAGE's self-vs-neighbour concatenation extracts more from the same graph than the GCN's symmetric normalisation. The pipeline is reproducible and modular: substituting a more recent year of price data, additional features such as AlphaEarth embeddings, or alternative graph constructions would re-use the entire model and evaluation stack.</p>
+
+    <div class="references">
+        <h3>References</h3>
+        <p>Brown, C. F., Kazmierski, M. R., Pasquarella, V. J., Rucklidge, W. J., Samsikova, M., Zhang, C., Shelhamer, E., et al. (2025). AlphaEarth Foundations: An embedding field model for accurate and efficient global mapping from sparse label data. <em>arXiv:2507.22291.</em></p>
+        <p>Greater London Authority. (2015). <em>Average House Prices by Borough, Ward, MSOA &amp; LSOA.</em> London Datastore.</p>
+        <p>Greater London Authority. (2014). <em>Statistical GIS Boundary Files for London.</em> London Datastore.</p>
+        <p>Hamilton, W. L., Ying, R., &amp; Leskovec, J. (2017). Inductive representation learning on large graphs. <em>Advances in Neural Information Processing Systems,</em> 30, 1024&ndash;1034.</p>
+        <p>Kipf, T. N., &amp; Welling, M. (2017). Semi-supervised classification with graph convolutional networks. <em>International Conference on Learning Representations.</em></p>
+        <p>Klemmer, K., Safir, N. S., &amp; Neill, D. B. (2023). Positional encoder graph neural networks for geographic data. <em>Proceedings of the 26th International Conference on Artificial Intelligence and Statistics (AISTATS),</em> PMLR 206:1379&ndash;1389.</p>
+        <p>Mai, G., Janowicz, K., Hu, Y., Gao, S., Yan, B., Zhu, R., Cai, L., &amp; Lao, N. (2022). A review of location encoding for GeoAI: methods and applications. <em>International Journal of Geographical Information Science,</em> 36(4), 639&ndash;673.</p>
+        <p>Ministry of Housing, Communities and Local Government. (2019). <em>English Indices of Deprivation 2019.</em></p>
+        <p>Office for National Statistics. (2011). <em>Lower Layer Super Output Areas (December 2011) generalised clipped boundaries.</em> ONS Open Geography Portal.</p>
+        <p>Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. <em>Economic Geography,</em> 46(sup1), 234&ndash;240.</p>
+        <p>Veli&ccaron;kovi&cacute;, P., Cucurull, G., Casanova, A., Romero, A., Li&ograve;, P., &amp; Bengio, Y. (2018). Graph attention networks. <em>International Conference on Learning Representations.</em></p>
+    </div>
+
+</div>
+
+<script src="home-button-loader.js" data-home-href="index.html" defer></script>
+</body>
+</html>
