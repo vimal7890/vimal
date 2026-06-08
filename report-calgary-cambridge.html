@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mining Social & Geographic Datasets — Vimal Vivegananda</title>
+    <link rel="stylesheet" href="bagnard.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: 'Bagnard', serif;
             background: #f5f1e8;
             color: #1a1a1a;
             line-height: 1.75;
@@ -23,7 +24,6 @@
             padding: 0;
             color: #333;
             text-decoration: none;
-            font-family: Arial, sans-serif;
             font-size: 0.95rem;
             font-weight: 600;
             line-height: 1.1;
@@ -48,7 +48,6 @@
             margin-top: 48px;
             color: #333;
             text-decoration: none;
-            font-family: Arial, sans-serif;
             font-weight: 500;
         }
         .back-link:hover,
@@ -68,7 +67,6 @@
             background: #fff;
         }
         figcaption {
-            font-family: Arial, sans-serif;
             font-size: 0.84em;
             color: #666;
             margin-top: 10px;
@@ -79,42 +77,18 @@
             margin: 0 auto;
             padding: clamp(30px, 6vw, 60px) clamp(20px, 5vw, 40px);
         }
-        .meta-block {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 24px 28px;
-            margin-bottom: 40px;
-            font-family: Arial, sans-serif;
-            font-size: 0.9em;
-            color: #444;
-        }
-        .meta-block table { border-collapse: collapse; width: 100%; }
-        .meta-block td { padding: 4px 12px 4px 0; vertical-align: top; }
-        .meta-block td:first-child { color: #888; white-space: nowrap; width: 160px; }
-        .meta-block .ai-notice {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #eee;
-            font-style: italic;
-            color: #666;
-            font-size: 0.88em;
-        }
         h1 {
-            font-family: Arial, sans-serif;
             font-size: clamp(1.6em, 4vw, 2.2em);
             font-weight: 700;
             margin-bottom: 8px;
             line-height: 1.2;
         }
         .subtitle {
-            font-family: Arial, sans-serif;
             color: #666;
             font-size: 1em;
             margin-bottom: 36px;
         }
         h2 {
-            font-family: Arial, sans-serif;
             font-size: 1.4em;
             font-weight: 700;
             margin: 48px 0 14px;
@@ -123,7 +97,6 @@
             color: #1a1a1a;
         }
         h3 {
-            font-family: Arial, sans-serif;
             font-size: 1.1em;
             font-weight: 700;
             margin: 28px 0 10px;
@@ -139,7 +112,6 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0 28px;
-            font-family: Arial, sans-serif;
             font-size: 0.88em;
         }
         table.data-table th {
@@ -160,12 +132,10 @@
             margin-top: 32px;
             font-size: 0.88em;
             color: #444;
-            font-family: Arial, sans-serif;
         }
         .references h3 { margin-top: 0; }
         .references p { margin-bottom: 0.6em; }
         @media (max-width: 600px) {
-            .meta-block td:first-child { width: 110px; }
             table.data-table { font-size: 0.8em; }
         }
     </style>
@@ -183,17 +153,6 @@
 
     <h1>Reports on Calgary and Cambridge</h1>
     <p class="subtitle">Mining Social and Geographic Datasets &mdash; GEOG0051, UCL (2025&ndash;26)</p>
-
-    <div class="meta-block">
-        <table>
-            <tr><td>Module</td><td>GEOG0051 &mdash; Mining Social and Geographic Datasets</td></tr>
-            <tr><td>Department</td><td>UCL Department of Geography</td></tr>
-            <tr><td>Academic Year</td><td>2025&ndash;26</td></tr>
-            <tr><td>Word Count</td><td>2,409</td></tr>
-            <tr><td>Topics</td><td>Mobility analysis, NLP, spatial data science, machine learning</td></tr>
-        </table>
-        <p class="ai-notice">AI use disclosure: Claude (claude.ai) and Gemini (gemini.google.com) were used to assist in coding, debugging, and reviewing partial drafts for concision.</p>
-    </div>
 
     <!-- ═══════════════════════════════════════════════════ -->
     <h2>Report 1 &mdash; Mobility Patterns Analysis in Cambridge</h2>
@@ -237,7 +196,7 @@
             <tr><td>Stop points detected (MovingPandas)</td><td>2</td><td>1</td></tr>
         </tbody>
     </table>
-    <p style="font-size:0.85em;color:#666;margin-top:-16px;margin-bottom:24px;font-family:Arial,sans-serif;">Table 1. Mobility metrics for each user, computed from OSMnx street-network shortest paths.</p>
+    <p style="font-size:0.85em;color:#666;margin-top:-16px;margin-bottom:24px;">Table 1. Mobility metrics for each user, computed from OSMnx street-network shortest paths.</p>
 
     <h3>4. Urban-Planning Application: Proposed Community Park</h3>
     <p>Cambridge city centre is historically well-served by retail and cultural amenities but the eastern residential fringe (the Romsey, Coleridge, and Cherry Hinton wards) carries a persistent green-space deficit recognised in the Cambridge Local Plan (Cambridge City Council, 2018). We propose a new community park in the area bounded by Mill Road, Coldham's Lane, and the Cambridge&ndash;Ipswich railway line, supported by three converging spatial analyses.</p>
