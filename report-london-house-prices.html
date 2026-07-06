@@ -76,7 +76,7 @@
             font-weight: 700;
             margin: 48px 0 14px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #d93025;
+            border-bottom: 2px solid #1a1a1a;
             color: #1a1a1a;
         }
         h3 {
@@ -103,16 +103,7 @@
             border-bottom: 1px solid #ddd;
         }
         table.data-table tr:nth-child(even) td { background: #faf8f3; }
-        .references {
-            background: #f5f1e8;
-            border-left: 4px solid #d93025;
-            padding: 20px 24px;
-            margin-top: 32px;
-            font-size: 0.88em;
-            color: #444;
-        }
-        .references h3 { margin-top: 0; }
-        .references p { margin-bottom: 0.6em; }
+
         @media (max-width: 600px) {
             table.data-table { font-size: 0.8em; }
         }
@@ -208,20 +199,18 @@
     <h2>Conclusion</h2>
     <p>This study built and compared four models for predicting median house prices across the 4,833 LSOAs of Greater London using real GLA / HM Land Registry, Census 2011, and IMD 2019 data. On the held-out test set GraphSAGE achieves R&sup2; = 0.767 and MAE &pound;88,015, substantially improving on the non-spatial MLP (R&sup2; = 0.653, MAE &pound;102,554) and the linear baseline (R&sup2; = 0.516, MAE &pound;122,650). The empirical findings support the methodological claim that an explicit spatial adjacency graph carries information that demographic and deprivation features alone do not capture, and that the choice of graph aggregator matters: GraphSAGE's self-vs-neighbour concatenation extracts more from the same graph than the GCN's symmetric normalisation. The pipeline is reproducible and modular: substituting a more recent year of price data, additional features such as AlphaEarth embeddings, or alternative graph constructions would re-use the entire model and evaluation stack.</p>
 
-    <div class="references">
-        <h3>References</h3>
-        <p>Brown, C. F., Kazmierski, M. R., Pasquarella, V. J., Rucklidge, W. J., Samsikova, M., Zhang, C., Shelhamer, E., et al. (2025). AlphaEarth Foundations: An embedding field model for accurate and efficient global mapping from sparse label data. <em>arXiv:2507.22291.</em></p>
-        <p>Greater London Authority. (2015). <em>Average House Prices by Borough, Ward, MSOA &amp; LSOA.</em> London Datastore.</p>
-        <p>Greater London Authority. (2014). <em>Statistical GIS Boundary Files for London.</em> London Datastore.</p>
-        <p>Hamilton, W. L., Ying, R., &amp; Leskovec, J. (2017). Inductive representation learning on large graphs. <em>Advances in Neural Information Processing Systems,</em> 30, 1024&ndash;1034.</p>
-        <p>Kipf, T. N., &amp; Welling, M. (2017). Semi-supervised classification with graph convolutional networks. <em>International Conference on Learning Representations.</em></p>
-        <p>Klemmer, K., Safir, N. S., &amp; Neill, D. B. (2023). Positional encoder graph neural networks for geographic data. <em>Proceedings of the 26th International Conference on Artificial Intelligence and Statistics (AISTATS),</em> PMLR 206:1379&ndash;1389.</p>
-        <p>Mai, G., Janowicz, K., Hu, Y., Gao, S., Yan, B., Zhu, R., Cai, L., &amp; Lao, N. (2022). A review of location encoding for GeoAI: methods and applications. <em>International Journal of Geographical Information Science,</em> 36(4), 639&ndash;673.</p>
-        <p>Ministry of Housing, Communities and Local Government. (2019). <em>English Indices of Deprivation 2019.</em></p>
-        <p>Office for National Statistics. (2011). <em>Lower Layer Super Output Areas (December 2011) generalised clipped boundaries.</em> ONS Open Geography Portal.</p>
-        <p>Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. <em>Economic Geography,</em> 46(sup1), 234&ndash;240.</p>
-        <p>Veli&ccaron;kovi&cacute;, P., Cucurull, G., Casanova, A., Romero, A., Li&ograve;, P., &amp; Bengio, Y. (2018). Graph attention networks. <em>International Conference on Learning Representations.</em></p>
-    </div>
+    <h3>References</h3>
+    <p>Brown, C. F., Kazmierski, M. R., Pasquarella, V. J., Rucklidge, W. J., Samsikova, M., Zhang, C., Shelhamer, E., et al. (2025). AlphaEarth Foundations: An embedding field model for accurate and efficient global mapping from sparse label data. <em>arXiv:2507.22291.</em></p>
+    <p>Greater London Authority. (2015). <em>Average House Prices by Borough, Ward, MSOA &amp; LSOA.</em> London Datastore.</p>
+    <p>Greater London Authority. (2014). <em>Statistical GIS Boundary Files for London.</em> London Datastore.</p>
+    <p>Hamilton, W. L., Ying, R., &amp; Leskovec, J. (2017). Inductive representation learning on large graphs. <em>Advances in Neural Information Processing Systems,</em> 30, 1024&ndash;1034.</p>
+    <p>Kipf, T. N., &amp; Welling, M. (2017). Semi-supervised classification with graph convolutional networks. <em>International Conference on Learning Representations.</em></p>
+    <p>Klemmer, K., Safir, N. S., &amp; Neill, D. B. (2023). Positional encoder graph neural networks for geographic data. <em>Proceedings of the 26th International Conference on Artificial Intelligence and Statistics (AISTATS),</em> PMLR 206:1379&ndash;1389.</p>
+    <p>Mai, G., Janowicz, K., Hu, Y., Gao, S., Yan, B., Zhu, R., Cai, L., &amp; Lao, N. (2022). A review of location encoding for GeoAI: methods and applications. <em>International Journal of Geographical Information Science,</em> 36(4), 639&ndash;673.</p>
+    <p>Ministry of Housing, Communities and Local Government. (2019). <em>English Indices of Deprivation 2019.</em></p>
+    <p>Office for National Statistics. (2011). <em>Lower Layer Super Output Areas (December 2011) generalised clipped boundaries.</em> ONS Open Geography Portal.</p>
+    <p>Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. <em>Economic Geography,</em> 46(sup1), 234&ndash;240.</p>
+    <p>Veli&ccaron;kovi&cacute;, P., Cucurull, G., Casanova, A., Romero, A., Li&ograve;, P., &amp; Bengio, Y. (2018). Graph attention networks. <em>International Conference on Learning Representations.</em></p>
 
 </div>
 
