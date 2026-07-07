@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapping the Papacy — Vimal Vivegananda</title>
+    <link rel="stylesheet" href="bagnard.css">
+    <style>
+        :root {
+            --cream: #efe6d3;
+            --cream-2: #e7dcc3;
+            --ink: #2f2a22;
+            --muted: #6f6656;
+            --land: #d9c9a3;
+            --map-stroke: #efe6d3;
+            --gold: #c69433;
+            --gold-dark: #94691c;
+            --accent: #8f2b20;
+            --line: #b9ad93;
+            /* region palette, bottom -> top of the stack */
+            --italy: #6e2233;
+            --resteur: #c05a3e;
+            --namerica: #3f7391;
+            --samerica: #6f9455;
+            --asia: #c89a3c;
+            --oceania: #8a6d97;
+            --africa: #7c4a2b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Bagnard', serif;
+            background: #f5f1e8;
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+        .home-button {
+            position: fixed;
+            top: clamp(14px, 2vw, 22px);
+            left: clamp(14px, 2vw, 22px);
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.1;
+            transition: color 0.2s ease;
+        }
+        .home-button svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .home-button:hover, .home-button:focus-visible { color: #d93025; }
+        .home-button:focus-visible { outline: 2px solid rgba(217,48,37,.55); outline-offset: 4px; }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: clamp(56px, 7vw, 80px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
+        }
+        .lede h1 {
+            font-size: clamp(1.7em, 4vw, 2.3em);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+        .lede p.stand {
+            color: #555;
+            font-size: clamp(1em, 2.4vw, 1.12em);
+            max-width: 60ch;
+            margin-bottom: 6px;
+        }
+        .lede p.byline { color: #8a8271; font-size: 0.92em; margin-bottom: 2px; }
+
+        /* The infographic surface */
+        .figure {
+            background: var(--cream);
+            border-radius: 14px;
+            padding: clamp(18px, 3vw, 34px);
+            margin: 26px 0 34px;
+            box-shadow: 0 12px 40px rgba(60,45,20,.10);
+            color: var(--ink);
+        }
+
+        .top-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(230px, 1fr);
+            gap: clamp(18px, 3vw, 40px);
+            align-items: start;
+        }
+        .map-frame { width: 100%; min-width: 0; }
+        .map-frame svg { width: 100%; height: auto; display: block; }
+        .map-loading {
+            aspect-ratio: 1200 / 820;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted); font-style: italic; font-size: 0.9em;
+        }
+
+        .sidebar h2 {
+            font-size: clamp(1.35em, 2.6vw, 1.7em);
+            font-weight: 700;
+            line-height: 1.12;
+            margin-bottom: 14px;
+        }
+        .sidebar p.intro {
+            font-size: 0.96em;
+            color: var(--muted);
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+        ol.popes { list-style: none; }
+        ol.popes li {
+            display: grid;
+            grid-template-columns: 22px 1fr auto;
+            gap: 4px 10px;
+            align-items: baseline;
+            padding: 5px 0;
+            font-size: 0.9em;
+        }
+        ol.popes .num { color: var(--gold-dark); font-weight: 700; text-align: right; }
+        ol.popes .who { line-height: 1.25; }
+        ol.popes .who b { font-weight: 700; }
+        ol.popes .who small { display: block; color: var(--muted); font-size: 0.86em; }
+        ol.popes .yrs { color: var(--muted); font-size: 0.82em; white-space: nowrap; text-align: right; }
+        ol.popes li.hl .who b { color: var(--accent); }
+        ol.popes li.hl .num { color: var(--accent); }
+
+        /* Chart panel */
+        .chart-panel { margin-top: clamp(26px, 4vw, 46px); border-top: 1px solid var(--line); padding-top: clamp(20px, 3vw, 34px); }
+        .chart-panel h3 { font-size: clamp(1.2em, 2.6vw, 1.55em); font-weight: 700; margin-bottom: 2px; }
+        .chart-panel .sub { color: var(--muted); font-style: italic; font-size: 0.92em; margin-bottom: 14px; }
+        .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .chart-scroll svg { display: block; min-width: 620px; width: 100%; height: auto; }
+
+        .sources { margin-top: 18px; color: var(--muted); font-size: 0.8em; font-style: italic; }
+
+        .backlink { margin-top: 34px; }
+        .backlink a { color: #333; text-decoration: none; font-weight: 600; transition: color .2s ease; }
+        .backlink a:hover { color: #d93025; }
+
+        @media (max-width: 760px) {
+            .top-panel { grid-template-columns: 1fr; }
+            .sidebar { order: -1; }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: #15130f; color: #eee5d8; }
+            .home-button { color: #eee5d8; }
+            .home-button:hover, .home-button:focus-visible { color: #ff5b4f; }
+            .lede p.stand { color: #b8ada0; }
+            .lede p.byline { color: #8a8271; }
+            .backlink a { color: #eee5d8; }
+            .backlink a:hover { color: #ff5b4f; }
+            .figure {
+                --cream: #1e1b15;
+                --cream-2: #26221a;
+                --ink: #ece3d3;
+                --muted: #a89a84;
+                --land: #40392b;
+                --map-stroke: #1e1b15;
+                --line: #40392b;
+                --accent: #e0685a;
+                --gold: #d0a13f;
+                --gold-dark: #d0a13f;
+                box-shadow: 0 12px 40px rgba(0,0,0,.4);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="home-button" aria-label="Go to home page">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+    </svg>
+    <span>Home</span>
+</a>
+
+<div class="container">
+
+    <div class="lede">
+        <h1>Mapping the Papacy</h1>
+        <p class="stand">Where the last eleven popes were born, and how the College of Cardinals that elects them slowly stopped being an Italian institution.</p>
+        <p class="byline">A data visualisation by Vimal Vivegananda</p>
+    </div>
+
+    <div class="figure">
+
+        <!-- ===== TOP PANEL: map + roster ===== -->
+        <div class="top-panel">
+            <div class="map-frame" id="map-frame">
+                <div class="map-loading">Loading map…</div>
+            </div>
+
+            <aside class="sidebar">
+                <h2>Eleven popes,<br>four countries.</h2>
+                <p class="intro">For more than a century every pope was born within 500&nbsp;km of Rome. The last three came from Poland, Argentina and the United States &mdash; mirroring the diversification of the cardinals shown below.</p>
+                <ol class="popes">
+                    <li><span class="num">1</span><span class="who"><b>Pius X</b><small>Riese, Italy</small></span><span class="yrs">1903&ndash;1914</span></li>
+                    <li><span class="num">2</span><span class="who"><b>Benedict XV</b><small>Genoa, Italy</small></span><span class="yrs">1914&ndash;1922</span></li>
+                    <li><span class="num">3</span><span class="who"><b>Pius XI</b><small>Desio, Italy</small></span><span class="yrs">1922&ndash;1939</span></li>
+                    <li><span class="num">4</span><span class="who"><b>Pius XII</b><small>Rome, Italy</small></span><span class="yrs">1939&ndash;1958</span></li>
+                    <li><span class="num">5</span><span class="who"><b>John XXIII</b><small>Sotto il Monte, Italy</small></span><span class="yrs">1958&ndash;1963</span></li>
+                    <li><span class="num">6</span><span class="who"><b>Paul VI</b><small>Concesio, Italy</small></span><span class="yrs">1963&ndash;1978</span></li>
+                    <li><span class="num">7</span><span class="who"><b>John Paul I</b><small>Canale d'Agordo, Italy</small></span><span class="yrs">1978</span></li>
+                    <li class="hl"><span class="num">8</span><span class="who"><b>John Paul II</b><small>Wadowice, Poland</small></span><span class="yrs">1978&ndash;2005</span></li>
+                    <li class="hl"><span class="num">9</span><span class="who"><b>Benedict XVI</b><small>Marktl, Germany</small></span><span class="yrs">2005&ndash;2013</span></li>
+                    <li class="hl"><span class="num">10</span><span class="who"><b>Francis</b><small>Buenos Aires, Argentina</small></span><span class="yrs">2013&ndash;2025</span></li>
+                    <li class="hl"><span class="num">11</span><span class="who"><b>Leo XIV</b><small>Chicago, USA</small></span><span class="yrs">2025&ndash;</span></li>
+                </ol>
+            </aside>
+        </div>
+
+        <!-- ===== CHART PANEL: cardinal electors over time ===== -->
+        <div class="chart-panel">
+            <h3>Who picks the pope</h3>
+            <p class="sub">Regional composition of the College of Cardinal Electors at each conclave, 1903&ndash;2025</p>
+            <div class="chart-scroll">
+                <svg id="chart" viewBox="0 0 1000 500" role="img"
+                     aria-label="Stacked area chart of cardinal electors by world region at each conclave from 1903 to 2025, showing Italy's share shrinking as other regions grow."></svg>
+            </div>
+        </div>
+
+        <p class="sources">Illustrative reconstruction &middot; Sources: Wikipedia (College of Cardinals, papal biographies) &middot; Birthplace coordinates approximate.</p>
+    </div>
+
+    <div class="backlink"><a href="index.html">&larr; Back to home</a></div>
+
+</div>
+
+<script>
+(function () {
+    /* ---------- shared helpers ---------- */
+    var SVGNS = 'http://www.w3.org/2000/svg';
+    function el(name, attrs, parent) {
+        var n = document.createElementNS(SVGNS, name);
+        if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]);
+        if (parent) parent.appendChild(n);
+        return n;
+    }
+    function cssVar(name) {
+        return getComputedStyle(document.querySelector('.figure')).getPropertyValue(name).trim();
+    }
+
+    /* ==================================================================
+       1. MAP  — fetch the shared world map, recolour, crop, annotate
+       ================================================================== */
+    // Linear projection fitted empirically to the source map's real geometry
+    // (verified against Italy, Germany, Poland, Argentina bounding boxes).
+    function px(lon) { return 1308.0 + 6.97 * lon; }
+    function py(lat) { return 694.3 - 8.56 * lat; }
+    // Atlantic-centred crop, with headroom above Europe for the top callouts.
+    var VB = { x: 520, y: 150, w: 1240, h: 940 };
+
+    function drawMap(svg) {
+        // strip fixed dimensions, apply crop
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
+        svg.setAttribute('viewBox', VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h);
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+        // recolour: override the map's own stylesheet
+        var style = document.createElementNS(SVGNS, 'style');
+        style.textContent =
+            '.landxx{fill:' + cssVar('--land') + '!important;stroke:' + cssVar('--map-stroke') +
+            '!important;stroke-width:0.7!important}' +
+            '.coastxx{stroke:' + cssVar('--map-stroke') + '!important}' +
+            '.oceanxx{display:none!important}.circlexx,.subxx{display:none!important}';
+        svg.insertBefore(style, svg.firstChild);
+
+        var g = el('g', { 'font-family': "'Bagnard', Georgia, serif" }, svg);
+
+        // ---- Italian cluster: seven tightly packed discs over N. Italy ----
+        var cx = 1392, cy = 336, rr = 11;
+        var offs = [
+            [-30, -2], [-10, -2], [10, -2], [30, -2],  // 1..4
+            [-20, 18], [0, 18], [20, 18]               // 5..7
+        ];
+        for (var i = 0; i < 7; i++) disc(g, cx + offs[i][0], cy + offs[i][1], rr, String(i + 1));
+
+        // ---- individual markers (fitted projection) ----
+        var germany   = { x: px(12.9),  y: py(48.1) };   // Marktl
+        var poland    = { x: px(19.5),  y: py(49.9) };   // Wadowice
+        var argentina = { x: px(-58.4), y: py(-34.6) };  // Buenos Aires
+        var chicago   = { x: px(-87.65),y: py(41.85) };  // Chicago
+
+        disc(g, germany.x,   germany.y,   13, '9');
+        disc(g, poland.x,    poland.y,    13, '8');
+        disc(g, argentina.x, argentina.y, 13, '10');
+        disc(g, chicago.x,   chicago.y,   13, '11');
+
+        // ---- callouts: [box top-left x, y], marker, name+place, years ----
+        callout(g, 545, 208,  chicago,   'Leo XIV', ' · Chicago, USA',        '2025 –');
+        callout(g, 560, 968,  argentina, 'Francis', ' · Buenos Aires, Argentina', '2013 – 2025');
+        callout(g, 1118, 175, germany,   'Benedict XVI', ' · Marktl, Germany',    '2005 – 2013');
+        callout(g, 1492, 175, poland,    'John Paul II', ' · Wadowice, Poland',   '1978 – 2005');
+
+        // ---- Italian cluster callout, below the pile ----
+        italyCallout(g, cx, cy + 40);
+    }
+
+    function disc(g, x, y, r, label) {
+        el('circle', { cx: x, cy: y, r: r, fill: cssVar('--gold'),
+                       stroke: cssVar('--gold-dark'), 'stroke-width': 1.4 }, g);
+        var t = el('text', { x: x, y: y, 'text-anchor': 'middle', 'dominant-baseline': 'central',
+                             'font-size': r * 1.15, 'font-weight': '700', fill: '#3a2708' }, g);
+        t.textContent = label;
+    }
+
+    // Two-line label box (name+place / years) joined to its marker by a thin leader.
+    function callout(g, bx, by, marker, name, place, years) {
+        var lineH = 21, padX = 12, padY = 15;
+        var w1 = (name + place).length * 7.7;
+        var w2 = years.length * 7.7;
+        var boxW = Math.max(150, w1, w2) + padX * 2;
+        var boxH = lineH * 2 + 12;
+
+        // leader from nearest box edge to the marker
+        var sx = Math.max(bx, Math.min(marker.x, bx + boxW));
+        var sy = marker.y > by + boxH ? by + boxH : (marker.y < by ? by : marker.y);
+        el('path', { d: 'M' + sx + ',' + sy + ' L' + marker.x + ',' + marker.y,
+                     fill: 'none', stroke: cssVar('--muted'), 'stroke-width': 1 }, g);
+
+        box(g, bx, by, boxW, boxH);
+        var tx = bx + boxW / 2;
+        var t1 = el('text', { x: tx, y: by + padY, 'text-anchor': 'middle', 'font-size': 15 }, g);
+        var nm = el('tspan', { fill: cssVar('--accent'), 'font-weight': '700' }, t1);
+        nm.textContent = name;
+        var pl = el('tspan', { fill: cssVar('--ink') }, t1);
+        pl.textContent = place;
+        var t2 = el('text', { x: tx, y: by + padY + lineH, 'text-anchor': 'middle',
+                              'font-size': 15, fill: cssVar('--ink') }, g);
+        t2.textContent = years;
+    }
+
+    function italyCallout(g, cx, cy) {
+        var lines = [
+            'Seven popes born in Northern Italy',
+            'Pius X · Benedict XV · Pius XI · Pius XII',
+            'John XXIII · Paul VI · John Paul I'
+        ];
+        var boxW = 372, boxH = 78, bx = cx - boxW / 2, by = cy + 40;
+        el('path', { d: 'M' + cx + ',' + by + ' L' + cx + ',' + cy,
+                     fill: 'none', stroke: cssVar('--muted'), 'stroke-width': 1 }, g);
+        box(g, bx, by, boxW, boxH);
+        lines.forEach(function (ln, i) {
+            var t = el('text', { x: cx, y: by + 22 + i * 20, 'text-anchor': 'middle',
+                                 'font-size': i === 0 ? 15 : 14,
+                                 'font-weight': i === 0 ? '700' : '400',
+                                 fill: cssVar('--ink') }, g);
+            t.textContent = ln;
+        });
+    }
+
+    function box(g, x, y, w, h) {
+        el('rect', { x: x, y: y, width: w, height: h, rx: 4,
+                     fill: cssVar('--cream'), 'fill-opacity': 0.92,
+                     stroke: cssVar('--line'), 'stroke-width': 1 }, g);
+    }
+
+    fetch('world-map.svg')
+        .then(function (r) { return r.text(); })
+        .then(function (txt) {
+            var doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+            var svg = doc.documentElement;
+            var frame = document.getElementById('map-frame');
+            frame.innerHTML = '';
+            frame.appendChild(document.importNode(svg, true));
+            drawMap(frame.querySelector('svg'));
+        })
+        .catch(function () {
+            document.getElementById('map-frame').innerHTML =
+                '<div class="map-loading">Map could not be loaded.</div>';
+        });
+
+    /* ==================================================================
+       2. CHART — stacked area of cardinal electors by region
+       ================================================================== */
+    var years = [1903, 1914, 1922, 1939, 1958, 1963, 1978, 2005, 2013, 2025];
+    // bottom -> top of the stack
+    var regions = [
+        { key: 'Italy',           var: '--italy',    data: [35, 33, 30, 31, 24, 50, 45, 30, 28, 28] },
+        { key: 'Rest of Europe',  var: '--resteur',  data: [24, 21, 19, 21, 16, 42, 33, 30, 30, 31] },
+        { key: 'North America',   var: '--namerica', data: [ 1,  3,  4,  5,  6, 14, 13, 14, 14, 15] },
+        { key: 'South America',   var: '--samerica', data: [ 0,  0,  1,  2,  3, 12, 11, 12, 13, 13] },
+        { key: 'Asia',            var: '--asia',     data: [ 0,  0,  0,  0,  2,  9, 10, 11, 13, 13] },
+        { key: 'Oceania',         var: '--oceania',  data: [ 0,  0,  0,  0,  0,  2,  2,  3,  4,  4] },
+        { key: 'Africa',          var: '--africa',   data: [ 0,  0,  0,  0,  0,  5,  8, 13, 15, 18] }
+    ];
+    var popeNames = ['Pius X', 'Benedict XV', 'Pius XI', 'Pius XII', 'John XXIII',
+                     'Paul VI', 'John Paul II', 'Benedict XVI', 'Francis', 'Leo XIV'];
+
+    function buildChart() {
+        var svg = document.getElementById('chart');
+        var W = 1000, H = 500;
+        var M = { t: 46, r: 128, b: 46, l: 44 };
+        var pw = W - M.l - M.r, ph = H - M.t - M.b;
+        var yMax = 150;
+        var y0 = 1903, y1 = 2025;
+
+        function X(yr) { return M.l + (yr - y0) / (y1 - y0) * pw; }
+        function Y(v) { return M.t + (1 - v / yMax) * ph; }
+
+        var g = el('g', { 'font-family': "'Bagnard', Georgia, serif" }, svg);
+
+        // gridlines + y labels
+        for (var v = 0; v <= yMax; v += 25) {
+            el('line', { x1: M.l, y1: Y(v), x2: M.l + pw, y2: Y(v),
+                         stroke: cssVar('--line'), 'stroke-width': v === 0 ? 1.4 : 0.7,
+                         'stroke-opacity': v === 0 ? 1 : 0.6 }, g);
+            var yl = el('text', { x: M.l - 8, y: Y(v) + 4, 'text-anchor': 'end',
+                                  'font-size': 12, fill: cssVar('--muted') }, g);
+            yl.textContent = v;
+        }
+        var yTitle = el('text', {
+            x: 14, y: M.t + ph / 2,
+            'text-anchor': 'middle', 'font-size': 12, fill: cssVar('--muted'),
+            transform: 'rotate(-90 14 ' + (M.t + ph / 2) + ')'
+        }, g);
+        yTitle.textContent = 'Cardinal electors';
+
+        // cumulative stacks
+        var cum = years.map(function () { return 0; });
+        regions.forEach(function (reg) {
+            var lower = cum.slice();
+            var upper = years.map(function (_, i) { return lower[i] + reg.data[i]; });
+            var d = 'M' + X(years[0]) + ',' + Y(lower[0]);
+            for (var i = 0; i < years.length; i++) d += ' L' + X(years[i]) + ',' + Y(upper[i]);
+            for (var j = years.length - 1; j >= 0; j--) d += ' L' + X(years[j]) + ',' + Y(lower[j]);
+            d += ' Z';
+            el('path', { d: d, fill: cssVar(reg.var), 'fill-opacity': 0.96 }, g);
+            cum = upper;
+
+            // region label at the right edge, vertically centred on its final band
+            var midV = lower[years.length - 1] + reg.data[years.length - 1] / 2;
+            var lab = el('text', { x: M.l + pw + 10, y: Y(midV) + 4, 'font-size': 12.5,
+                                   'font-weight': '600', fill: cssVar(reg.var) }, g);
+            lab.textContent = reg.key;
+        });
+
+        // x axis labels
+        var seen = {};
+        years.forEach(function (yr) {
+            if (seen[yr]) return; seen[yr] = 1;
+            var xl = el('text', { x: X(yr), y: M.t + ph + 20, 'text-anchor': 'middle',
+                                  'font-size': 12, fill: cssVar('--muted') }, g);
+            xl.textContent = yr;
+        });
+        var aug = el('text', { x: X(1978), y: M.t + ph + 34, 'text-anchor': 'middle',
+                               'font-size': 10.5, fill: cssVar('--muted') }, g);
+        aug.textContent = '(Aug/Oct)';
+
+        // pope-name labels above each column
+        var totals = years.map(function (_, i) {
+            return regions.reduce(function (s, r) { return s + r.data[i]; }, 0);
+        });
+        popeNames.forEach(function (nm, i) {
+            var stagger = (i % 2 === 0) ? 0 : -14;
+            var yy = Y(totals[i]) - 8 + stagger;
+            var t = el('text', { x: X(years[i]), y: yy, 'text-anchor': 'middle',
+                                 'font-size': 10.5, fill: cssVar('--ink'), 'fill-opacity': 0.72 }, g);
+            t.textContent = nm;
+        });
+
+        // annotations
+        annot(g, X(1912), Y(115), X(1909), Y(48),
+              ['Italy alone holds', '58% of the conclave'], 'middle');
+        annot(g, X(1969), Y(150), X(1980), Y(112),
+              ['John Paul II · first', 'non-Italian pope since 1523'], 'middle', cssVar('--accent'));
+        annot(g, X(2004), Y(146), X(2025), Y(14),
+              ['By 2025 Italy’s share', 'has fallen to 24%'], 'middle');
+    }
+
+    function annot(g, tx, ty, px, py, lines, anchor, color) {
+        el('path', { d: 'M' + tx + ',' + (ty + 6) + ' Q' + tx + ',' + ((ty + py) / 2) + ' ' + px + ',' + py,
+                     fill: 'none', stroke: cssVar('--muted'), 'stroke-width': 0.8,
+                     'stroke-dasharray': '2,2' }, g);
+        lines.forEach(function (ln, i) {
+            var t = el('text', { x: tx, y: ty - (lines.length - 1 - i) * 14, 'text-anchor': anchor,
+                                 'font-size': 12, fill: color || cssVar('--ink') }, g);
+            t.textContent = ln;
+        });
+    }
+
+    buildChart();
+})();
+</script>
+
+<script src="home-button-loader.js" data-home-href="index.html" defer></script>
+</body>
+</html>
