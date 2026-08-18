@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — Vimal Vivegananda</title>
+    <link rel="stylesheet" href="/bagnard.css">
+    <link rel="stylesheet" href="/site.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Bagnard', serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f1e8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .not-found {
+            text-align: center;
+            max-width: 560px;
+        }
+        .not-found .code {
+            font-size: clamp(4.5rem, 18vw, 7rem);
+            font-weight: 700;
+            line-height: 1;
+            color: #d93025;
+        }
+        .not-found h1 {
+            font-size: clamp(1.4rem, 5vw, 1.9rem);
+            margin: 14px 0 10px;
+        }
+        .not-found p {
+            color: #555;
+            margin-bottom: 26px;
+        }
+        .not-found-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 22px;
+        }
+        .not-found-links a {
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .not-found-links a:hover,
+        .not-found-links a:focus-visible {
+            color: #d93025;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            .not-found h1 { color: #eee5d8; }
+            .not-found p { color: #b8ada0; }
+            .not-found .code { color: #ff5b4f; }
+            .not-found-links a { color: #eee5d8; }
+            .not-found-links a:hover,
+            .not-found-links a:focus-visible {
+                color: #ff5b4f;
+            }
+        }
+    </style>
+    <!-- seo:start -->
+    <meta name="description" content="Page not found.">
+    <link rel="canonical" href="https://vimal.my/404">
+    <meta property="og:site_name" content="Vimal Vivegananda">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Page Not Found — Vimal Vivegananda">
+    <meta property="og:description" content="Page not found.">
+    <meta property="og:url" content="https://vimal.my/404">
+    <meta property="og:image" content="https://vimal.my/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Page Not Found — Vimal Vivegananda">
+    <meta name="twitter:description" content="Page not found.">
+    <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
+    <meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
+    <meta name="robots" content="noindex">
+    <!-- seo:end -->
+</head>
+<body>
+    <a href="/" class="home-button" aria-label="Go to home page">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+        </svg>
+        <span>Home</span>
+    </a>
+    <main class="not-found">
+        <div class="code">404</div>
+        <h1>This page doesn't exist</h1>
+        <p>The link may be outdated, or the page may have moved. Here are some good places to go instead.</p>
+        <nav class="not-found-links" aria-label="Suggested pages">
+            <a href="/">Home</a>
+            <a href="/mapping-the-papacy.html">Mapping the Papacy</a>
+            <a href="/polio.html">Polio Tracker</a>
+            <a href="/report-london-house-prices.html">Spatial Deep Learning</a>
+        </nav>
+    </main>
+    <script src="/home-button-loader.js" data-home-href="/" defer></script>
+</body>
+</html>

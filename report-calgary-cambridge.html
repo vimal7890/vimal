@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mining Social & Geographic Datasets — Vimal Vivegananda</title>
     <link rel="stylesheet" href="bagnard.css">
+    <link rel="stylesheet" href="site.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -13,36 +14,6 @@
             background: #f5f1e8;
             color: #1a1a1a;
             line-height: 1.75;
-        }
-        .home-button {
-            position: fixed;
-            top: clamp(14px, 2vw, 22px);
-            left: clamp(14px, 2vw, 22px);
-            z-index: 1000;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 0;
-            color: #333;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 600;
-            line-height: 1.1;
-            transition: color 0.2s ease;
-        }
-        .home-button svg {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-        }
-        .home-button:hover,
-        .home-button:focus-visible {
-            color: #d93025;
-            text-decoration: none;
-        }
-        .home-button:focus-visible {
-            outline: 2px solid rgba(217, 48, 37, 0.55);
-            outline-offset: 4px;
         }
         figure {
             margin: 28px 0;
@@ -110,10 +81,58 @@
         }
         table.data-table tr:nth-child(even) td { background: #faf8f3; }
 
+        .table-note {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: -16px;
+            margin-bottom: 24px;
+        }
+
         @media (max-width: 600px) {
             table.data-table { font-size: 0.8em; }
         }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            h1, h3 { color: #eee5d8; }
+            h2 {
+                color: #eee5d8;
+                border-bottom-color: #eee5d8;
+            }
+            figcaption, .table-note { color: #b8ada0; }
+            figure img { border-color: #2e2922; }
+            .report-divider { border-top-color: #eee5d8; }
+            table.data-table th {
+                background: #26221c;
+                color: #eee5d8;
+            }
+            table.data-table td { border-bottom-color: #2e2922; }
+            table.data-table tr:nth-child(even) td { background: #1f1b16; }
+            a { color: #5190e8; }
+        }
     </style>
+    <!-- seo:start -->
+    <meta name="description" content="Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.">
+    <link rel="canonical" href="https://vimal.my/report-calgary-cambridge">
+    <meta property="og:site_name" content="Vimal Vivegananda">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Mining Social &amp; Geographic Datasets — Vimal Vivegananda">
+    <meta property="og:description" content="Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.">
+    <meta property="og:url" content="https://vimal.my/report-calgary-cambridge">
+    <meta property="og:image" content="https://vimal.my/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mining Social &amp; Geographic Datasets — Vimal Vivegananda">
+    <meta name="twitter:description" content="Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.">
+    <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
+    <meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Mining Social & Geographic Datasets — Vimal Vivegananda","description":"Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.","url":"https://vimal.my/report-calgary-cambridge","image":"https://vimal.my/assets/og-card.png","author":{"@type":"Person","name":"Vimal Vivegananda","url":"https://vimal.my/"}}</script>
+    <!-- seo:end -->
 </head>
 <body>
 
@@ -138,7 +157,7 @@
     <p>To contextualise the two focal users within the broader dataset, all 1,871 GC check-ins were first aggregated into a hexagonal-bin density surface &mdash; projected to EPSG:3857 and overlaid on a Carto Positron basemap using contextily &mdash; revealing two dominant clusters: the historic university core between King's Parade and Trinity Street, and the Mill Road commercial corridor to the south-east (Figure 1a). Individual records for users 75027 (67 total check-ins) and 102829 (75 total check-ins) were then extracted by filtering on User_ID, converted to a GeoDataFrame with <code>gpd.points_from_xy</code>, and plotted as colour-coded markers on the same basemap (Figure 1b). User 75027 extends noticeably east to Cherry Hinton Road &mdash; implying a residential location separate from a daytime city-centre presence &mdash; while user 102829 clusters more tightly in the centre with a secondary node at the West Cambridge Research Campus, consistent with an academic workplace affiliation.</p>
 
     <figure>
-        <img src="report-images/fig1-cambridge-checkins.png" alt="Hexbin check-in density across Cambridge alongside the two focal users' individual check-ins" loading="lazy">
+        <img src="report-images/fig1-cambridge-checkins.webp" alt="Hexbin check-in density across Cambridge alongside the two focal users' individual check-ins" width="1400" height="734" loading="lazy">
         <figcaption>Figure 1. (a) Hexagonal-bin density of all 1,871 GC check-ins on a Carto Positron basemap; (b) individual check-ins for users 75027 and 102829.</figcaption>
     </figure>
     <p>Despite the numeric anonymisation applied to the dataset, the privacy implications of this type of analysis are substantial. De Montjoye et al. (2013) demonstrated that four spatio-temporal points are sufficient to uniquely identify approximately 95% of individuals from a mobility trace, because most people cycle predictably between a small number of locations. The repeated evening check-ins at Cherry Hinton visible for user 75027 function as a probabilistic home-address fingerprint; a single cross-reference with a contemporaneous social-media post by a co-present acquaintance would likely suffice to resolve the identifier to a real name. Aggregation to a coarser grid, temporal rounding, or k-anonymity constraints would each be necessary mitigations before individual-level release.</p>
@@ -149,7 +168,7 @@
     <p>To identify significant pauses along each route, the daily check-ins were additionally loaded into a MovingPandas TrajectoryCollection using an artificial minute-interval datetime index. <code>TrajectoryStopDetector</code> was applied with <code>min_duration=60s</code> and <code>max_diameter=150m</code> &mdash; parameters set leniently to account for the sparse check-in cadence &mdash; and the resulting stop points were overlaid on each route figure. For user 75027, two stop clusters emerge: one at the destination of the first 5.6 km leg (consistent with a venue visit in the city centre) and one near Mill Road in the evening. For user 102829, a stop cluster appears at West Cambridge during midday, corroborating the workplace hypothesis.</p>
 
     <figure>
-        <img src="report-images/fig2-cambridge-trajectories.png" alt="Daily movement trajectories for both users routed on the Cambridge driving network" loading="lazy">
+        <img src="report-images/fig2-cambridge-trajectories.webp" alt="Daily movement trajectories for both users routed on the Cambridge driving network" width="1400" height="815" loading="lazy">
         <figcaption>Figure 2. Daily trajectories on the Cambridge driving network, with MovingPandas stop points marked. Left: user 75027 (30 Jan 2010); right: user 102829 (24 May 2010).</figcaption>
     </figure>
 
@@ -170,26 +189,26 @@
             <tr><td>Stop points detected (MovingPandas)</td><td>2</td><td>1</td></tr>
         </tbody>
     </table>
-    <p style="font-size:0.85em;color:#666;margin-top:-16px;margin-bottom:24px;">Table 1. Mobility metrics for each user, computed from OSMnx street-network shortest paths.</p>
+    <p class="table-note">Table 1. Mobility metrics for each user, computed from OSMnx street-network shortest paths.</p>
 
     <h3>4. Urban-Planning Application: Proposed Community Park</h3>
     <p>Cambridge city centre is historically well-served by retail and cultural amenities but the eastern residential fringe (the Romsey, Coleridge, and Cherry Hinton wards) carries a persistent green-space deficit recognised in the Cambridge Local Plan (Cambridge City Council, 2018). We propose a new community park in the area bounded by Mill Road, Coldham's Lane, and the Cambridge&ndash;Ipswich railway line, supported by three converging spatial analyses.</p>
     <p>First, all GC check-ins were aggregated to a 200 m regular grid and a DistanceBand spatial weights matrix (threshold 500 m) was constructed using libpysal. Moran's I was computed using <code>Moran_Local</code> from the PySAL esda module, confirming significant positive spatial autocorrelation in check-in density (Moran's I &asymp; 0.45, p &lt; 0.05). The LISA cluster map identifies the historic core as a statistically significant High-High cluster and the Romsey&ndash;Cherry Hinton zone as a Low-Low cold spot &mdash; an area of low civic activity surrounded by equally low-activity neighbours, consistent with a gap in public-realm provision.</p>
 
     <figure>
-        <img src="report-images/fig3-lisa-cluster.png" alt="LISA cluster map of GC check-in density showing High-High and Low-Low clusters" loading="lazy">
+        <img src="report-images/fig3-lisa-cluster.webp" alt="LISA cluster map of GC check-in density showing High-High and Low-Low clusters" width="1111" height="1400" loading="lazy">
         <figcaption>Figure 3. LISA cluster map of GC check-in density (High-High in red, Low-Low in blue, p &lt; 0.05).</figcaption>
     </figure>
     <p>Second, edge-level betweenness centrality was computed for the Cambridge driving network &mdash; converted to a DiGraph and analysed via <code>nx.betweenness_centrality</code> on the line graph &mdash; and visualised on a contextily basemap. The proposed site sits in a moderate-betweenness transitional zone: not isolated, yet not on a primary arterial where heavy through-traffic would conflict with a park environment.</p>
 
     <figure>
-        <img src="report-images/fig4-betweenness.jpg" alt="Edge betweenness centrality of the Cambridge driving network" loading="lazy">
+        <img src="report-images/fig4-betweenness.webp" alt="Edge betweenness centrality of the Cambridge driving network" width="941" height="1400" loading="lazy">
         <figcaption>Figure 4. Edge-level betweenness centrality of the Cambridge driving network, highlighting primary through-routes versus quieter transitional streets.</figcaption>
     </figure>
     <p>Third, OpenStreetMap parks and recreation grounds within 2 km of the city centre were extracted using <code>ox.features_from_address</code>, reprojected to EPSG:27700 (British National Grid), and buffered at 300 m and 1 km &mdash; the Natural England (2010) ANGSt Local and Neighbourhood standards for accessible natural greenspace. The existing parks (Coleridge Recreation Ground, Cherry Hinton Hall, Mill Road Cemetery) leave an accessibility gap around the proposed site that exceeds the Local-standard threshold. A gravitational-accessibility surface treating GC check-in points as residential-demand proxies places the proposed site in the lowest accessibility decile, constituting the synthesis evidence for the recommendation.</p>
 
     <figure>
-        <img src="report-images/fig5-cambridge-accessibility.jpg" alt="Synthesis map of Cambridge parks, ANGSt buffers, and gravitational accessibility" loading="lazy">
+        <img src="report-images/fig5-cambridge-accessibility.webp" alt="Synthesis map of Cambridge parks, ANGSt buffers, and gravitational accessibility" width="1292" height="1400" loading="lazy">
         <figcaption>Figure 5. Synthesis map combining existing parks, Natural England ANGSt buffers (300 m / 1 km), and the gravitational-accessibility surface, locating the proposed community park.</figcaption>
     </figure>
 
@@ -212,7 +231,7 @@
     <p>The star-rating distribution confirms the well-known J-curve bimodal pattern on consumer-review platforms (Hu et al., 2009). The polarity split &mdash; positive (stars &ge; 4) at approximately 66%, negative (stars &le; 3) at 34% &mdash; introduces a moderate class imbalance managed at the modelling stage. The top 40 most-frequent unigrams in the cleaned restaurant corpus after stop-word removal and lower-casing (CountVectorizer, <code>min_df=5</code>), separated by polarity class, reveal contrasting vocabularies: &ldquo;amazing&rdquo;, &ldquo;delicious&rdquo;, and &ldquo;friendly&rdquo; versus &ldquo;bland&rdquo;, &ldquo;rude&rdquo;, and &ldquo;overpriced&rdquo; &mdash; already signalling strong lexical separability between classes.</p>
 
     <figure>
-        <img src="report-images/fig6-calgary-ratings.png" alt="Star-rating distribution and top polarity-discriminative tokens in the Calgary corpus" loading="lazy">
+        <img src="report-images/fig6-calgary-ratings.webp" alt="Star-rating distribution and top polarity-discriminative tokens in the Calgary corpus" width="1400" height="580" loading="lazy">
         <figcaption>Figure 6. (a) Star-rating distribution for the full dataset versus the restaurant subset, with the 3.5 polarity boundary; (b) top polarity-discriminative tokens.</figcaption>
     </figure>
 
@@ -226,7 +245,7 @@
     <p>LDA was applied to the restaurant corpus using <code>LatentDirichletAllocation</code> (<code>k=8</code>, <code>max_iter=10</code>, <code>learning_method='online'</code>) trained on the CountVectorizer bag-of-words matrix. Several interpretable themes emerge: a fast-food topic dominated by &ldquo;burger&rdquo;, &ldquo;fries&rdquo;, &ldquo;drive&rdquo;; a fine-dining topic anchored by &ldquo;wine&rdquo;, &ldquo;steak&rdquo;, &ldquo;reservation&rdquo;; and a service-quality topic &mdash; &ldquo;staff&rdquo;, &ldquo;rude&rdquo;, &ldquo;manager&rdquo;, &ldquo;wait&rdquo; &mdash; strongly associated with negative reviews, as confirmed by inspecting the mean topic-proportion vector for reviews below versus above the polarity boundary.</p>
 
     <figure>
-        <img src="report-images/fig7-lda-topics.png" alt="Top words per topic from the LDA model on restaurant reviews" loading="lazy">
+        <img src="report-images/fig7-lda-topics.webp" alt="Top words per topic from the LDA model on restaurant reviews" width="1400" height="623" loading="lazy">
         <figcaption>Figure 7. LDA topic model on restaurant reviews (k = 8), showing the top 10 words per topic.</figcaption>
     </figure>
 
@@ -234,13 +253,13 @@
     <p>The best-performing model (Logistic Regression, Text+Structured+VADER) achieves approximately <strong>0.88 accuracy</strong> and <strong>0.86 macro F1</strong> on the held-out set. The near-diagonal confusion-matrix pattern confirms that <code>class_weight='balanced'</code> prevents bias toward the majority positive class. The top 20 positive TF-IDF feature coefficients include &ldquo;amazing&rdquo;, &ldquo;delicious&rdquo;, &ldquo;favourite&rdquo;, and &ldquo;perfect&rdquo;; the top 20 negative include &ldquo;rude&rdquo;, &ldquo;worst&rdquo;, &ldquo;bland&rdquo;, and &ldquo;overpriced&rdquo;.</p>
 
     <figure>
-        <img src="report-images/fig8-confusion-matrix.png" alt="Confusion matrix and top feature coefficients for the best logistic-regression model" loading="lazy">
+        <img src="report-images/fig8-confusion-matrix.webp" alt="Confusion matrix and top feature coefficients for the best logistic-regression model" width="1400" height="589" loading="lazy">
         <figcaption>Figure 8. (a) Normalised confusion matrix for the best model (Logistic Regression, Text+Structured+VADER); (b) top 20 positive and 20 negative feature coefficients.</figcaption>
     </figure>
     <p>Two consistent patterns emerge across all nine classifier&ndash;feature combinations: linear models outperform tree ensembles in the high-dimensional sparse text space; and each successive feature addition yields a small but reliable uplift of approximately one to two percentage points. Na&iuml;ve Bayes remains a fast, interpretable baseline above 0.80 accuracy on Text-only features.</p>
 
     <figure>
-        <img src="report-images/fig9-model-comparison.png" alt="Macro F1 and accuracy across three classifiers and three feature sets" loading="lazy">
+        <img src="report-images/fig9-model-comparison.webp" alt="Macro F1 and accuracy across three classifiers and three feature sets" width="1400" height="484" loading="lazy">
         <figcaption>Figure 9. Model comparison &mdash; macro F1 and accuracy across three classifiers (Logistic Regression, Na&iuml;ve Bayes, Random Forest) and three feature sets.</figcaption>
     </figure>
 
@@ -249,7 +268,7 @@
     <p>The downtown core and the 17th Avenue SW / Beltline district are simultaneously high-density, moderate-sentiment, and high-accessibility &mdash; a saturated market with strong incumbents and high entry costs. The <strong>Mahogany / Auburn Bay area</strong> in the south-east instead shows low restaurant density, above-mean sentiment for its few existing venues (VADER compound &gt; 0.40), and one of the lowest gravitational-accessibility scores in the dataset. We recommend a location at approximately <strong>50.880&deg;N, &minus;113.970&deg;W</strong> in this quadrant. The City of Calgary's 2020 Municipal Development Plan emphasises Activity Centres as nodes for diversified urban activity along the Primary Transit Network, providing the policy framework within which a new commercial food-service venture in this growing residential catchment could be supported.</p>
 
     <figure>
-        <img src="report-images/fig10-calgary-map.jpg" alt="Calgary bivariate map of restaurant hex density and mean venue sentiment with proposed site" loading="lazy">
+        <img src="report-images/fig10-calgary-map.webp" alt="Calgary bivariate map of restaurant hex density and mean venue sentiment with proposed site" width="1076" height="1400" loading="lazy">
         <figcaption>Figure 10. Calgary bivariate map overlaying restaurant hex-cell density (shading) with mean VADER venue sentiment (marker colour); the recommended Mahogany / Auburn Bay site is starred.</figcaption>
     </figure>
 

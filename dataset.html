@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ARCHIVED: part of the Bureaucracy of Religion project — restore together with religious-tracker.html -->
+    <meta http-equiv="refresh" content="0;url=index.html">
+    <title>Religious Leader Tracker — Dataset</title>
+    <link rel="stylesheet" href="bagnard.css">
+    <link rel="stylesheet" href="site.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Bagnard', serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f5f1e8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: clamp(56px, 7vw, 72px) 20px 60px;
+        }
+        .page-title {
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { text-decoration: underline; }
+        h2 {
+            font-size: 1.45rem;
+            margin: 38px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #333;
+        }
+        p { color: #555; margin-bottom: 1em; }
+        a { color: #333; }
+        a:hover, a:focus-visible { color: #d93025; }
+        .download-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0 6px;
+        }
+        .download-chip {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 14px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-decoration: none;
+        }
+        .download-chip strong { color: #d93025; }
+        .download-chip span { font-size: 0.9rem; color: #666; }
+        table.schema {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 10px;
+            font-size: 0.95rem;
+        }
+        table.schema th {
+            background: #333;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 9px 12px;
+        }
+        table.schema td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd2bc;
+            color: #555;
+            vertical-align: top;
+        }
+        table.schema code {
+            font-size: 0.9em;
+        }
+        ul { margin: 0 0 1em 1.3em; color: #555; }
+        li { margin-bottom: 6px; }
+        .schema-wrapper { overflow-x: auto; }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: #15130f; color: #eee5d8; }
+            .page-title, .back-link, a { color: #eee5d8; }
+            h2 { color: #eee5d8; border-bottom-color: #eee5d8; }
+            p, ul { color: #b8ada0; }
+            a:hover, a:focus-visible { color: #ff5b4f; }
+            .download-chip {
+                background: #1f1b16;
+                box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+            }
+            .download-chip strong { color: #ff5b4f; }
+            .download-chip span { color: #b8ada0; }
+            table.schema th { background: #26221c; color: #eee5d8; }
+            table.schema td { border-bottom-color: #2e2922; color: #b8ada0; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button" aria-label="Go to home page">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+        </svg>
+        <span>Home</span>
+    </a>
+    <div class="container">
+        <a href="religious-tracker.html" class="back-link">&larr; Back to Religious Leader Tracker</a>
+        <h1 class="page-title">The Dataset</h1>
+        <p>The Religious Leader Tracker is built on a hand-researched dataset covering current leadership across 150+ religious denominations worldwide: who leads each body, when their tenure began, and how many members the body claims. It is maintained continuously as leadership changes occur.</p>
+
+        <div class="download-row">
+            <a class="download-chip" href="leaders.csv" download>
+                <strong>leaders.csv</strong>
+                <span>Primary leadership table — source of truth</span>
+            </a>
+            <a class="download-chip" href="membership-data.json" download>
+                <strong>membership-data.json</strong>
+                <span>Membership figures with sources</span>
+            </a>
+            <a class="download-chip" href="leaders-research-log.csv" download>
+                <strong>leaders-research-log.csv</strong>
+                <span>Research audit trail for tenure dates</span>
+            </a>
+        </div>
+
+        <h2>Schema — leaders.csv</h2>
+        <div class="schema-wrapper">
+        <table class="schema">
+            <thead>
+                <tr><th>Column</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>religion</code></td><td>Top-level religion (Christianity, Islam, Buddhism, Hinduism, Judaism, …).</td></tr>
+                <tr><td><code>Denomination</code></td><td>Major branch or family within the religion (e.g. Catholic, Sunni, Mahāyāna).</td></tr>
+                <tr><td><code>sub denomination</code></td><td>Intermediate grouping where one exists (e.g. Eastern Orthodoxy, Pure Land).</td></tr>
+                <tr><td><code>sub denomination 2</code></td><td>The specific body being tracked (e.g. Russian Orthodox Church, Soka Gakkai).</td></tr>
+                <tr><td><code>members</code></td><td>Claimed membership where known; <code>n/a</code> otherwise. Figures also live in <code>membership-data.json</code> with sources.</td></tr>
+                <tr><td><code>source</code></td><td>Source for the membership figure.</td></tr>
+                <tr><td><code>leader</code></td><td>Current leader, usually as <code>Name / Title</code>.</td></tr>
+                <tr><td><code>since</code></td><td>Tenure start date. Day precision (e.g. <code>May 8th 2025</code>) where research allows; month or year precision otherwise.</td></tr>
+                <tr><td><code>days</code></td><td>Unused in the data — days in office are computed live on the site.</td></tr>
+            </tbody>
+        </table>
+        </div>
+
+        <h2>Methodology</h2>
+        <p>Leadership entries are researched primarily from Wikipedia infoboxes and official denominational sources, then refined for date precision. Every tenure-date decision is recorded in <a href="leaders-research-log.csv">leaders-research-log.csv</a>, including the field used (e.g. <code>term_start</code>), the source type, the source URL, and matching notes — so any figure on the site can be traced back to where it came from.</p>
+        <ul>
+            <li>Membership figures are as claimed by the denomination or as estimated by the cited source; they are not independently verified.</li>
+            <li>Day counts are only computed for tenures with day-precision start dates.</li>
+            <li>Recent changes are published in the <a href="succession-log.html">Succession Log</a> and its <a href="feed.xml">RSS feed</a>.</li>
+        </ul>
+
+        <h2>Use</h2>
+        <p>You are welcome to use the dataset for research or journalism with attribution to <a href="https://vimal.my/">vimal.my</a>. If you spot an error or a leadership change I have missed, <a href="mailto:vimal134@pm.me">email me</a>.</p>
+    </div>
+    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
+</body>
+</html>

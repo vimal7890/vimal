@@ -1,0 +1,85 @@
+/* Shared site styles: design tokens, home button, motion preferences.
+   Load after bagnard.css and before any page-specific <style>. */
+
+:root {
+    --site-bg: #f5f1e8;
+    --site-ink: #333;
+    --site-muted: #555;
+    --site-faint: #888;
+    --site-accent: #d93025;
+    --site-accent-soft: rgba(217, 48, 37, 0.55);
+    --site-card-bg: #ffffff;
+    --site-border: #eee;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --site-bg: #15130f;
+        --site-ink: #eee5d8;
+        --site-muted: #b8ada0;
+        --site-faint: #b8ada0;
+        --site-accent: #ff5b4f;
+        --site-accent-soft: rgba(255, 91, 79, 0.55);
+        --site-card-bg: #1f1b16;
+        --site-border: #2e2922;
+    }
+}
+
+.home-button {
+    position: fixed;
+    top: clamp(14px, 2vw, 22px);
+    left: clamp(14px, 2vw, 22px);
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    color: var(--site-ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.1;
+    transition: color 0.2s ease;
+}
+
+.home-button svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.home-button:hover,
+.home-button:focus-visible {
+    color: var(--site-accent);
+    text-decoration: none;
+}
+
+.home-button:focus-visible {
+    outline: 2px solid var(--site-accent-soft);
+    outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+    .home-button {
+        gap: 6px;
+        font-size: 0.9rem;
+    }
+
+    .home-button svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Respect users who prefer reduced motion: disable decorative
+   animation and transition effects site-wide. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

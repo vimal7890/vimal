@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ARCHIVED: part of the Bureaucracy of Religion project — restore together with religious-tracker.html -->
+    <meta http-equiv="refresh" content="0;url=index.html">
+    <title>Succession Log — Religious Leader Tracker</title>
+    <link rel="alternate" type="application/rss+xml" title="Succession Log RSS" href="feed.xml">
+    <link rel="stylesheet" href="bagnard.css">
+    <link rel="stylesheet" href="site.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Bagnard', serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f1e8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: clamp(56px, 7vw, 72px) 20px 60px;
+        }
+        .page-title {
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .page-intro {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .feed-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 28px;
+            color: #d93025;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .feed-link:hover,
+        .feed-link:focus-visible {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .log-year h2 {
+            font-size: 1.5rem;
+            margin: 34px 0 14px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #333;
+        }
+        .log-list {
+            list-style: none;
+        }
+        .log-entry {
+            display: flex;
+            gap: 18px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5ddc9;
+        }
+        .log-date {
+            flex: 0 0 150px;
+            color: #8a7d6b;
+            font-size: 0.95rem;
+        }
+        .log-text {
+            color: #444;
+        }
+        .log-text a {
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .log-text a:hover,
+        .log-text a:focus-visible {
+            color: #d93025;
+            text-decoration: underline;
+        }
+        .log-religion {
+            color: #8a7d6b;
+            font-size: 0.95rem;
+        }
+        .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
+        @media (max-width: 560px) {
+            .log-entry {
+                flex-direction: column;
+                gap: 2px;
+            }
+            .log-date {
+                flex-basis: auto;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            .page-title,
+            .back-link,
+            .log-text a {
+                color: #eee5d8;
+            }
+            .log-year h2 {
+                color: #eee5d8;
+                border-bottom-color: #eee5d8;
+            }
+            .page-intro,
+            .log-text {
+                color: #b8ada0;
+            }
+            .log-date,
+            .log-religion {
+                color: #8c7e6c;
+            }
+            .log-entry {
+                border-bottom-color: #2e2922;
+            }
+            .feed-link,
+            .log-text a:hover,
+            .log-text a:focus-visible {
+                color: #ff5b4f;
+            }
+            .footer {
+                color: #b8ada0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button" aria-label="Go to home page">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+        </svg>
+        <span>Home</span>
+    </a>
+    <div class="container">
+        <a href="religious-tracker.html" class="back-link">&larr; Back to Religious Leader Tracker</a>
+        <h1 class="page-title">Succession Log</h1>
+        <p class="page-intro">Leadership changes across the denominations followed by the Religious Leader Tracker, newest first. Only changes with a day-precision start date are listed.</p>
+        <a class="feed-link" href="feed.xml">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.18 20.82a2.18 2.18 0 1 1-4.36 0 2.18 2.18 0 0 1 4.36 0zM1.82 9.82v3.09c5.15 0 9.27 4.12 9.27 9.27h3.09c0-6.83-5.53-12.36-12.36-12.36zM1.82 3.64v3.09c9.1 0 16.45 7.36 16.45 16.45h3.09C21.36 12.4 12.6 3.64 1.82 3.64z"/></svg>
+            Subscribe via RSS
+        </a>
+        <!-- log:start -->
+            <section class="log-year">
+                <h2>2026</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">May 12th 2026</span>
+                    <span class="log-text"><strong>Catholicos-Patriarch of All Georgia Shio (Mujiri)</strong> became leader of <a href="religious-denominations/georgian-orthodox-church.html">Georgian Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">April 12th 2026</span>
+                    <span class="log-text"><strong>Patriarch Paulos III Nona</strong> became leader of <a href="religious-denominations/chaldean-catholic-church.html">Chaldean Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 5th 2026</span>
+                    <span class="log-text"><strong>Archbishop of Canterbury Sarah Mullally</strong> became leader of <a href="religious-denominations/church-of-england.html">Church of England</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2025</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">October 22nd 2025</span>
+                    <span class="log-text"><strong>Salih al‑Fawzan</strong> became leader of Sunni <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">July 4th 2025</span>
+                    <span class="log-text"><strong>General Conference President Erton Köhler</strong> became leader of <a href="religious-denominations/seventh-day-adventists.html">Seventh-day Adventists</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">May 8th 2025</span>
+                    <span class="log-text"><strong>Pope Leo XIV</strong> became leader of <a href="religious-denominations/roman-catholic.html">Roman Catholic</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 4th 2025</span>
+                    <span class="log-text"><strong>50th Imam Aga Khan V</strong> became leader of Nizari Ismailism <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 26th 2025</span>
+                    <span class="log-text"><strong>Patriach Abune Basilos</strong> became leader of <a href="religious-denominations/eritrean-orthodox-church.html">Eritrean Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2024</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">December 1st 2024</span>
+                    <span class="log-text"><strong>Archbishop of Helsinki and All Finland Elia Wallgrén</strong> became leader of <a href="religious-denominations/orthodox-church-of-finland.html">Orthodox Church of Finland</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">June 30th 2024</span>
+                    <span class="log-text"><strong>Patriarch of All Bulgaria and Metropolitan of Sofia Daniil</strong> became leader of <a href="religious-denominations/bulgarian-orthodox-church.html">Bulgarian Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 10th 2024</span>
+                    <span class="log-text"><strong>Major Archbishop Raphael Thattil</strong> became leader of <a href="religious-denominations/syro-malabar-church.html">Syro-Malabar Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2023</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">October 26th 2023</span>
+                    <span class="log-text"><strong>Metropolitan Jonáš Maxim</strong> became leader of <a href="religious-denominations/slovak-greek-catholic-church.html">Slovak Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">August 3rd 2023</span>
+                    <span class="log-text"><strong>General Lyndon Buckingham</strong> became leader of Salvation Army <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">July 8th 2023</span>
+                    <span class="log-text"><strong>President Sofía Betancourt</strong> became leader of Unitarian Universalist Association <span class="log-religion">(Other)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">June 29th 2023</span>
+                    <span class="log-text"><strong>Supreme Bishop Joel Porlares</strong> became leader of <a href="religious-denominations/philippine-independent-church.html">Philippine Independent Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">March 30th 2023</span>
+                    <span class="log-text"><strong>Apostolic Administrator Sergius Gajek</strong> became leader of <a href="religious-denominations/belarusian-greek-catholic-church.html">Belarusian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">March 8th 2023</span>
+                    <span class="log-text"><strong>Jebtsundamba Khutuktu Altannaryn Aguidai</strong> became leader of <a href="religious-denominations/gelug.html">Gelug in Mongolia</a> <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 8th 2023</span>
+                    <span class="log-text"><strong>Archbishop of Nea Justiniana and All Cyprus George III</strong> became leader of <a href="religious-denominations/cypriot-orthodox-church.html">Cypriot Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2022</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">September 8th 2022</span>
+                    <span class="log-text"><strong>Supreme Governor of the Church of England Charles III</strong> became leader of <a href="religious-denominations/church-of-england.html">Church of England</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2021</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">December 24th 2021</span>
+                    <span class="log-text"><strong>Yahya Cholil Staquf</strong> became leader of Nahdlatul Ulama <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">October 15th 2021</span>
+                    <span class="log-text"><strong>Catholicos of the East and Malankara Metropolitan Baselios Marthoma Mathews III</strong> became leader of <a href="religious-denominations/indian-orthodox-church.html">Malankara Orthodox Syrian Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">September 24th 2021</span>
+                    <span class="log-text"><strong>Patriarch Raphaël Bedros XXI Minassian</strong> became leader of <a href="religious-denominations/armenian-catholic-church.html">Armenian Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">September 13th 2021</span>
+                    <span class="log-text"><strong>Patriarch Mar Awa III</strong> became leader of <a href="religious-denominations/assyrian-church-of-the-east.html">Assyrian Church of the East</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 19th 2021</span>
+                    <span class="log-text"><strong>Porfirije / Archbishop of Peć / Metropolitan of Belgrade and Karlovci / and Serbian Patriarch</strong> became leader of <a href="religious-denominations/serbian-orthodox-church.html">Serbian Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 31st 2021</span>
+                    <span class="log-text"><strong>Patriarch Juan Almario Calampiano</strong> became leader of <a href="religious-denominations/apostolic-catholic-church-philippines.html">Apostolic Catholic Church (Philippines)</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2020</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">November 14th 2020</span>
+                    <span class="log-text"><strong>Marthoma Metropolitan Theodosius Mar Thoma</strong> became leader of <a href="religious-denominations/malankara-marthoma-syrian-church.html">Malankara Marthoma Syrian Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">September 8th 2020</span>
+                    <span class="log-text"><strong>Bishop Milan Stipić</strong> became leader of <a href="religious-denominations/croatian-and-serbian-byzantine-catholic-church.html">Croatian and Serbian Byzantine Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">July 1st 2020</span>
+                    <span class="log-text"><strong>Abbot Choyu Otani</strong> became leader of <a href="religious-denominations/jodo-shinshu-otani-ha.html">Jodo Shinshu (Otani-ha)</a> <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2019</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">May 1st 2019</span>
+                    <span class="log-text"><strong>Naruhito / Emperor of Japan / head of Shinto</strong> became leader of  <span class="log-religion">(Shinto)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2018</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">September 22nd 2018</span>
+                    <span class="log-text"><strong>Miftachul Akhyar</strong> became leader of Nahdlatul Ulama <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 1st 2018</span>
+                    <span class="log-text"><strong>General Secretary and CEO Elijah M. Brown</strong> became leader of <a href="religious-denominations/baptist-world-alliance.html">Baptist World Alliance</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2017</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">June 22nd 2017</span>
+                    <span class="log-text"><strong>Patriarch Youssef Absi</strong> became leader of <a href="religious-denominations/melkite-greek-catholic-church.html">Melkite Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">June 15th 2017</span>
+                    <span class="log-text"><strong>Apostolic Administrator Giovanni Peragine</strong> became leader of <a href="religious-denominations/albanian-greek-catholic-church.html">Albanian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 7th 2017</span>
+                    <span class="log-text"><strong>Supreme Patriarch Ariyavongsagatanana IX</strong> became leader of <a href="religious-denominations/thai-buddhism.html">Thai Buddhism</a> <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2016</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">August 13th 2016</span>
+                    <span class="log-text"><strong>Mahant Swami Maharaj</strong> became leader of <a href="religious-denominations/baps.html">BAPS</a> <span class="log-religion">(Hinduism)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">March 25th 2016</span>
+                    <span class="log-text"><strong>Amir Hibatullah Akhundzada</strong> became leader of <a href="religious-denominations/taliban.html">Taliban 🇦🇫</a> <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 2nd 2016</span>
+                    <span class="log-text"><strong>Apostolic Exarch Manuel Nin</strong> became leader of <a href="religious-denominations/greek-byzantine-catholic-church.html">Greek Byzantine Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2015</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">August 6th 2015</span>
+                    <span class="log-text"><strong>Haedar Nashir</strong> became leader of Muhammadiyah <span class="log-religion">(Islam)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">March 20th 2015</span>
+                    <span class="log-text"><strong>Metropolitan Fülöp Kocsis</strong> became leader of <a href="religious-denominations/hungarian-greek-catholic-church.html">Hungarian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 19th 2015</span>
+                    <span class="log-text"><strong>Metropolitan Menghesteab Tesfamariam</strong> became leader of <a href="religious-denominations/eritrean-catholic-church.html">Eritrean Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2014</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">June 6th 2014</span>
+                    <span class="log-text"><strong>Monshu Sennyo</strong> became leader of <a href="religious-denominations/jodo-shinshu-hongwanji-ha.html">Jodo Shinshu (Hongwanji-ha)</a> <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">May 29th 2014</span>
+                    <span class="log-text"><strong>Ignatius Aphrem II Karim</strong> became leader of <a href="religious-denominations/syriac-orthodox-church.html">Syriac Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2013</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">September 1st 2013</span>
+                    <span class="log-text"><strong>Chief Rabbi Ephraim Mirvis</strong> became leader of Chief Rabbis of the United Hebrew Congregations <span class="log-religion">(Judaism)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 10th 2013</span>
+                    <span class="log-text"><strong>Patriarch of Antioch John X (Yazigi)</strong> became leader of <a href="religious-denominations/greek-orthodox-patriarchate-of-antioch.html">Greek Orthodox Patriarchate of Antioch</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 18th 2013</span>
+                    <span class="log-text"><strong>Patriarch Ibrahim Isaac Sidrak</strong> became leader of <a href="religious-denominations/coptic-catholic-church.html">Coptic Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2012</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">November 18th 2012</span>
+                    <span class="log-text"><strong>Pope and Patriarch (Pope Tawadros II) Theodoros II of Alexandria</strong> became leader of <a href="religious-denominations/coptic-orthodox-church-of-alexandria.html">Coptic Orthodox Church of Alexandria</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">November 13th 2012</span>
+                    <span class="log-text"><strong>Metropolitan of All America and Canada Tikhon</strong> became leader of <a href="religious-denominations/orthodox-church-in-america.html">Orthodox Church in America</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 19th 2012</span>
+                    <span class="log-text"><strong>Metropolitan William C. Skurla</strong> became leader of <a href="religious-denominations/ruthenian-byzantine-catholic-church.html">Ruthenian Byzantine Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2011</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">March 25th 2011</span>
+                    <span class="log-text"><strong>Major Archbishop Sviatoslav Shevchuk</strong> became leader of <a href="religious-denominations/ukrainian-greek-catholic-church.html">Ukrainian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">March 24th 2011</span>
+                    <span class="log-text"><strong>Patriarch Bechara Boutros al-Rahi</strong> became leader of <a href="religious-denominations/maronite-church.html">Maronite Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2010</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">September 11th 2010</span>
+                    <span class="log-text"><strong>President Matthew C. Harrison</strong> became leader of <a href="religious-denominations/lutheran-church-missouri-synod.html">Lutheran Church–Missouri Synod</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2009</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">February 1st 2009</span>
+                    <span class="log-text"><strong>Patriarch of Moscow and All Russia Kirill I</strong> became leader of <a href="religious-denominations/russian-orthodox-church.html">Russian Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">January 22nd 2009</span>
+                    <span class="log-text"><strong>Patriarch Ignatius Joseph III Yonan</strong> became leader of <a href="religious-denominations/syriac-catholic-church.html">Syriac Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2008</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">February 7th 2008</span>
+                    <span class="log-text"><strong>Archbishop of Athens and All Greece Ieronymos II</strong> became leader of <a href="religious-denominations/church-of-greece.html">Church of Greece</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2007</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">September 30th 2007</span>
+                    <span class="log-text"><strong>Patriarch of All Romania Daniel Ciobotea</strong> became leader of <a href="religious-denominations/romanian-orthodox-church.html">Romanian Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">February 10th 2007</span>
+                    <span class="log-text"><strong>Major Archbishop Baselios Cleemis</strong> became leader of <a href="religious-denominations/syro-malankara-catholic-church.html">Syro-Malankara Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2006</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">November 9th 2006</span>
+                    <span class="log-text"><strong>President Minoru Harada</strong> became leader of <a href="religious-denominations/soka-gakkai.html">Soka Gakkai</a> <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2005</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">December 16th 2005</span>
+                    <span class="log-text"><strong>Major Archbishop Lucian Mureșan</strong> became leader of <a href="religious-denominations/romanian-greek-catholic-church.html">Romanian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">November 22nd 2005</span>
+                    <span class="log-text"><strong>Greek Orthodox Patriarch of Jerusalem Theophilos III</strong> became leader of <a href="religious-denominations/greek-orthodox-patriarchate-of-jerusalem.html">Greek Orthodox Patriarchate of Jerusalem</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">July 20th 2005</span>
+                    <span class="log-text"><strong>Bishop Kiro Stojanov</strong> became leader of <a href="religious-denominations/macedonian-greek-catholic-church.html">Macedonian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2004</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">December 20th 2004</span>
+                    <span class="log-text"><strong>Ordinary Joseph Werth</strong> became leader of <a href="religious-denominations/russian-byzantine-catholic-church.html">Russian Byzantine Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                <li class="log-entry">
+                    <span class="log-date">October 24th 2004</span>
+                    <span class="log-text"><strong>Patriarch of Alexandria Theodore II</strong> became leader of <a href="religious-denominations/greek-orthodox-patriarchate-of-alexandria.html">Greek Orthodox Patriarchate of Alexandria</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2003</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">April 22nd 2003</span>
+                    <span class="log-text"><strong>Khalifatul Masih V  Mirza Masroor Ahmad</strong> became leader of <a href="religious-denominations/ahmadiyya.html">Ahmadiyya</a> <span class="log-religion">(Islam)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>2000</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">June 13th 2000</span>
+                    <span class="log-text"><strong>Chief Rabbi of Russia 🇷🇺 Berel Lazar</strong> became leader of Federation of Jewish Communities of Russia 🇷🇺 <span class="log-religion">(Judaism)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1999</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">July 7th 1999</span>
+                    <span class="log-text"><strong>Metropolitan Berhaneyesus Demerew Souraphiel</strong> became leader of <a href="religious-denominations/ethiopian-catholic-church.html">Ethiopian Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1998</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">October 25th 1998</span>
+                    <span class="log-text"><strong>Shinbashira Nakayama Zenji</strong> became leader of Tenrikyo <span class="log-religion">(New religious movements)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1996</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">July 1st 1996</span>
+                    <span class="log-text"><strong>Grand Mufti and Chairman Rawil Ğaynetdin</strong> became leader of Spiritual Administration of the Muslims of Russian Federation and Russian Council of Muftis <span class="log-religion">(Islam)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1995</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">October 11th 1995</span>
+                    <span class="log-text"><strong>Apostolic Exarch Christo Proykov</strong> became leader of <a href="religious-denominations/bulgarian-greek-catholic-church.html">Bulgarian Greek Catholic Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1992</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">December 21st 1992</span>
+                    <span class="log-text"><strong>Metropolitan of Chișinău and all Moldova Vladimir</strong> became leader of <a href="religious-denominations/moldovan-orthodox-church.html">Moldovan Orthodox Church</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1991</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">November 2nd 1991</span>
+                    <span class="log-text"><strong>Ecumenical Patriarch of Constantinople Bartholomew I</strong> became leader of <a href="religious-denominations/ecumenical-patriarchate-of-constantinople.html">Ecumenical Patriarchate of Constantinople</a> <span class="log-religion">(Christianity)</span></span>
+                </li>
+                </ol>
+            </section>
+            <section class="log-year">
+                <h2>1940</h2>
+                <ol class="log-list">
+                <li class="log-entry">
+                    <span class="log-date">February 22nd 1940</span>
+                    <span class="log-text"><strong>Dalai Lama Tenzin Gyatso</strong> became leader of Tibetan <span class="log-religion">(Buddhism)</span></span>
+                </li>
+                </ol>
+            </section>
+        <!-- log:end -->
+        <div class="footer">
+            <p>Generated from <a href="leaders.csv">leaders.csv</a> — the tracker's source of truth.</p>
+        </div>
+    </div>
+    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
+</body>
+</html>

@@ -8,6 +8,7 @@
     <meta http-equiv="refresh" content="0;url=index.html">
     <title>Bureaucracy of Religion - Vimal</title>
     <link rel="stylesheet" href="bagnard.css">
+    <link rel="stylesheet" href="site.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -22,36 +23,6 @@
             margin: 0 auto;
             padding: 20px clamp(12px, 1.8vw, 28px);
         }
-        .home-button {
-            position: fixed;
-            top: clamp(14px, 2vw, 22px);
-            left: clamp(14px, 2vw, 22px);
-            z-index: 1000;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 0;
-            color: #333;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 600;
-            line-height: 1.1;
-            transition: color 0.2s ease;
-        }
-        .home-button svg {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-        }
-        .home-button:hover,
-        .home-button:focus-visible {
-            color: #d93025;
-            text-decoration: none;
-        }
-        .home-button:focus-visible {
-            outline: 2px solid rgba(217, 48, 37, 0.55);
-            outline-offset: 4px;
-        }
         .header { text-align: center; padding: 24px 0 60px; color: #333; }
         .header h1 { font-size: 3.5em; font-weight: 700; margin-bottom: 10px; }
         .update-note {
@@ -59,6 +30,23 @@
             font-size: 0.95rem;
             color: #6b5f56;
             font-weight: 600;
+        }
+        .tracker-nav {
+            margin-top: 14px;
+            font-size: 1rem;
+        }
+        .tracker-nav a {
+            color: #d93025;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .tracker-nav a:hover,
+        .tracker-nav a:focus-visible {
+            text-decoration: underline;
+        }
+        .tracker-nav span {
+            margin: 0 6px;
+            color: #6b5f56;
         }
         .back-link {
             display: inline-block;
@@ -123,6 +111,58 @@
         tr.islam-row:hover {
             background-color: #e8f5e9 !important; /* Soft green tint */
         }
+        .stats-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .stat {
+            background: white;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .stat-value {
+            display: block;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #d93025;
+            line-height: 1.2;
+        }
+        .stat-label {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.92rem;
+            color: #666;
+        }
+        .table-controls {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        #table-search {
+            flex: 1 1 260px;
+            max-width: 420px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 0.98rem;
+            color: #333;
+            background: white;
+            border: 1px solid #ddd2bc;
+            border-radius: 10px;
+        }
+        #table-search:focus-visible {
+            outline: 2px solid rgba(217, 48, 37, 0.55);
+            outline-offset: 2px;
+        }
+        .search-count {
+            font-size: 0.92rem;
+            color: #666;
+        }
+        tr.row-hidden { display: none; }
         .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
         .denomination-link {
             color: #333;
@@ -203,6 +243,12 @@
             .update-note {
                 color: #b8ada0;
             }
+            .tracker-nav a {
+                color: #ff5b4f;
+            }
+            .tracker-nav span {
+                color: #b8ada0;
+            }
             .table-container {
                 background: #1f1b16;
                 box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
@@ -246,6 +292,22 @@
             .footer {
                 color: #b8ada0;
             }
+            .stat {
+                background: #1f1b16;
+                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+            }
+            .stat-value {
+                color: #ff5b4f;
+            }
+            .stat-label,
+            .search-count {
+                color: #b8ada0;
+            }
+            #table-search {
+                background: #1f1b16;
+                border-color: #2e2922;
+                color: #eee5d8;
+            }
         }
     </style>
 </head>
@@ -261,9 +323,34 @@
             <h1>Bureaucracy of Religion</h1>
             <p>A project tracking the bureaucracy of religion across various religious denominations.</p>
             <p class="update-note">Latest update (May 11, 2026): Metropolitan Shio (Mujiri) elected Catholicos-Patriarch of All Georgia; enthronement scheduled for May 12 at Svetitskhoveli Cathedral.</p>
+            <p class="tracker-nav">
+                <a href="succession-log.html">Succession Log</a>
+                <span aria-hidden="true">·</span>
+                <a href="dataset.html">About the Dataset</a>
+            </p>
         </div>
 
         <a href="index.html" class="back-link">← Back to Home</a>
+
+        <div class="stats-strip" id="stats-strip" hidden>
+            <div class="stat">
+                <span class="stat-value" id="stat-count">–</span>
+                <span class="stat-label">denominations tracked</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="stat-longest">–</span>
+                <span class="stat-label" id="stat-longest-label">longest-serving current leader</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="stat-latest">–</span>
+                <span class="stat-label" id="stat-latest-label">most recent leadership change</span>
+            </div>
+        </div>
+
+        <div class="table-controls">
+            <input type="search" id="table-search" placeholder="Search leaders, denominations, religions…" aria-label="Search the tracker table">
+            <span class="search-count" id="search-count" aria-live="polite"></span>
+        </div>
 
         <div class="table-container">
             <table id="leaders-table">
@@ -735,6 +822,55 @@
             updateHeaderArrows();
         }
 
+        function shortEntityName(data) {
+            return data.subDenomination2 || data.subDenomination || data.denomination || data.religion;
+        }
+
+        function updateStats() {
+            const strip = document.getElementById('stats-strip');
+            if (!strip || leadersData.length === 0) return;
+
+            let longest = null;
+            let latest = null;
+            leadersData.forEach((data) => {
+                const days = calculateDays(data.since);
+                if (isNaN(days)) return;
+                if (!longest || days > longest.days) longest = { data, days };
+                if (!latest || days < latest.days) latest = { data, days };
+            });
+
+            document.getElementById('stat-count').textContent = leadersData.length.toLocaleString();
+            if (longest) {
+                document.getElementById('stat-longest').textContent = `${Math.floor(longest.days).toLocaleString()} days`;
+                document.getElementById('stat-longest-label').textContent =
+                    `longest current tenure — ${formatLeaderRoleForTracker(longest.data.leader)} (${shortEntityName(longest.data)})`;
+            }
+            if (latest) {
+                document.getElementById('stat-latest').textContent = latest.data.since;
+                document.getElementById('stat-latest-label').textContent =
+                    `most recent change — ${formatLeaderRoleForTracker(latest.data.leader)} (${shortEntityName(latest.data)})`;
+            }
+            strip.hidden = false;
+        }
+
+        function setupSearch() {
+            const input = document.getElementById('table-search');
+            const countEl = document.getElementById('search-count');
+            if (!input) return;
+
+            input.addEventListener('input', () => {
+                const query = input.value.trim().toLowerCase();
+                const rows = document.querySelectorAll('#table-body tr');
+                let visible = 0;
+                rows.forEach((row) => {
+                    const matches = !query || row.textContent.toLowerCase().includes(query);
+                    row.classList.toggle('row-hidden', !matches);
+                    if (matches) visible += 1;
+                });
+                countEl.textContent = query ? `${visible} of ${rows.length} rows` : '';
+            });
+        }
+
         async function loadTable() {
             try {
                 const [csvResponse, membershipResponse] = await Promise.all([
@@ -784,7 +920,8 @@
                         religion,
                         denomination,
                         subDenomination,
-                        subDenomination2
+                        subDenomination2,
+                        leader: columns[leaderIdx] ? columns[leaderIdx].trim() : ''
                     });
 
                     const tr = document.createElement('tr');
@@ -902,6 +1039,8 @@
 
                 updateTableValues();
                 updateHeaderArrows();
+                updateStats();
+                setupSearch();
 
             } catch (error) {
                 console.error('Error loading CSV:', error);

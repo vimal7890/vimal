@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song of the Month Archive - Vimal</title>
     <link rel="stylesheet" href="bagnard.css">
+    <link rel="stylesheet" href="site.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -17,36 +18,6 @@
             overflow-x: hidden;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: clamp(14px, 3.8vw, 20px); }
-        .home-button {
-            position: fixed;
-            top: clamp(14px, 2vw, 22px);
-            left: clamp(14px, 2vw, 22px);
-            z-index: 1000;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 0;
-            color: #333;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 600;
-            line-height: 1.1;
-            transition: color 0.2s ease;
-        }
-        .home-button svg {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-        }
-        .home-button:hover,
-        .home-button:focus-visible {
-            color: #d93025;
-            text-decoration: none;
-        }
-        .home-button:focus-visible {
-            outline: 2px solid rgba(217, 48, 37, 0.55);
-            outline-offset: 4px;
-        }
         .header { text-align: center; padding: clamp(42px, 8vw, 60px) 0; color: #333; }
         .header h1 { font-size: clamp(2rem, 8vw, 2.5rem); font-weight: 700; margin-bottom: 10px; }
         .back-link {
@@ -124,14 +95,6 @@
             font-size: clamp(0.95rem, 3.4vw, 1rem);
         }
         @media (max-width: 640px) {
-            .home-button {
-                gap: 6px;
-                font-size: 0.9rem;
-            }
-            .home-button svg {
-                width: 14px;
-                height: 14px;
-            }
             .container {
                 padding: 14px;
             }
@@ -178,6 +141,24 @@
             }
         }
     </style>
+    <!-- seo:start -->
+    <meta name="description" content="An archive of Vimal's Song of the Month picks, with the story behind each one.">
+    <link rel="canonical" href="https://vimal.my/song-archive">
+    <meta property="og:site_name" content="Vimal Vivegananda">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Song of the Month Archive - Vimal">
+    <meta property="og:description" content="An archive of Vimal's Song of the Month picks, with the story behind each one.">
+    <meta property="og:url" content="https://vimal.my/song-archive">
+    <meta property="og:image" content="https://vimal.my/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Song of the Month Archive - Vimal">
+    <meta name="twitter:description" content="An archive of Vimal's Song of the Month picks, with the story behind each one.">
+    <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
+    <meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
+    <!-- seo:end -->
 </head>
 <body>
     <a href="index.html" class="home-button" aria-label="Go to home page">
