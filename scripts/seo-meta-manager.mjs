@@ -30,7 +30,8 @@ const PERSON_JSONLD = {
     "@type": "Person",
     name: "Vimal Vivegananda",
     url: `${ORIGIN}/`,
-    description: "International Politics graduate; MSc Social and Geographic Data Science student at UCL.",
+    description:
+        "International Politics graduate and MSc Social and Geographic Data Science student at UCL, working across spatial analysis, information politics, and public-interest research.",
     affiliation: {
         "@type": "CollegeOrUniversity",
         name: "University College London",
@@ -63,7 +64,7 @@ const DATASET_JSONLD = {
 const PAGE_META = {
     "index.html": {
         description:
-            "Vimal Vivegananda — International Politics graduate and MSc Social & Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.",
+            "Vimal Vivegananda is an MSc Social & Geographic Data Science student at UCL, using spatial analysis and computational methods to study place, power, information, and public life.",
         ogType: "website",
         jsonld: PERSON_JSONLD,
     },
