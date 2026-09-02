@@ -196,7 +196,7 @@ function buildSeoBlock({ title, description, canonical, ogType, noindex, jsonld 
         `<meta name="twitter:title" content="${escapeAttr(title)}">`,
         `<meta name="twitter:description" content="${escapeAttr(description)}">`,
         `<meta name="twitter:image" content="${OG_IMAGE}">`,
-        `<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">`,
+        `<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">`,
         `<meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">`,
     ];
     if (noindex) {

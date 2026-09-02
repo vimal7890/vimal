@@ -2,7 +2,7 @@
    Load after bagnard.css and before any page-specific <style>. */
 
 :root {
-    --site-bg: #f5f1e8;
+    --site-bg: #ffffff;
     --site-ink: #333;
     --site-muted: #555;
     --site-faint: #888;
