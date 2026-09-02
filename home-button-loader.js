@@ -743,11 +743,10 @@
 
         createMenuGroup(panel, "Explore", [
             { label: "Home", href: buildSiteUrl("") },
-            { label: "Research agenda", href: buildSiteUrl("#research") },
-            { label: "Selected work", href: buildSiteUrl("#work") },
-            { label: "Résumé", href: buildSiteUrl("#profile") },
-            { label: "Writing", href: buildSiteUrl("#writing") },
-            { label: "Contact", href: buildSiteUrl("#contact") }
+            { label: "About", href: buildSiteUrl("#about") },
+            { label: "My work", href: buildSiteUrl("#work") },
+            { label: "Song of the month", href: buildSiteUrl("#music") },
+            { label: "Contact", href: "mailto:vimal134@pm.me" }
         ], closeMenu);
 
         root.appendChild(panel);

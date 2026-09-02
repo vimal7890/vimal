@@ -10,7 +10,6 @@ const workspaceRoot = path.resolve(__dirname, "..");
 const loaderName = "home-button-loader.js";
 const htmlExtension = ".html";
 const excludedDirs = new Set([".git", "node_modules"]);
-const excludedFiles = new Set(["index.html"]);
 const debounceTimers = new Map();
 
 function computePrefix(filePath) {
@@ -30,11 +29,6 @@ function buildScriptTag(filePath) {
 
 function injectIntoFile(filePath) {
     if (!filePath.endsWith(htmlExtension)) {
-        return false;
-    }
-
-    const relativePath = path.relative(workspaceRoot, filePath).split(path.sep).join("/");
-    if (excludedFiles.has(relativePath)) {
         return false;
     }
 

@@ -3,286 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vimal Vivegananda — Spatial Data Science &amp; Public-Interest Research</title>
+    <title>Vimal</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bagnard.css">
     <link rel="stylesheet" href="site.css">
-    <link rel="stylesheet" href="portfolio.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Bagnard', serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: clamp(14px, 3.8vw, 20px); position: relative; z-index: 1; }
+        .header { text-align: center; padding: clamp(44px, 8vw, 60px) 0; color: #333; }
+        .header h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); font-weight: 700; margin-bottom: 10px; transition: opacity 0.5s ease; }
+        .header h1.fade { opacity: 0; }
+        .header .subtitle { font-size: clamp(1.05rem, 3.8vw, 1.3rem); opacity: 0.9; font-weight: 300; }
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(10px, 3vw, 18px);
+            flex-wrap: wrap;
+        }
+        .social-link { display: inline-flex; align-items: center; gap: 8px; color: #ff6600; text-decoration: none; font-size: clamp(0.95rem, 3.4vw, 1rem); font-weight: 500; transition: color 0.3s ease; }
+        .social-link:hover { color: #cc5200; }
+        .social-link svg { width: 20px; height: 20px; }
+        .linkedin-link { color: #0a66c2; }
+        .linkedin-link:hover { color: #004182; }
+        .email-link { color: #555; }
+        .email-link:hover { color: #222; }
+        .content {
+            margin: 0 auto 40px;
+        }
+        .section {
+            padding: clamp(22px, 4vw, 30px) 0;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .section:last-child { }
+        .section:hover { }
+        .section h2 {
+            font-size: clamp(1.7rem, 6vw, 2.2rem);
+            margin-bottom: clamp(18px, 4vw, 30px);
+            color: #333;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .bio-content { font-size: clamp(1rem, 3.8vw, 1.1rem); line-height: 1.8; color: #555; }
+        .blue-underline {
+            text-decoration-line: underline;
+            text-decoration-color: #1e5aa8;
+            text-decoration-thickness: 0.2em;
+            text-underline-offset: 0.12em;
+            text-decoration-skip-ink: none;
+        }
+        .interests { margin-top: 30px; }
+        .interest-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+        .tag {
+            background: #333;
+            color: white; padding: 8px 20px; border-radius: 25px;
+            font-size: 0.9em; font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(20px, 4vw, 30px); margin-top: 30px; }
+        .work-item {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            min-width: 0;
+        }
+        .work-item:hover { }
+        .work-item h3 { margin-bottom: 15px; font-size: 1.3em; font-weight: 700; }
+        .work-title-link {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .work-title-link:hover,
+        .work-title-link:focus-visible {
+            color: #d93025;
+        }
+        .work-item p { color: #666; line-height: 1.6; margin-bottom: 15px; }
+        .work-link {
+            display: inline-flex;
+            align-items: center;
+            margin-top: auto;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease, transform 0.2s ease;
+            transform-origin: left center;
+        }
+        .work-link:hover,
+        .work-link:focus-visible {
+            color: #d93025;
+            transform: scale(1.04);
+            text-decoration: none;
+        }
+        .resume-section { background: #f8f8f8; }
+        .download-btn {
+            display: inline-block;
+            background: #333;
+            color: white; padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none; font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin: 20px auto 0;
+        }
+        .contact-info { text-align: center; font-size: 1.1em; color: #555; }
+        .song-description { color: #666; margin-top: 15px; font-size: 1em; }
+        .song-widget-shell {
+            position: relative;
+            display: grid;
+            width: min(100%, 860px);
+            margin: 0 auto;
+            grid-template-columns: clamp(14px, 4.4vw, 32px) minmax(0, 1fr) clamp(14px, 4.4vw, 32px);
+            gap: clamp(4px, 1.7vw, 8px);
+            align-items: stretch;
+        }
+        .song-embed {
+            width: 100%;
+            min-height: 152px;
+            min-width: 0;
+        }
+        .song-widget-shell iframe,
+        .song-embed iframe {
+            display: block;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            border-radius: 12px;
+        }
+        .song-visualizer {
+            width: 100%;
+            min-height: 152px;
+            height: 100%;
+            display: block;
+            align-self: stretch;
+            opacity: 0.32;
+            transition: opacity 0.28s ease;
+            pointer-events: none;
+        }
+        .song-visualizer.active {
+            opacity: 0.9;
+        }
+        .show-more-section {
+            margin-top: 22px;
+            padding-top: 18px;
+        }
+        .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
+        .footer a { color: #333; text-decoration: none; }
+        .footer a:hover { text-decoration: none; }
+        @media (max-width: 820px) {
+            .header {
+                padding-top: 72px;
+            }
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 14px;
+            }
+            .social-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .work-item {
+                padding: 12px 0;
+            }
+            .song-description {
+                font-size: 0.96rem;
+            }
+        }
+        @media (max-width: 420px) {
+            .header {
+                padding-top: 62px;
+            }
+            .song-widget-shell {
+                grid-template-columns: 12px minmax(0, 1fr) 12px;
+                gap: 3px;
+            }
+            .song-visualizer {
+                opacity: 0.22;
+            }
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #15130f;
+                color: #eee5d8;
+            }
+            .header,
+            .header h1,
+            .section h2,
+            .work-title-link,
+            .work-link,
+            .home-button,
+            .footer a {
+                color: #eee5d8;
+            }
+            .home-button:hover,
+            .home-button:focus-visible,
+            .work-title-link:hover,
+            .work-title-link:focus-visible,
+            .work-link:hover,
+            .work-link:focus-visible,
+            .social-link:hover {
+                color: #ff5b4f;
+            }
+            .bio-content,
+            .work-item p,
+            .song-description,
+            .contact-info,
+            .footer {
+                color: #b8ada0;
+            }
+            .social-link {
+                color: #ff802b;
+            }
+            .social-link.linkedin-link {
+                color: #4da3ff;
+            }
+            .social-link.email-link {
+                color: #b8ada0;
+            }
+            .blue-underline {
+                text-decoration-color: #5190e8;
+            }
+            .tag {
+                background: #eee5d8;
+                color: #15130f;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            }
+            .resume-section {
+                background: #1f1b16;
+            }
+            .download-btn {
+                background: #eee5d8;
+                color: #15130f;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            }
+        }
+    </style>
     <!-- seo:start -->
-    <meta name="description" content="Vimal Vivegananda is an MSc Social &amp; Geographic Data Science student at UCL, using spatial analysis and computational methods to study place, power, information, and public life.">
+    <meta name="description" content="Vimal Vivegananda — International Politics graduate and MSc Social &amp; Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.">
     <link rel="canonical" href="https://vimal.my/">
     <meta property="og:site_name" content="Vimal Vivegananda">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Vimal Vivegananda — Spatial Data Science &amp; Public-Interest Research">
-    <meta property="og:description" content="Vimal Vivegananda is an MSc Social &amp; Geographic Data Science student at UCL, using spatial analysis and computational methods to study place, power, information, and public life.">
+    <meta property="og:title" content="Vimal">
+    <meta property="og:description" content="Vimal Vivegananda — International Politics graduate and MSc Social &amp; Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.">
     <meta property="og:url" content="https://vimal.my/">
     <meta property="og:image" content="https://vimal.my/assets/og-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vimal Vivegananda — Spatial Data Science &amp; Public-Interest Research">
-    <meta name="twitter:description" content="Vimal Vivegananda is an MSc Social &amp; Geographic Data Science student at UCL, using spatial analysis and computational methods to study place, power, information, and public life.">
+    <meta name="twitter:title" content="Vimal">
+    <meta name="twitter:description" content="Vimal Vivegananda — International Politics graduate and MSc Social &amp; Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.">
     <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vimal Vivegananda","url":"https://vimal.my/","description":"International Politics graduate and MSc Social and Geographic Data Science student at UCL, working across spatial analysis, information politics, and public-interest research.","affiliation":{"@type":"CollegeOrUniversity","name":"University College London"},"sameAs":["https://substack.com/@vimal0","https://www.linkedin.com/in/vimal-v-5004751ba/"]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vimal Vivegananda","url":"https://vimal.my/","description":"International Politics graduate; MSc Social and Geographic Data Science student at UCL.","affiliation":{"@type":"CollegeOrUniversity","name":"University College London"},"sameAs":["https://substack.com/@vimal0","https://www.linkedin.com/in/vimal-v-5004751ba/"]}</script>
     <!-- seo:end -->
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-
-    <header class="site-header">
-        <div class="shell nav-shell">
-            <a class="wordmark" href="#top" aria-label="Vimal Vivegananda, back to top">
-                <span>Vimal Vivegananda</span>
-                <span class="wordmark-tamil" aria-hidden="true">விமல்</span>
-            </a>
-            <nav class="site-nav" aria-label="Primary navigation">
-                <a href="#research">Research</a>
-                <a href="#work">Selected work</a>
-                <a href="#profile">Résumé</a>
-            </nav>
-            <a class="nav-contact" href="mailto:vimal134@pm.me">Contact</a>
+    <a href="index.html" class="home-button" aria-label="Go to home page">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
+        </svg>
+        <span>Home</span>
+    </a>
+    <div class="container">
+        <div class="header">
+            <h1 id="name-title">Vimal</h1>
+            <div class="social-links">
+                <a href="https://substack.com/@vimal0?" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                    Substack
+                </a>
+                <a href="https://www.linkedin.com/in/vimal-v-5004751ba/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/>
+                    </svg>
+                    LinkedIn
+                </a>
+                <a href="mailto:vimal134@pm.me" class="social-link email-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    Email
+                </a>
+            </div>
         </div>
-    </header>
 
-    <main id="main-content">
-        <section class="hero" id="top">
-            <div class="shell hero-grid">
-                <div class="hero-copy">
-                    <p class="eyebrow">MSc Social &amp; Geographic Data Science · UCL</p>
-                    <h1>Vimal<br>Vivegananda</h1>
-                    <p class="hero-deck">I use spatial data and computational methods to study how place, power, and information shape public life.</p>
-                    <p class="hero-summary">With a background in International Politics, my work connects GeoAI, text analysis, and data storytelling to questions in censorship, urban inequality, public policy, and political change.</p>
-                    <div class="hero-actions">
-                        <a class="button" href="#work">Explore selected work</a>
-                        <a class="button button-secondary" href="https://www.linkedin.com/in/vimal-v-5004751ba/" target="_blank" rel="noopener noreferrer">View LinkedIn</a>
+        <div class="content">
+            <section class="section" id="about">
+                <h2>About Me</h2>
+                <div class="bio-content">
+                    <p>Hi, I'm Vimal! I'm an International Politics Graduate, currently pursuing a <a href="https://www.ucl.ac.uk/prospective-students/graduate/taught-degrees/social-and-geographic-data-science-msc" class="blue-underline" target="_blank" rel="noopener noreferrer">MSc in Social and Geographic Data Science at UCL</a>.</p>
+                    <p style="margin-top: 1.8em;">I have a passion for data-driven research, my work focuses on <span class="blue-underline">tracking censorship patterns</span>, <span class="blue-underline">privacy law</span>, <span class="blue-underline">analysing political trends</span>, and exploring how <span class="blue-underline">information flows (or is restricted) across different political systems</span>.</p>
+                </div>
+            </section>
+
+            <section class="section" id="work">
+                <h2>My Work</h2>
+                <div class="work-grid">
+                    <div class="work-item">
+                        <h3><a href="https://censorship.my" class="work-title-link" target="_blank" rel="noopener noreferrer">Censorship Tracker</a></h3>
+                        <p>Created a simple tracker looking at the censorship of Social Media around the world.</p>
+                        <a href="https://censorship.my" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>
+
+                    <div class="work-item">
+                        <h3><a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-title-link" target="_blank" rel="noopener noreferrer">Inside Croydon Journalism</a></h3>
+                        <p>Explore the work that I did with Inside Croydon below.</p>
+                        <a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>
+
+                    <!-- ARCHIVED: Bureaucracy of Religion — hidden from site, restore when ready
+                    <div class="work-item">
+                        <h3><a href="religious-tracker.html" class="work-title-link">Bureaucracy of Religion</a></h3>
+                        <p>A project tracking the bureaucracy of religion across various religious denominations.</p>
+                        <a href="religious-tracker.html" class="work-link">View Project →</a>
+                    </div>
+                    -->
+
+                    <div class="work-item">
+                        <h3><a href="report-calgary-cambridge.html" class="work-title-link">Mining Social &amp; Geographic Datasets</a></h3>
+                        <p>Report analysing mobility patterns in Cambridge and machine-learning sentiment classification of Calgary restaurant reviews.</p>
+                        <a href="report-calgary-cambridge.html" class="work-link">View Report →</a>
+                    </div>
+
+                    <div class="work-item">
+                        <h3><a href="report-london-house-prices.html" class="work-title-link">Spatial Deep Learning for House Prices</a></h3>
+                        <p>Report using a Graph Neural Network (GraphSAGE) on London's LSOA adjacency graph to predict median house prices, beating non-spatial baselines.</p>
+                        <a href="report-london-house-prices.html" class="work-link">View Report →</a>
+                    </div>
+
+                    <div class="work-item">
+                        <h3><a href="report-housing-fertility.html" class="work-title-link">Housing Constraints &amp; European Fertility</a></h3>
+                        <p>Video brief arguing that housing constraints significantly contribute to Europe's fertility decline through space, affordability, and tenure insecurity, with three policy recommendations.</p>
+                        <a href="report-housing-fertility.html" class="work-link">View Report →</a>
+                    </div>
+
+                    <div class="work-item">
+                        <h3><a href="mapping-the-papacy.html" class="work-title-link">Mapping the Papacy</a></h3>
+                        <p>Data visualisation tracing where the last eleven popes were born.</p>
+                        <a href="mapping-the-papacy.html" class="work-link">View Project →</a>
+                    </div>
+
+                    <div class="work-item">
+                        <h3><a href="polio.html" class="work-title-link">Polio Tracker</a></h3>
+                        <p>Vaccination campaigns have pushed polio to the brink of eradication, with endemic transmission now limited to just two countries.</p>
+                        <a href="polio.html" class="work-link">View Project →</a>
                     </div>
                 </div>
+            </section>
 
-                <aside class="profile-card" aria-labelledby="profile-card-title">
-                    <p class="section-kicker">Academic profile</p>
-                    <h2 id="profile-card-title">Politics-informed data science.</h2>
-                    <dl class="profile-facts">
-                        <div>
-                            <dt>Current</dt>
-                            <dd>MSc Social &amp; Geographic Data Science</dd>
-                        </div>
-                        <div>
-                            <dt>At</dt>
-                            <dd>University College London</dd>
-                        </div>
-                        <div>
-                            <dt>Background</dt>
-                            <dd>International Politics</dd>
-                        </div>
-                        <div>
-                            <dt>Methods</dt>
-                            <dd>Spatial analysis, machine learning, and research communication</dd>
-                        </div>
-                    </dl>
-                    <div class="profile-links" aria-label="External profiles">
-                        <a href="https://www.ucl.ac.uk/prospective-students/graduate/taught-degrees/social-and-geographic-data-science-msc" target="_blank" rel="noopener noreferrer">UCL programme</a>
-                        <a href="https://substack.com/@vimal0" target="_blank" rel="noopener noreferrer">Substack</a>
-                    </div>
-                </aside>
-            </div>
-        </section>
-
-        <section class="section" id="research" aria-labelledby="research-title">
-            <div class="shell">
-                <header class="section-heading">
-                    <span class="section-number">01</span>
-                    <div>
-                        <p class="section-kicker">Research agenda</p>
-                        <h2 id="research-title">Questions I keep returning to.</h2>
-                        <p>My interests sit where political inquiry meets computational evidence: understanding systems, mapping uneven outcomes, and communicating what the data means.</p>
-                    </div>
-                </header>
-
-                <div class="focus-grid">
-                    <article class="focus-item">
-                        <span class="focus-index">A / 03</span>
-                        <h3>Information politics</h3>
-                        <p>Censorship, privacy law, and the ways information flows—or is restricted—across political systems.</p>
-                    </article>
-                    <article class="focus-item">
-                        <span class="focus-index">B / 03</span>
-                        <h3>Spatial systems</h3>
-                        <p>How neighbourhood structure, mobility, access, and geography shape social and economic outcomes.</p>
-                    </article>
-                    <article class="focus-item">
-                        <span class="focus-index">C / 03</span>
-                        <h3>Public-interest evidence</h3>
-                        <p>Turning complex datasets into transparent research, useful tools, and clear public-facing explanations.</p>
-                    </article>
+            <section class="section" id="music">
+                <h2>Song of the Month</h2>
+                <div class="song-widget-shell">
+                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="152" aria-hidden="true"></canvas>
+                    <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
+                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="152" aria-hidden="true"></canvas>
                 </div>
-            </div>
-        </section>
-
-        <section class="section" id="work" aria-labelledby="work-title">
-            <div class="shell">
-                <header class="section-heading">
-                    <span class="section-number">02</span>
-                    <div>
-                        <p class="section-kicker">Selected work</p>
-                        <h2 id="work-title">Research with an argument.</h2>
-                        <p>Selected projects span spatial machine learning, mobility analysis, natural-language processing, policy research, and public data storytelling.</p>
-                    </div>
-                </header>
-
-                <div class="case-studies">
-                    <article class="case-study">
-                        <div class="case-media">
-                            <img src="report-images/gnn-fig3-spatial-maps.webp" alt="Observed London house prices, GraphSAGE predictions, and residual maps across LSOAs" width="1600" height="383">
-                        </div>
-                        <div class="case-copy">
-                            <p class="card-kicker">GeoAI · Spatial machine learning</p>
-                            <h3>Spatial Deep Learning for London House Prices</h3>
-                            <p>A controlled comparison of linear, neural, and graph-based models asks whether explicit neighbourhood structure improves small-area price prediction beyond the same tabular features.</p>
-                            <div class="result-grid" aria-label="Project results">
-                                <div><strong>4,833</strong><span>London LSOAs</span></div>
-                                <div><strong>0.767</strong><span>GraphSAGE test R²</span></div>
-                                <div><strong>~£35k</strong><span>Lower MAE vs linear</span></div>
-                            </div>
-                            <a class="case-link" href="report-london-house-prices.html">Read the full report →</a>
-                        </div>
-                    </article>
-
-                    <article class="case-study">
-                        <div class="case-media">
-                            <img src="report-images/fig1-cambridge-checkins.webp" alt="Maps of Cambridge check-in density and the locations of two focal users" width="1400" height="734" loading="lazy">
-                        </div>
-                        <div class="case-copy">
-                            <p class="card-kicker">Spatial networks · NLP · Urban analysis</p>
-                            <h3>Mining Social &amp; Geographic Datasets</h3>
-                            <p>Linked studies turn mobility traces and large-scale venue reviews into practical urban recommendations, while examining privacy, access, and model performance.</p>
-                            <div class="result-grid" aria-label="Project scale and results">
-                                <div><strong>1,871</strong><span>Cambridge check-ins</span></div>
-                                <div><strong>82,182</strong><span>Calgary reviews</span></div>
-                                <div><strong>0.86</strong><span>Best macro F1</span></div>
-                            </div>
-                            <a class="case-link" href="report-calgary-cambridge.html">Explore both studies →</a>
-                        </div>
-                    </article>
+                <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
+                <div class="show-more-section">
+                    <a href="song-archive.html" class="work-link">Show More →</a>
                 </div>
-
-                <div class="supporting-projects">
-                    <article class="project-card">
-                        <p class="card-kicker">Public-interest data project</p>
-                        <h3>Censorship Tracker</h3>
-                        <p>A country-level tracker documenting restrictions on social-media platforms around the world.</p>
-                        <a class="project-link" href="https://censorship.my" target="_blank" rel="noopener noreferrer">View live project ↗</a>
-                    </article>
-                    <article class="project-card">
-                        <p class="card-kicker">Policy research brief</p>
-                        <h3>Housing &amp; European Fertility</h3>
-                        <p>An evidence-led argument connecting space, affordability, and tenure insecurity to Europe’s fertility decline.</p>
-                        <a class="project-link" href="report-housing-fertility.html">Read the brief →</a>
-                    </article>
-                    <article class="project-card">
-                        <p class="card-kicker">Interactive data visualisation</p>
-                        <h3>Mapping the Papacy</h3>
-                        <p>A visual history tracing where the last eleven popes were born and how the institution’s geography shifted.</p>
-                        <a class="project-link" href="mapping-the-papacy.html">Explore the visualisation →</a>
-                    </article>
-                    <article class="project-card">
-                        <p class="card-kicker">Global health tracker</p>
-                        <h3>Polio: The Final Mile</h3>
-                        <p>A concise visual account of eradication progress and the countries where endemic transmission remains.</p>
-                        <a class="project-link" href="polio.html">View the tracker →</a>
-                    </article>
-                </div>
-
-                <!-- ARCHIVED: Bureaucracy of Religion remains intentionally hidden until restored. -->
-            </div>
-        </section>
-
-        <section class="section" id="profile" aria-labelledby="resume-title">
-            <div class="shell resume-layout">
-                <header class="resume-intro">
-                    <p class="section-kicker">Profile &amp; résumé</p>
-                    <h2 id="resume-title">A cross-disciplinary toolkit.</h2>
-                    <p>Political training shapes the questions I ask; spatial and computational methods help me test them.</p>
-                </header>
-
-                <div class="resume-stack">
-                    <section class="resume-block" aria-labelledby="education-title">
-                        <h3 id="education-title">Education</h3>
-                        <div class="timeline">
-                            <article class="timeline-item">
-                                <p class="timeline-meta">Current</p>
-                                <div>
-                                    <h4>MSc Social &amp; Geographic Data Science</h4>
-                                    <p>University College London</p>
-                                </div>
-                            </article>
-                            <article class="timeline-item">
-                                <p class="timeline-meta">Background</p>
-                                <div>
-                                    <h4>International Politics</h4>
-                                    <p>Graduate training in political systems, institutions, policy, and research.</p>
-                                </div>
-                            </article>
-                        </div>
-                    </section>
-
-                    <section class="resume-block" aria-labelledby="methods-title">
-                        <h3 id="methods-title">Methods demonstrated in my work</h3>
-                        <ul class="methods-list">
-                            <li><strong>Spatial analysis &amp; GeoAI</strong><span>Spatial weights, autocorrelation, accessibility modelling, and graph neural networks</span></li>
-                            <li><strong>Networks &amp; mobility</strong><span>OSMnx, NetworkX, street-network routing, and trajectory analysis</span></li>
-                            <li><strong>Machine learning &amp; NLP</strong><span>Model comparison, TF-IDF, sentiment classification, VADER, and topic modelling</span></li>
-                            <li><strong>Research communication</strong><span>Data visualisation, analytical writing, policy briefs, and public-interest reporting</span></li>
-                        </ul>
-                    </section>
-
-                    <section class="resume-block" id="writing" aria-labelledby="writing-title">
-                        <h3 id="writing-title">Writing &amp; public scholarship</h3>
-                        <div class="writing-list">
-                            <a class="writing-link" href="https://insidecroydon.com/?s=Vimal+Vivegananda" target="_blank" rel="noopener noreferrer"><span>Inside Croydon · Local public-interest journalism</span><span>↗</span></a>
-                            <a class="writing-link" href="https://substack.com/@vimal0" target="_blank" rel="noopener noreferrer"><span>Substack · Notes and long-form writing</span><span>↗</span></a>
-                            <a class="writing-link" href="report-housing-fertility.html"><span>Housing &amp; European Fertility · Policy brief</span><span>→</span></a>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </section>
-
-        <section class="section personal-section" aria-labelledby="personal-title">
-            <div class="shell personal-note">
-                <div class="personal-copy">
-                    <p class="section-kicker">Beyond the research</p>
-                    <h2 id="personal-title">Song of the Month</h2>
-                    <p>A small archive of music and the stories attached to each monthly pick—kept here as a reminder that a good portfolio can still feel personal.</p>
-                    <a class="inline-link" href="song-archive.html">Browse the archive →</a>
-                </div>
-                <iframe class="spotify-embed" src="https://open.spotify.com/embed/track/5m4TzaOXvk1biOR3LdObVt?utm_source=generator" title="Song of the Month on Spotify" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-            </div>
-        </section>
-
-        <section class="contact-section" id="contact" aria-labelledby="contact-title">
-            <div class="shell contact-grid">
-                <span class="section-number">04</span>
-                <div class="contact-copy">
-                    <p class="section-kicker">Contact</p>
-                    <h2 id="contact-title">Let’s talk about research.</h2>
-                    <p>If you are working on questions involving spatial data, political systems, information access, or public-interest analysis, I would be glad to hear from you.</p>
-                    <a class="email-link" href="mailto:vimal134@pm.me">vimal134@pm.me →</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="shell footer-shell">
-            <p>Vimal Vivegananda · Data, politics, and public-interest research</p>
-            <nav class="footer-links" aria-label="Footer navigation">
-                <a href="#top">Back to top</a>
-                <a href="https://www.linkedin.com/in/vimal-v-5004751ba/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                <a href="https://substack.com/@vimal0" target="_blank" rel="noopener noreferrer">Substack</a>
-            </nav>
+            </section>
         </div>
-    </footer>
+    </div>
+    <script>
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const names = ['Vimal', 'விமல்'];
+        let currentIndex = 0;
+        const titleEl = document.getElementById('name-title');
+
+        if (!prefersReducedMotion) {
+            setInterval(() => {
+                titleEl.classList.add('fade');
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % names.length;
+                    titleEl.textContent = names[currentIndex];
+                    titleEl.classList.remove('fade');
+                }, 500);
+            }, 2000);
+        }
+
+        const spotifyTrackId = '5m4TzaOXvk1biOR3LdObVt';
+        const spotifyUri = `spotify:track:${spotifyTrackId}`;
+        const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${spotifyTrackId}?utm_source=generator`;
+        const songWidgetShell = document.querySelector('.song-widget-shell');
+        const spotifyContainer = document.getElementById('song-embed');
+        const visualizerTargets = [
+            { canvas: document.getElementById('visualizer-left'), direction: -1 },
+            { canvas: document.getElementById('visualizer-right'), direction: 1 },
+        ]
+            .map((target) => ({
+                ...target,
+                ctx: target.canvas ? target.canvas.getContext('2d') : null,
+            }))
+            .filter((target) => target.canvas && target.ctx);
+
+        const visualizerState = {
+            isPlaying: false,
+            energy: 0.12,
+            targetEnergy: 0.12,
+            progressRatio: 0,
+        };
+
+        function setVisualizerActive(isActive) {
+            visualizerTargets.forEach(({ canvas }) => {
+                canvas.classList.toggle('active', isActive);
+            });
+        }
+
+        function queueVisualizerResize() {
+            window.requestAnimationFrame(resizeVisualizerCanvases);
+        }
+
+        function injectFallbackEmbed() {
+            if (!spotifyContainer || spotifyContainer.querySelector('iframe')) {
+                return;
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('data-testid', 'embed-iframe');
+            iframe.style.borderRadius = '12px';
+            iframe.src = spotifyEmbedUrl;
+            iframe.width = '100%';
+            iframe.height = '152';
+            iframe.frameBorder = '0';
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+            iframe.loading = 'lazy';
+            iframe.addEventListener('load', queueVisualizerResize, { once: true });
+            spotifyContainer.appendChild(iframe);
+            queueVisualizerResize();
+        }
+
+        function resizeVisualizerCanvases() {
+            const ratio = window.devicePixelRatio || 1;
+
+            visualizerTargets.forEach(({ canvas, ctx }) => {
+                const width = Math.max(1, Math.floor(canvas.clientWidth || canvas.width));
+                const height = Math.max(1, Math.floor(canvas.clientHeight || spotifyContainer.clientHeight || 152));
+                canvas.width = Math.max(1, Math.floor(width * ratio));
+                canvas.height = Math.max(1, Math.floor(height * ratio));
+                ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                ctx.lineCap = 'round';
+            });
+        }
+
+        function pseudoNoise(seed) {
+            const value = Math.sin(seed * 12.9898) * 43758.5453;
+            return value - Math.floor(value);
+        }
+
+        function drawVisualizerRail(target, t) {
+            const { canvas, ctx, direction } = target;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            if (!width || !height) {
+                return;
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            const laneCount = Math.max(14, Math.round(height / 18));
+            const laneGap = height / laneCount;
+            const innerEdge = direction < 0 ? width - 1 : 1;
+            const maxReach = Math.max(6, width - 5);
+            const baseReach = 1.5;
+            const anchorAlpha = visualizerState.isPlaying ? 0.16 : 0.08;
+
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const strokeColor = isDark ? '240, 84, 79' : '158, 59, 47';
+
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${strokeColor}, ${anchorAlpha})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(innerEdge, 0);
+            ctx.lineTo(innerEdge, height);
+            ctx.stroke();
+
+            for (let i = 0; i < laneCount; i += 1) {
+                const laneRatio = i / Math.max(1, laneCount - 1);
+                const wave = 0.5 + 0.5 * Math.sin((t * 4.6) + laneRatio * 10.5 + visualizerState.progressRatio * 18);
+                const shimmer = 0.5 + 0.5 * Math.sin((t * 8.4) + laneRatio * 19.5 + direction * 0.8);
+                const grain = pseudoNoise((laneRatio * 80) + (t * 2.1) + visualizerState.progressRatio * 160);
+                const pulse = (wave * 0.46) + (shimmer * 0.34) + (grain * 0.2);
+                const energyScale = 0.2 + visualizerState.energy * 0.52;
+                const magnitude = baseReach + (maxReach - baseReach) * pulse * energyScale;
+                const alpha = 0.1 + pulse * (visualizerState.isPlaying ? 0.3 : 0.12);
+                const y = i * laneGap + laneGap / 2;
+                const endX = direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
+
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${strokeColor}, ${alpha.toFixed(3)})`;
+                ctx.lineWidth = 1.15;
+                ctx.moveTo(innerEdge, y);
+                ctx.lineTo(endX, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawVisualizers() {
+            const t = performance.now() * 0.001;
+            visualizerState.energy += (visualizerState.targetEnergy - visualizerState.energy) * 0.08;
+            visualizerTargets.forEach((target) => drawVisualizerRail(target, t));
+            if (!prefersReducedMotion) {
+                requestAnimationFrame(drawVisualizers);
+            }
+        }
+
+        function updatePlaybackState(data) {
+            const duration = Number(data && data.duration) || 0;
+            const position = Number(data && data.position) || 0;
+            const isPlaying = Boolean(data) && !data.isPaused && !data.isBuffering;
+
+            if (duration > 0) {
+                visualizerState.progressRatio = Math.max(0, Math.min(1, position / duration));
+            }
+
+            visualizerState.isPlaying = isPlaying;
+            visualizerState.targetEnergy = isPlaying ? 0.98 : 0.12;
+            setVisualizerActive(isPlaying);
+        }
+
+        resizeVisualizerCanvases();
+        requestAnimationFrame(drawVisualizers);
+        window.addEventListener('resize', queueVisualizerResize);
+        window.addEventListener('load', queueVisualizerResize);
+
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(() => {
+                queueVisualizerResize();
+            });
+
+            if (songWidgetShell) {
+                resizeObserver.observe(songWidgetShell);
+            }
+
+            if (spotifyContainer) {
+                resizeObserver.observe(spotifyContainer);
+            }
+        }
+
+        if (window.MutationObserver && spotifyContainer) {
+            const embedObserver = new MutationObserver(() => {
+                const iframe = spotifyContainer.querySelector('iframe');
+                if (iframe) {
+                    iframe.addEventListener('load', queueVisualizerResize, { once: true });
+                }
+                queueVisualizerResize();
+            });
+
+            embedObserver.observe(spotifyContainer, { childList: true, subtree: true });
+        }
+
+        let spotifyControllerReady = false;
+        const fallbackTimer = setTimeout(() => {
+            if (!spotifyControllerReady) {
+                injectFallbackEmbed();
+            }
+        }, 1800);
+
+        window.onSpotifyIframeApiReady = (IFrameAPI) => {
+            if (!spotifyContainer) {
+                return;
+            }
+
+            IFrameAPI.createController(
+                spotifyContainer,
+                {
+                    uri: spotifyUri,
+                    width: 640,
+                    height: 152,
+                },
+                (EmbedController) => {
+                    spotifyControllerReady = true;
+                    clearTimeout(fallbackTimer);
+                    queueVisualizerResize();
+
+                    EmbedController.addListener('playback_started', () => {
+                        visualizerState.targetEnergy = 0.98;
+                        setVisualizerActive(true);
+                    });
+
+                    EmbedController.addListener('playback_update', (event) => {
+                        updatePlaybackState(event && event.data);
+                    });
+                },
+            );
+        };
+
+        const spotifyApiScript = document.createElement('script');
+        spotifyApiScript.src = 'https://open.spotify.com/embed/iframe-api/v1';
+        spotifyApiScript.async = true;
+        spotifyApiScript.onerror = injectFallbackEmbed;
+        document.body.appendChild(spotifyApiScript);
+    </script>
+    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
 </body>
 </html>
