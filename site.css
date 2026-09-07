@@ -109,19 +109,15 @@ img {
 
 .site-header {
     text-align: center;
-    padding: clamp(22px, 4.5vw, 32px) clamp(14px, 3.8vw, 20px) 0;
-}
-
-/* The homepage wears the same header, only taller and with a bigger name. */
-.site-header-home {
-    padding-top: clamp(44px, 8vw, 60px);
+    padding: clamp(44px, 8vw, 60px) clamp(14px, 3.8vw, 20px) 0;
 }
 
 .site-name {
     display: inline-block;
+    margin-bottom: 10px;
     color: var(--ink);
     font-family: var(--font);
-    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
     font-weight: 700;
     line-height: 1.2;
     text-decoration: none;
@@ -133,12 +129,7 @@ a.site-name:focus-visible {
     color: var(--accent);
 }
 
-.site-header-home .site-name {
-    font-size: clamp(2.5rem, 9vw, 3.5rem);
-    margin-bottom: 10px;
-}
-
-/* Homepage only: the name cross-fades between its Latin and Tamil spellings. */
+/* site.js cross-fades the name between its Latin and Tamil spellings. */
 .site-name.fade {
     opacity: 0;
 }
@@ -149,10 +140,6 @@ a.site-name:focus-visible {
     align-items: center;
     flex-wrap: wrap;
     gap: clamp(10px, 3vw, 18px);
-    margin-top: 14px;
-}
-
-.site-header-home .social-links {
     margin-top: 20px;
 }
 
@@ -206,7 +193,7 @@ a.site-name:focus-visible {
 }
 
 @media (max-width: 640px) {
-    .site-header-home .social-links {
+    .social-links {
         flex-direction: column;
         gap: 12px;
     }

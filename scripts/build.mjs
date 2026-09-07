@@ -228,13 +228,14 @@ function seoLines(file, html, meta) {
     return lines;
 }
 
-/** The header block: name, social links, menu. The homepage carries the name as
- *  its <h1> (and the id the name animation hooks onto); everywhere else the name
- *  is a link home, so the page keeps its own <h1>. */
+/** The header block: name, social links, menu — identical on every page, down to
+ *  the name's size and its Latin/Tamil cross-fade (site.js). The only difference
+ *  is the markup of the name itself: the homepage's <h1>, or a link home so the
+ *  other pages keep their own <h1>. */
 function headerLines(file) {
     const home = file === "index.html";
     const name = home
-        ? `    <h1 class="site-name" id="name-title">Vimal</h1>`
+        ? `    <h1 class="site-name">Vimal</h1>`
         : `    <a class="site-name" href="/">Vimal</a>`;
 
     const socials = SOCIAL_LINKS.flatMap((link) => {
@@ -253,7 +254,7 @@ function headerLines(file) {
     });
 
     return [
-        `<header class="site-header${home ? " site-header-home" : ""}">`,
+        `<header class="site-header">`,
         name,
         `    <div class="social-links">`,
         ...socials,
@@ -264,6 +265,7 @@ function headerLines(file) {
         `        </ul>`,
         `    </nav>`,
         `</header>`,
+        `<script src="/site.js" defer></script>`,
     ];
 }
 

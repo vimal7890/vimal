@@ -19,15 +19,6 @@
             font-weight: 700;
             margin-bottom: 10px;
         }
-        .back-link {
-            margin-top: 20px;
-            transition: color 0.2s ease, transform 0.2s ease;
-            transform-origin: left center;
-        }
-        .back-link:hover,
-        .back-link:focus-visible {
-            transform: scale(1.04);
-        }
         .content {
             background: var(--card);
             border-radius: 20px;
@@ -60,11 +51,6 @@
         }
         .song-description {
             font-size: clamp(0.95rem, 3.4vw, 1rem);
-        }
-        @media (max-width: 640px) {
-            .back-link {
-                margin-top: 16px;
-            }
         }
         @media (max-width: 420px) {
             .song-widget-shell {
@@ -123,11 +109,11 @@
             </ul>
         </nav>
     </header>
+    <script src="/site.js" defer></script>
     <!-- header:end -->
     <div class="container">
         <div class="header">
             <h1>Song of the Month Archive</h1>
-            <a href="index.html" class="back-link">← Back to home</a>
         </div>
 
         <div class="content">

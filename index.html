@@ -49,8 +49,8 @@
 </head>
 <body>
     <!-- header:start -->
-    <header class="site-header site-header-home">
-        <h1 class="site-name" id="name-title">Vimal</h1>
+    <header class="site-header">
+        <h1 class="site-name">Vimal</h1>
         <div class="social-links">
             <a href="https://substack.com/@vimal0?" class="social-link" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
@@ -74,6 +74,7 @@
             </ul>
         </nav>
     </header>
+    <script src="/site.js" defer></script>
     <!-- header:end -->
     <div class="container">
         <div class="bio-content">
@@ -81,32 +82,5 @@
             <p>I have a passion for data-driven research, my work focuses on <span class="blue-underline">tracking censorship patterns</span>, <span class="blue-underline">privacy law</span>, <span class="blue-underline">analysing political trends</span>, and exploring how <span class="blue-underline">information flows (or is restricted) across different political systems</span>.</p>
         </div>
     </div>
-    <script>
-        (function () {
-            var title = document.getElementById('name-title');
-            var names = ['Vimal', 'விமல்'];
-            var nameIndex = 0, nameTimer = null;
-            function startNames() {
-                if (nameTimer) return;
-                nameTimer = setInterval(function () {
-                    title.classList.add('fade');
-                    setTimeout(function () {
-                        nameIndex = (nameIndex + 1) % names.length;
-                        title.textContent = names[nameIndex];
-                        title.lang = nameIndex === 1 ? 'ta' : 'en';
-                        title.classList.remove('fade');
-                    }, 500);
-                }, 2000);
-            }
-            if (title && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                startNames();
-                document.addEventListener('visibilitychange', function () {
-                    clearInterval(nameTimer);
-                    nameTimer = null;
-                    if (document.visibilityState === 'visible') startNames();
-                });
-            }
-        })();
-    </script>
 </body>
 </html>
