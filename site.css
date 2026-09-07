@@ -108,6 +108,114 @@ img {
     text-decoration: underline;
 }
 
+/* ---- Site header (name + social links + menu, on every page,
+   stamped by scripts/build.mjs) -------------------------------------------- */
+
+.site-header {
+    text-align: center;
+    padding: clamp(22px, 4.5vw, 32px) clamp(14px, 3.8vw, 20px) 0;
+}
+
+/* The homepage wears the same header, only taller and with a bigger name. */
+.site-header-home {
+    padding-top: clamp(44px, 8vw, 60px);
+}
+
+.site-name {
+    display: inline-block;
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.5s ease;
+}
+
+a.site-name:hover,
+a.site-name:focus-visible {
+    color: var(--accent);
+}
+
+.site-header-home .site-name {
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
+    margin-bottom: 10px;
+}
+
+/* Homepage only: the name cross-fades between its Latin and Tamil spellings. */
+.site-name.fade {
+    opacity: 0;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: clamp(10px, 3vw, 18px);
+    margin-top: 14px;
+}
+
+.site-header-home .social-links {
+    margin-top: 20px;
+}
+
+/* Brand colours (Substack orange, LinkedIn blue); email follows the body ink. */
+.social-link {
+    --social: #ff6600;
+    --social-hover: #cc5200;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--social);
+    text-decoration: none;
+    font-size: clamp(0.9rem, 3.2vw, 1rem);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.social-link:hover,
+.social-link:focus-visible {
+    color: var(--social-hover);
+}
+
+.social-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+.linkedin-link {
+    --social: #0a66c2;
+    --social-hover: #004182;
+}
+
+.email-link {
+    --social: var(--muted);
+    --social-hover: var(--ink-strong);
+}
+
+@media (prefers-color-scheme: dark) {
+    .social-link {
+        --social: #ff802b;
+        --social-hover: var(--accent);
+    }
+    .linkedin-link {
+        --social: #4da3ff;
+        --social-hover: var(--accent);
+    }
+    .email-link {
+        --social: var(--muted);
+        --social-hover: var(--accent);
+    }
+}
+
+@media (max-width: 640px) {
+    .site-header-home .social-links {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
 /* ---- Site menu (horizontal bar in the style of aadi.net.in,
    stamped by scripts/build.mjs) ------------------------------------------- */
 
@@ -149,9 +257,9 @@ img {
     outline-offset: 3px;
 }
 
-/* Homepage: the menu sits just below the Substack / LinkedIn / Email links. */
-.header .site-nav {
-    margin-top: 24px;
+/* The menu sits just below the Substack / LinkedIn / Email links. */
+.site-header .site-nav {
+    margin-top: clamp(16px, 3vw, 24px);
 }
 
 @media (max-width: 480px) {

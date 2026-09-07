@@ -3,12 +3,13 @@
  * Site build. Stamps every root HTML page with two marker-delimited blocks and
  * regenerates sitemap.xml:
  *
- *   <!-- nav:start --> … <!-- nav:end -->   the shared site menu: a horizontal
- *                                          bar in the style of aadi.net.in.
- *                                          On index.html it sits just below the
- *                                          social links in the header; on every
- *                                          other page it is the first thing in
- *                                          <body>.
+ *   <!-- header:start --> … <!-- header:end -->  the shared site header: the
+ *                                          name, the Substack / LinkedIn /
+ *                                          Email links and the menu bar (in the
+ *                                          style of aadi.net.in). Identical on
+ *                                          every page apart from the bigger
+ *                                          homepage name; always the first
+ *                                          thing in <body>.
  *   <!-- seo:start --> … <!-- seo:end -->   description, canonical, Open Graph,
  *                                          Twitter card, theme-color, JSON-LD
  *
@@ -49,11 +50,6 @@ const PAGES = {
             "Vimal Vivegananda — International Politics graduate and MSc Social & Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.",
         ogType: "website",
         jsonld: PERSON,
-    },
-    "about.html": {
-        description:
-            "About Vimal Vivegananda — International Politics graduate and MSc Social & Geographic Data Science student at UCL, working on data-driven research.",
-        ogType: "website",
     },
     "work.html": {
         description:
@@ -99,8 +95,9 @@ const PAGES = {
     },
 };
 
+/** The homepage is the About Me page, so "About Me" points at the site root. */
 const NAV_LINKS = [
-    { label: "About Me", href: "/about" },
+    { label: "About Me", href: "/" },
     { label: "My Work", href: "/work" },
     { label: "Song of the Month", href: "/song-archive" },
     { label: "Contact", href: CONTACT },
@@ -108,10 +105,34 @@ const NAV_LINKS = [
 
 /** File -> menu href, so the menu can mark the current page. */
 const NAV_CURRENT = {
-    "about.html": "/about",
+    "index.html": "/",
     "work.html": "/work",
     "song-archive.html": "/song-archive",
 };
+
+/** The social links that sit under the name in the header. */
+const SOCIAL_LINKS = [
+    {
+        label: "Substack",
+        href: "https://substack.com/@vimal0?",
+        className: "social-link",
+        external: true,
+        path: "M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z",
+    },
+    {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/vimal-v-5004751ba/",
+        className: "social-link linkedin-link",
+        external: true,
+        path: "M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z",
+    },
+    {
+        label: "Email",
+        href: CONTACT,
+        className: "social-link email-link",
+        path: "M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z",
+    },
+];
 
 function escapeAttr(value) {
     return String(value)
@@ -142,8 +163,8 @@ function canonicalFor(file) {
 }
 
 /** Replace the block between `<!-- marker:start/end -->`, or insert it at `insertAt(html)`.
- *  An existing block keeps its current indentation (the homepage menu lives
- *  deeper, inside the header); `indent` is only used when inserting. */
+ *  An existing block keeps its current indentation (pages differ: some indent
+ *  the whole body, some do not); `indent` is only used when inserting. */
 function stamp(html, marker, lines, indent, insertAt) {
     const found = html.match(new RegExp(`([ \\t]*)<!-- ${marker}:start -->[\\s\\S]*?<!-- ${marker}:end -->`));
     if (found) {
@@ -204,17 +225,42 @@ function seoLines(file, html, meta) {
     return lines;
 }
 
-function navLines(file) {
+/** The header block: name, social links, menu. The homepage carries the name as
+ *  its <h1> (and the id the name animation hooks onto); everywhere else the name
+ *  is a link home, so the page keeps its own <h1>. */
+function headerLines(file) {
+    const home = file === "index.html";
+    const name = home
+        ? `    <h1 class="site-name" id="name-title">Vimal</h1>`
+        : `    <a class="site-name" href="/">Vimal</a>`;
+
+    const socials = SOCIAL_LINKS.flatMap((link) => {
+        const target = link.external ? ` target="_blank" rel="noopener noreferrer"` : "";
+        return [
+            `        <a href="${escapeAttr(link.href)}" class="${link.className}"${target}>`,
+            `            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${link.path}"/></svg>`,
+            `            ${link.label}`,
+            `        </a>`,
+        ];
+    });
+
     const items = NAV_LINKS.map((link) => {
         const current = NAV_CURRENT[file] === link.href ? ' aria-current="page"' : "";
-        return `        <li><a href="${link.href}"${current}>${link.label}</a></li>`;
+        return `            <li><a href="${link.href}"${current}>${link.label}</a></li>`;
     });
+
     return [
-        `<nav class="site-nav" aria-label="Site navigation">`,
-        `    <ul>`,
+        `<header class="site-header${home ? " site-header-home" : ""}">`,
+        name,
+        `    <div class="social-links">`,
+        ...socials,
+        `    </div>`,
+        `    <nav class="site-nav" aria-label="Site navigation">`,
+        `        <ul>`,
         ...items,
-        `    </ul>`,
-        `</nav>`,
+        `        </ul>`,
+        `    </nav>`,
+        `</header>`,
     ];
 }
 
@@ -262,7 +308,7 @@ function main() {
         let next = stamp(html, "seo", seoLines(file, html, meta), headIndent, (h) => h.search(/[ \t]*<\/head>/i));
 
         const bodyIndent = (next.match(/<body[^>]*>\n([ \t]*)\S/) || [, "    "])[1];
-        next = stamp(next, "nav", navLines(file), bodyIndent, (h) => {
+        next = stamp(next, "header", headerLines(file), bodyIndent, (h) => {
             const open = h.match(/<body[^>]*>\n?/i);
             return open ? open.index + open[0].length : -1;
         });

@@ -23,22 +23,25 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 
 ## Layout
 
-- `index.html` — homepage (name, social links, menu only)
-- `about.html`, `work.html` — the About Me and My Work pages
+- `index.html` — homepage; this *is* the About Me page (shared header + the bio)
+- `work.html` — the My Work page
 - `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
   (song-archive also carries the current Song of the Month pick)
 - `report-*.html` — long-form reports; wrapper is `<div class="container article">`
 - `404.html` — GitHub Pages not-found page (root-relative URLs only)
 - `site.css` — the single shared stylesheet: Bagnard @font-face, design tokens
   (CSS custom properties with dark-mode values swapped once), reset, `.container`,
-  `.back-link`, the `.site-nav` menu, `.article` typography, `.data-table`, and the
-  Song of the Month widget classes. Page-specific rules stay inline in each page.
+  `.back-link`, the `.site-header` band (name + `.social-links` + `.site-nav`),
+  `.article` typography, `.data-table`, and the Song of the Month widget classes.
+  Page-specific rules stay inline in each page.
 - `song-visualizer.js` — decorative canvas rails beside the Spotify embeds
   (song archive page). Animates only while visible; static under reduced motion.
-- `scripts/build.mjs` — the only tooling. Stamps `<!-- nav:start/end -->` (a
-  horizontal menu bar in the style of aadi.net.in — below the social links in
-  the homepage header, first thing in `<body>` everywhere else) and
-  `<!-- seo:start/end -->` (in `<head>`) and writes `sitemap.xml`.
+- `scripts/build.mjs` — the only tooling. Stamps `<!-- header:start/end -->` —
+  the name, the Substack / LinkedIn / Email links and the menu bar (in the style
+  of aadi.net.in), first thing in `<body>` on every page — and
+  `<!-- seo:start/end -->` (in `<head>`), and writes `sitemap.xml`. The name is
+  the `<h1>` on the homepage and a link home elsewhere; menu labels, hrefs and
+  the social links all live in that script.
 - `world-map.svg` — minified world map fetched by `mapping-the-papacy.html`
 - `report-images/*.webp`, `assets/og-card.png`, `favicon.svg`
 

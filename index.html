@@ -7,81 +7,23 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="site.css">
     <style>
-        body {
-            overflow-x: hidden;
+        /* The homepage is the About Me page: header, then the bio. */
+        .bio-content {
+            max-width: 64ch;
+            margin: clamp(10px, 3vw, 24px) auto 0;
+            font-size: clamp(1rem, 3.8vw, 1.1rem);
+            line-height: 1.8;
+            color: var(--muted);
         }
-        .container {
-            padding: clamp(14px, 3.8vw, 20px);
+        .bio-content p + p {
+            margin-top: 1.8em;
         }
-        .header {
-            text-align: center;
-            padding: clamp(44px, 8vw, 60px) 0;
-        }
-        .header h1 {
-            font-size: clamp(2.5rem, 9vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 10px;
-            transition: opacity 0.5s ease;
-        }
-        .header h1.fade {
-            opacity: 0;
-        }
-        .social-links {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: clamp(10px, 3vw, 18px);
-            flex-wrap: wrap;
-        }
-        /* Brand colours (Substack orange, LinkedIn blue). In dark mode every link hovers to the accent. */
-        .social-link {
-            --social: #ff6600;
-            --social-hover: #cc5200;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--social);
-            text-decoration: none;
-            font-size: clamp(0.95rem, 3.4vw, 1rem);
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        .social-link:hover {
-            color: var(--social-hover);
-        }
-        .social-link svg {
-            width: 20px;
-            height: 20px;
-        }
-        .linkedin-link {
-            --social: #0a66c2;
-            --social-hover: #004182;
-        }
-        .email-link {
-            --social: var(--muted);
-            --social-hover: #222222;
-        }
-        @media (prefers-color-scheme: dark) {
-            .social-link {
-                --social: #ff802b;
-                --social-hover: var(--accent);
-            }
-            .linkedin-link {
-                --social: #4da3ff;
-            }
-            .email-link {
-                --social: var(--muted);
-            }
-        }
-        @media (max-width: 640px) {
-            .container {
-                padding: 14px;
-            }
-            .social-links {
-                flex-direction: column;
-                gap: 12px;
-            }
+        .blue-underline {
+            text-decoration-line: underline;
+            text-decoration-color: var(--link);
+            text-decoration-thickness: 0.2em;
+            text-underline-offset: 0.12em;
+            text-decoration-skip-ink: none;
         }
     </style>
     <!-- seo:start -->
@@ -105,35 +47,37 @@
     <!-- seo:end -->
 </head>
 <body>
+    <!-- header:start -->
+    <header class="site-header site-header-home">
+        <h1 class="site-name" id="name-title">Vimal</h1>
+        <div class="social-links">
+            <a href="https://substack.com/@vimal0?" class="social-link" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                Substack
+            </a>
+            <a href="https://www.linkedin.com/in/vimal-v-5004751ba/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+                LinkedIn
+            </a>
+            <a href="mailto:vimal134@pm.me" class="social-link email-link">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                Email
+            </a>
+        </div>
+        <nav class="site-nav" aria-label="Site navigation">
+            <ul>
+                <li><a href="/" aria-current="page">About Me</a></li>
+                <li><a href="/work">My Work</a></li>
+                <li><a href="/song-archive">Song of the Month</a></li>
+                <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- header:end -->
     <div class="container">
-        <div class="header">
-            <h1 id="name-title">Vimal</h1>
-            <div class="social-links">
-                <a href="https://substack.com/@vimal0?" class="social-link" target="_blank">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-                    Substack
-                </a>
-                <a href="https://www.linkedin.com/in/vimal-v-5004751ba/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/>
-                    </svg>
-                    LinkedIn
-                </a>
-                <a href="mailto:vimal134@pm.me" class="social-link email-link">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    Email
-                </a>
-            </div>
-            <!-- nav:start -->
-            <nav class="site-nav" aria-label="Site navigation">
-                <ul>
-                    <li><a href="/about">About Me</a></li>
-                    <li><a href="/work">My Work</a></li>
-                    <li><a href="/song-archive">Song of the Month</a></li>
-                    <li><a href="mailto:vimal134@pm.me">Contact</a></li>
-                </ul>
-            </nav>
-            <!-- nav:end -->
+        <div class="bio-content">
+            <p>Hi, I'm Vimal! I'm an International Politics Graduate, currently pursuing a <a href="https://www.ucl.ac.uk/prospective-students/graduate/taught-degrees/social-and-geographic-data-science-msc" class="blue-underline" target="_blank" rel="noopener noreferrer">MSc in Social and Geographic Data Science at UCL</a>.</p>
+            <p>I have a passion for data-driven research, my work focuses on <span class="blue-underline">tracking censorship patterns</span>, <span class="blue-underline">privacy law</span>, <span class="blue-underline">analysing political trends</span>, and exploring how <span class="blue-underline">information flows (or is restricted) across different political systems</span>.</p>
         </div>
     </div>
     <script>
