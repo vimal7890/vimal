@@ -25,6 +25,8 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 
 - `index.html` — homepage; this *is* the About Me page (shared header + the bio)
 - `work.html` — the My Work page
+- `blog.html`, `resume.html` — Blog and Resume menu pages; placeholders ("Coming
+  Soon", `noindex`) until they have content
 - `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
   (song-archive also carries the current Song of the Month pick)
 - `report-*.html` — long-form reports; wrapper is `<div class="container article">`

@@ -72,6 +72,16 @@ const PAGES = {
         description: "An archive of Vimal's Song of the Month picks, with the story behind each one.",
         ogType: "website",
     },
+    "blog.html": {
+        description: "Vimal Vivegananda's blog — coming soon.",
+        ogType: "website",
+        noindex: true, // placeholder page; drop this once there is content
+    },
+    "resume.html": {
+        description: "Vimal Vivegananda's resume — coming soon.",
+        ogType: "website",
+        noindex: true, // placeholder page; drop this once there is content
+    },
     "report-calgary-cambridge.html": {
         description:
             "Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.",
@@ -101,6 +111,8 @@ const PAGES = {
 const NAV_LINKS = [
     { label: "About Me", href: "/" },
     { label: "My Work", href: "/work" },
+    { label: "Blog", href: "/blog" },
+    { label: "Resume", href: "/resume" },
     { label: "Song of the Month", href: "/song-archive" },
 ];
 
@@ -108,6 +120,8 @@ const NAV_LINKS = [
 const NAV_CURRENT = {
     "index.html": "/",
     "work.html": "/work",
+    "blog.html": "/blog",
+    "resume.html": "/resume",
     "song-archive.html": "/song-archive",
 };
 

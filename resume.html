@@ -2,70 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found — Vimal Vivegananda</title>
-    <link rel="stylesheet" href="/site.css">
+    <title>Resume - Vimal</title>
+    <link rel="stylesheet" href="site.css">
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 0;
-        }
-        .not-found {
+        /* Placeholder until the Resume page has content. */
+        .placeholder {
+            max-width: 64ch;
+            margin: clamp(24px, 8vw, 80px) auto 0;
             text-align: center;
-            max-width: 560px;
-            width: 100%;
-            margin: auto;
-            padding: 20px;
         }
-        .not-found .code {
-            font-size: clamp(4.5rem, 18vw, 7rem);
+        .placeholder h1 {
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
             font-weight: 700;
-            line-height: 1;
-            color: var(--accent);
+            margin-bottom: 0.5em;
         }
-        .not-found h1 {
-            font-size: clamp(1.4rem, 5vw, 1.9rem);
-            margin: 14px 0 10px;
-        }
-        .not-found p {
+        .placeholder p {
+            font-size: clamp(1rem, 3.8vw, 1.1rem);
+            line-height: 1.8;
             color: var(--muted);
-            margin-bottom: 26px;
-        }
-        .not-found-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px 22px;
-        }
-        .not-found-links a {
-            color: var(--ink);
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        .not-found-links a:hover,
-        .not-found-links a:focus-visible {
-            color: var(--accent);
         }
     </style>
     <!-- seo:start -->
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf" as="font" type="font/otf" crossorigin>
-    <meta name="description" content="Page not found.">
-    <link rel="canonical" href="https://vimal.my/404">
+    <meta name="description" content="Vimal Vivegananda's resume — coming soon.">
+    <link rel="canonical" href="https://vimal.my/resume">
     <meta property="og:site_name" content="Vimal Vivegananda">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Page Not Found — Vimal Vivegananda">
-    <meta property="og:description" content="Page not found.">
-    <meta property="og:url" content="https://vimal.my/404">
+    <meta property="og:title" content="Resume - Vimal">
+    <meta property="og:description" content="Vimal Vivegananda's resume — coming soon.">
+    <meta property="og:url" content="https://vimal.my/resume">
     <meta property="og:image" content="https://vimal.my/assets/og-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Page Not Found — Vimal Vivegananda">
-    <meta name="twitter:description" content="Page not found.">
+    <meta name="twitter:title" content="Resume - Vimal">
+    <meta name="twitter:description" content="Vimal Vivegananda's resume — coming soon.">
     <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
@@ -95,23 +68,18 @@
                 <li><a href="/">About Me</a></li>
                 <li><a href="/work">My Work</a></li>
                 <li><a href="/blog">Blog</a></li>
-                <li><a href="/resume">Resume</a></li>
+                <li><a href="/resume" aria-current="page">Resume</a></li>
                 <li><a href="/song-archive">Song of the Month</a></li>
             </ul>
         </nav>
     </header>
     <script src="/site.js" defer></script>
     <!-- header:end -->
-    <main class="not-found">
-        <div class="code">404</div>
-        <h1>This page doesn't exist</h1>
-        <p>The link may be outdated, or the page may have moved. Here are some good places to go instead.</p>
-        <nav class="not-found-links" aria-label="Suggested pages">
-            <a href="/">Home</a>
-            <a href="/mapping-the-papacy.html">Mapping the Papacy</a>
-            <a href="/polio.html">Polio Tracker</a>
-            <a href="/report-london-house-prices.html">Spatial Deep Learning</a>
-        </nav>
-    </main>
+    <div class="container">
+        <div class="placeholder">
+            <h1>Resume</h1>
+            <p>Coming Soon</p>
+        </div>
+    </div>
 </body>
 </html>
