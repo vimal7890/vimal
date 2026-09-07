@@ -90,6 +90,18 @@ img {
     padding: clamp(14px, 3.8vw, 20px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
 }
 
+/* For headings a page needs for structure and search engines but not on screen. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 .back-link {
     display: inline-block;
     color: var(--ink);

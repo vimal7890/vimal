@@ -10,20 +10,11 @@
         body {
             overflow-x: hidden;
         }
-        .header {
-            text-align: center;
-            padding: clamp(42px, 8vw, 60px) 0;
-        }
-        .header h1 {
-            font-size: clamp(2rem, 8vw, 2.5rem);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
         .content {
             background: var(--card);
             border-radius: 20px;
             box-shadow: var(--shadow-lg);
-            margin: 0 auto 40px;
+            margin: clamp(20px, 4vw, 34px) auto 40px;
             padding: clamp(26px, 6vw, 50px) clamp(16px, 5vw, 60px);
             text-align: center;
             color: var(--soft);
@@ -112,9 +103,7 @@
     <script src="/site.js" defer></script>
     <!-- header:end -->
     <div class="container">
-        <div class="header">
-            <h1>Song of the Month Archive</h1>
-        </div>
+        <h1 class="visually-hidden">Song of the Month Archive</h1>
 
         <div class="content">
             <div class="song-item song-current">
