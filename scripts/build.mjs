@@ -50,6 +50,16 @@ const PAGES = {
         ogType: "website",
         jsonld: PERSON,
     },
+    "about.html": {
+        description:
+            "About Vimal Vivegananda — International Politics graduate and MSc Social & Geographic Data Science student at UCL, working on data-driven research.",
+        ogType: "website",
+    },
+    "work.html": {
+        description:
+            "Selected work by Vimal Vivegananda — data-driven research on censorship, privacy law, and political trends.",
+        ogType: "website",
+    },
     "polio.html": {
         description:
             "Tracking the global eradication of polio: vaccination campaigns have pushed endemic transmission down to just two countries.",
@@ -90,11 +100,18 @@ const PAGES = {
 };
 
 const NAV_LINKS = [
-    { label: "About me", href: "/#about" },
-    { label: "My work", href: "/#work" },
-    { label: "Song of the month", href: "/#music" },
+    { label: "About Me", href: "/about" },
+    { label: "My Work", href: "/work" },
+    { label: "Song of the Month", href: "/song-archive" },
     { label: "Contact", href: CONTACT },
 ];
+
+/** File -> menu href, so the menu can mark the current page. */
+const NAV_CURRENT = {
+    "about.html": "/about",
+    "work.html": "/work",
+    "song-archive.html": "/song-archive",
+};
 
 function escapeAttr(value) {
     return String(value)
@@ -187,9 +204,10 @@ function seoLines(file, html, meta) {
     return lines;
 }
 
-function navLines() {
+function navLines(file) {
     const items = NAV_LINKS.map((link) => {
-        return `        <li><a href="${link.href}">${link.label}</a></li>`;
+        const current = NAV_CURRENT[file] === link.href ? ' aria-current="page"' : "";
+        return `        <li><a href="${link.href}"${current}>${link.label}</a></li>`;
     });
     return [
         `<nav class="site-nav" aria-label="Site navigation">`,
@@ -244,7 +262,7 @@ function main() {
         let next = stamp(html, "seo", seoLines(file, html, meta), headIndent, (h) => h.search(/[ \t]*<\/head>/i));
 
         const bodyIndent = (next.match(/<body[^>]*>\n([ \t]*)\S/) || [, "    "])[1];
-        next = stamp(next, "nav", navLines(), bodyIndent, (h) => {
+        next = stamp(next, "nav", navLines(file), bodyIndent, (h) => {
             const open = h.match(/<body[^>]*>\n?/i);
             return open ? open.index + open[0].length : -1;
         });

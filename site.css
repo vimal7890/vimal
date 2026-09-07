@@ -112,7 +112,7 @@ img {
    stamped by scripts/build.mjs) ------------------------------------------- */
 
 .site-nav {
-    font-family: var(--font-ui);
+    font-family: var(--font);
     background: var(--card);
 }
 
@@ -131,8 +131,8 @@ img {
 
 .site-nav a {
     color: var(--ink);
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 15px;
+    font-weight: 700;
     line-height: 1.4;
     text-decoration: none;
     white-space: nowrap;
@@ -253,7 +253,7 @@ img {
     .data-table { font-size: 0.8em; }
 }
 
-/* ---- Song of the Month widget (homepage + archive) ----------------------- */
+/* ---- Song of the Month widget (song archive page) -------------------------- */
 
 .song-widget-shell {
     position: relative;

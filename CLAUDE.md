@@ -23,8 +23,10 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 
 ## Layout
 
-- `index.html` — homepage (about, work grid, Song of the Month)
+- `index.html` — homepage (name, social links, menu only)
+- `about.html`, `work.html` — the About Me and My Work pages
 - `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
+  (song-archive also carries the current Song of the Month pick)
 - `report-*.html` — long-form reports; wrapper is `<div class="container article">`
 - `404.html` — GitHub Pages not-found page (root-relative URLs only)
 - `site.css` — the single shared stylesheet: Bagnard @font-face, design tokens
@@ -32,7 +34,7 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
   `.back-link`, the `.site-nav` menu, `.article` typography, `.data-table`, and the
   Song of the Month widget classes. Page-specific rules stay inline in each page.
 - `song-visualizer.js` — decorative canvas rails beside the Spotify embeds
-  (homepage + archive). Animates only while visible; static under reduced motion.
+  (song archive page). Animates only while visible; static under reduced motion.
 - `scripts/build.mjs` — the only tooling. Stamps `<!-- nav:start/end -->` (a
   horizontal menu bar in the style of aadi.net.in — below the social links in
   the homepage header, first thing in `<body>` everywhere else) and

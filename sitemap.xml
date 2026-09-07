@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://vimal.my/</loc></url>
+  <url><loc>https://vimal.my/about</loc></url>
   <url><loc>https://vimal.my/mapping-the-papacy</loc></url>
   <url><loc>https://vimal.my/polio</loc></url>
   <url><loc>https://vimal.my/report-calgary-cambridge</loc></url>
   <url><loc>https://vimal.my/report-housing-fertility</loc></url>
   <url><loc>https://vimal.my/report-london-house-prices</loc></url>
   <url><loc>https://vimal.my/song-archive</loc></url>
+  <url><loc>https://vimal.my/work</loc></url>
 </urlset>

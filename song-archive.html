@@ -99,9 +99,9 @@
     <!-- nav:start -->
     <nav class="site-nav" aria-label="Site navigation">
         <ul>
-            <li><a href="/#about">About me</a></li>
-            <li><a href="/#work">My work</a></li>
-            <li><a href="/#music">Song of the month</a></li>
+            <li><a href="/about">About Me</a></li>
+            <li><a href="/work">My Work</a></li>
+            <li><a href="/song-archive" aria-current="page">Song of the Month</a></li>
             <li><a href="mailto:vimal134@pm.me">Contact</a></li>
         </ul>
     </nav>
@@ -113,6 +113,14 @@
         </div>
 
         <div class="content">
+            <div class="song-item song-current">
+                <div class="song-widget-shell">
+                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="152" aria-hidden="true"></canvas>
+                    <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
+                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="152" aria-hidden="true"></canvas>
+                </div>
+                <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
+            </div>
             <div class="song-item">
                 <div class="song-widget-shell">
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
@@ -145,6 +153,56 @@
             </div>
         </div>
     </div>
+    <script>
+        (function () {
+            // Spotify: request the iframe API only once the current pick is near; fall back to a plain embed if it errors or stays silent.
+            var TRACK = '5m4TzaOXvk1biOR3LdObVt';
+            var current = document.querySelector('.song-current');
+            var embed = document.getElementById('song-embed');
+            var shell = current ? current.querySelector('.song-widget-shell') : null;
+            var settled = false, fallbackTimer = null;
+            function report(isPlaying, data) {
+                if (window.SongVisualizer) window.SongVisualizer.setPlayback(shell, { isPlaying: isPlaying, position: data && data.position, duration: data && data.duration });
+            }
+            function fallback() {
+                if (settled || !embed || embed.querySelector('iframe')) return;
+                settled = true;
+                embed.insertAdjacentHTML('beforeend', '<iframe src="https://open.spotify.com/embed/track/' + TRACK + '?utm_source=generator" ' +
+                    'title="Song of the Month Spotify player" width="100%" height="152" loading="lazy" ' +
+                    'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>');
+            }
+            window.onSpotifyIframeApiReady = function (api) {
+                if (settled || !embed) return;
+                settled = true;
+                clearTimeout(fallbackTimer);
+                api.createController(embed, { uri: 'spotify:track:' + TRACK, width: '100%', height: 152 }, function (controller) {
+                    controller.addListener('playback_started', function () { report(true, null); });
+                    controller.addListener('playback_update', function (event) {
+                        var data = event && event.data;
+                        report(!!data && !data.isPaused && !data.isBuffering, data);
+                    });
+                });
+            };
+            function loadSpotify() {
+                var script = document.createElement('script');
+                script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+                script.async = true;
+                script.onerror = fallback;
+                document.body.appendChild(script);
+                fallbackTimer = setTimeout(fallback, 1800);
+            }
+            if (embed && current && 'IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+                    observer.disconnect();
+                    loadSpotify();
+                }, { rootMargin: '400px' });
+                observer.observe(current);
+            } else if (embed) {
+                loadSpotify();
+            }
+        })();
+    </script>
     <script src="song-visualizer.js" defer></script>
 </body>
 </html>

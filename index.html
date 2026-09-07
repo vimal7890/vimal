@@ -74,88 +74,6 @@
                 --social: var(--muted);
             }
         }
-        .content {
-            margin: 0 auto 40px;
-        }
-        .section {
-            padding: clamp(22px, 4vw, 30px) 0;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-        .section h2 {
-            font-size: clamp(1.7rem, 6vw, 2.2rem);
-            margin-bottom: clamp(18px, 4vw, 30px);
-            font-weight: 700;
-        }
-        .bio-content {
-            font-size: clamp(1rem, 3.8vw, 1.1rem);
-            line-height: 1.8;
-            color: var(--muted);
-        }
-        .blue-underline {
-            text-decoration-line: underline;
-            text-decoration-color: var(--link);
-            text-decoration-thickness: 0.2em;
-            text-underline-offset: 0.12em;
-            text-decoration-skip-ink: none;
-        }
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-            gap: clamp(20px, 4vw, 30px);
-            margin-top: 30px;
-        }
-        .work-item {
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-            min-width: 0;
-        }
-        .work-item h3 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            font-weight: 700;
-        }
-        .work-item p {
-            color: var(--soft);
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        .work-title-link {
-            color: var(--ink);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        .work-title-link:hover,
-        .work-title-link:focus-visible {
-            color: var(--accent);
-        }
-        .work-link {
-            display: inline-flex;
-            align-items: center;
-            margin-top: auto;
-            color: var(--ink);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease, transform 0.2s ease;
-            transform-origin: left center;
-        }
-        .work-link:hover,
-        .work-link:focus-visible {
-            color: var(--accent);
-            transform: scale(1.04);
-        }
-        .show-more-section {
-            margin-top: 22px;
-            padding-top: 18px;
-        }
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
         @media (max-width: 640px) {
             .container {
                 padding: 14px;
@@ -163,12 +81,6 @@
             .social-links {
                 flex-direction: column;
                 gap: 12px;
-            }
-            .work-item {
-                padding: 12px 0;
-            }
-            .song-description {
-                font-size: 0.96rem;
             }
         }
     </style>
@@ -215,83 +127,13 @@
             <!-- nav:start -->
             <nav class="site-nav" aria-label="Site navigation">
                 <ul>
-                    <li><a href="/#about">About me</a></li>
-                    <li><a href="/#work">My work</a></li>
-                    <li><a href="/#music">Song of the month</a></li>
+                    <li><a href="/about">About Me</a></li>
+                    <li><a href="/work">My Work</a></li>
+                    <li><a href="/song-archive">Song of the Month</a></li>
                     <li><a href="mailto:vimal134@pm.me">Contact</a></li>
                 </ul>
             </nav>
             <!-- nav:end -->
-        </div>
-
-        <div class="content">
-            <section class="section" id="about">
-                <h2>About Me</h2>
-                <div class="bio-content">
-                    <p>Hi, I'm Vimal! I'm an International Politics Graduate, currently pursuing a <a href="https://www.ucl.ac.uk/prospective-students/graduate/taught-degrees/social-and-geographic-data-science-msc" class="blue-underline" target="_blank" rel="noopener noreferrer">MSc in Social and Geographic Data Science at UCL</a>.</p>
-                    <p style="margin-top: 1.8em;">I have a passion for data-driven research, my work focuses on <span class="blue-underline">tracking censorship patterns</span>, <span class="blue-underline">privacy law</span>, <span class="blue-underline">analysing political trends</span>, and exploring how <span class="blue-underline">information flows (or is restricted) across different political systems</span>.</p>
-                </div>
-            </section>
-
-            <section class="section" id="work">
-                <h2>My Work</h2>
-                <div class="work-grid">
-                    <div class="work-item">
-                        <h3><a href="https://censorship.my" class="work-title-link" target="_blank" rel="noopener noreferrer">Censorship Tracker</a></h3>
-                        <p>Created a simple tracker looking at the censorship of Social Media around the world.</p>
-                        <a href="https://censorship.my" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-title-link" target="_blank" rel="noopener noreferrer">Inside Croydon Journalism</a></h3>
-                        <p>Explore the work that I did with Inside Croydon below.</p>
-                        <a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="report-calgary-cambridge.html" class="work-title-link">Mining Social &amp; Geographic Datasets</a></h3>
-                        <p>Report analysing mobility patterns in Cambridge and machine-learning sentiment classification of Calgary restaurant reviews.</p>
-                        <a href="report-calgary-cambridge.html" class="work-link">View Report →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="report-london-house-prices.html" class="work-title-link">Spatial Deep Learning for House Prices</a></h3>
-                        <p>Report using a Graph Neural Network (GraphSAGE) on London's LSOA adjacency graph to predict median house prices, beating non-spatial baselines.</p>
-                        <a href="report-london-house-prices.html" class="work-link">View Report →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="report-housing-fertility.html" class="work-title-link">Housing Constraints &amp; European Fertility</a></h3>
-                        <p>Video brief arguing that housing constraints significantly contribute to Europe's fertility decline through space, affordability, and tenure insecurity, with three policy recommendations.</p>
-                        <a href="report-housing-fertility.html" class="work-link">View Report →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="mapping-the-papacy.html" class="work-title-link">Mapping the Papacy</a></h3>
-                        <p>Data visualisation tracing where the last eleven popes were born.</p>
-                        <a href="mapping-the-papacy.html" class="work-link">View Project →</a>
-                    </div>
-
-                    <div class="work-item">
-                        <h3><a href="polio.html" class="work-title-link">Polio Tracker</a></h3>
-                        <p>Vaccination campaigns have pushed polio to the brink of eradication, with endemic transmission now limited to just two countries.</p>
-                        <a href="polio.html" class="work-link">View Project →</a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="music">
-                <h2>Song of the Month</h2>
-                <div class="song-widget-shell">
-                    <canvas id="visualizer-left" class="song-visualizer song-visualizer-left" width="32" height="152" aria-hidden="true"></canvas>
-                    <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
-                    <canvas id="visualizer-right" class="song-visualizer song-visualizer-right" width="32" height="152" aria-hidden="true"></canvas>
-                </div>
-                <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
-                <div class="show-more-section">
-                    <a href="song-archive.html" class="work-link">Show More →</a>
-                </div>
-            </section>
         </div>
     </div>
     <script>
@@ -318,55 +160,7 @@
                     if (document.visibilityState === 'visible') startNames();
                 });
             }
-
-            // Spotify: request the iframe API only once the section is near; fall back to a plain embed if it errors or stays silent.
-            var TRACK = '5m4TzaOXvk1biOR3LdObVt';
-            var music = document.getElementById('music');
-            var embed = document.getElementById('song-embed');
-            var shell = document.querySelector('.song-widget-shell');
-            var settled = false, fallbackTimer = null;
-            function report(isPlaying, data) {
-                if (window.SongVisualizer) window.SongVisualizer.setPlayback(shell, { isPlaying: isPlaying, position: data && data.position, duration: data && data.duration });
-            }
-            function fallback() {
-                if (settled || !embed || embed.querySelector('iframe')) return;
-                settled = true;
-                embed.insertAdjacentHTML('beforeend', '<iframe src="https://open.spotify.com/embed/track/' + TRACK + '?utm_source=generator" ' +
-                    'title="Song of the Month Spotify player" width="100%" height="152" loading="lazy" ' +
-                    'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>');
-            }
-            window.onSpotifyIframeApiReady = function (api) {
-                if (settled || !embed) return;
-                settled = true;
-                clearTimeout(fallbackTimer);
-                api.createController(embed, { uri: 'spotify:track:' + TRACK, width: '100%', height: 152 }, function (controller) {
-                    controller.addListener('playback_started', function () { report(true, null); });
-                    controller.addListener('playback_update', function (event) {
-                        var data = event && event.data;
-                        report(!!data && !data.isPaused && !data.isBuffering, data);
-                    });
-                });
-            };
-            function loadSpotify() {
-                var script = document.createElement('script');
-                script.src = 'https://open.spotify.com/embed/iframe-api/v1';
-                script.async = true;
-                script.onerror = fallback;
-                document.body.appendChild(script);
-                fallbackTimer = setTimeout(fallback, 1800);
-            }
-            if (embed && music && 'IntersectionObserver' in window) {
-                var observer = new IntersectionObserver(function (entries) {
-                    if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
-                    observer.disconnect();
-                    loadSpotify();
-                }, { rootMargin: '400px' });
-                observer.observe(music);
-            } else if (embed) {
-                loadSpotify();
-            }
         })();
     </script>
-    <script src="song-visualizer.js" defer></script>
 </body>
 </html>

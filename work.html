@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work - Vimal</title>
+    <link rel="stylesheet" href="site.css">
+    <style>
+        .page-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            font-weight: 700;
+            margin: 0 0 16px;
+        }
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: clamp(20px, 4vw, 30px);
+            margin-top: 30px;
+            margin-bottom: 36px;
+        }
+        .work-item {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            min-width: 0;
+        }
+        .work-item h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        .work-item p {
+            color: var(--soft);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .work-title-link {
+            color: var(--ink);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .work-title-link:hover,
+        .work-title-link:focus-visible {
+            color: var(--accent);
+        }
+        .work-link {
+            display: inline-flex;
+            align-items: center;
+            margin-top: auto;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease, transform 0.2s ease;
+            transform-origin: left center;
+        }
+        .work-link:hover,
+        .work-link:focus-visible {
+            color: var(--accent);
+            transform: scale(1.04);
+        }
+        .back-link {
+            margin-top: 12px;
+        }
+        @media (max-width: 640px) {
+            .work-item {
+                padding: 12px 0;
+            }
+        }
+    </style>
+    <!-- seo:start -->
+    <meta name="description" content="Selected work by Vimal Vivegananda — data-driven research on censorship, privacy law, and political trends.">
+    <link rel="canonical" href="https://vimal.my/work">
+    <meta property="og:site_name" content="Vimal Vivegananda">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="My Work - Vimal">
+    <meta property="og:description" content="Selected work by Vimal Vivegananda — data-driven research on censorship, privacy law, and political trends.">
+    <meta property="og:url" content="https://vimal.my/work">
+    <meta property="og:image" content="https://vimal.my/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="My Work - Vimal">
+    <meta name="twitter:description" content="Selected work by Vimal Vivegananda — data-driven research on censorship, privacy law, and political trends.">
+    <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
+    <!-- seo:end -->
+</head>
+<body>
+    <!-- nav:start -->
+    <nav class="site-nav" aria-label="Site navigation">
+        <ul>
+            <li><a href="/about">About Me</a></li>
+            <li><a href="/work" aria-current="page">My Work</a></li>
+            <li><a href="/song-archive">Song of the Month</a></li>
+            <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- nav:end -->
+    <div class="container">
+        <h1 class="page-title">My Work</h1>
+        <div class="work-grid">
+            <div class="work-item">
+                <h3><a href="https://censorship.my" class="work-title-link" target="_blank" rel="noopener noreferrer">Censorship Tracker</a></h3>
+                <p>Created a simple tracker looking at the censorship of Social Media around the world.</p>
+                <a href="https://censorship.my" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-title-link" target="_blank" rel="noopener noreferrer">Inside Croydon Journalism</a></h3>
+                <p>Explore the work that I did with Inside Croydon below.</p>
+                <a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="report-calgary-cambridge.html" class="work-title-link">Mining Social &amp; Geographic Datasets</a></h3>
+                <p>Report analysing mobility patterns in Cambridge and machine-learning sentiment classification of Calgary restaurant reviews.</p>
+                <a href="report-calgary-cambridge.html" class="work-link">View Report →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="report-london-house-prices.html" class="work-title-link">Spatial Deep Learning for House Prices</a></h3>
+                <p>Report using a Graph Neural Network (GraphSAGE) on London's LSOA adjacency graph to predict median house prices, beating non-spatial baselines.</p>
+                <a href="report-london-house-prices.html" class="work-link">View Report →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="report-housing-fertility.html" class="work-title-link">Housing Constraints &amp; European Fertility</a></h3>
+                <p>Video brief arguing that housing constraints significantly contribute to Europe's fertility decline through space, affordability, and tenure insecurity, with three policy recommendations.</p>
+                <a href="report-housing-fertility.html" class="work-link">View Report →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="mapping-the-papacy.html" class="work-title-link">Mapping the Papacy</a></h3>
+                <p>Data visualisation tracing where the last eleven popes were born.</p>
+                <a href="mapping-the-papacy.html" class="work-link">View Project →</a>
+            </div>
+
+            <div class="work-item">
+                <h3><a href="polio.html" class="work-title-link">Polio Tracker</a></h3>
+                <p>Vaccination campaigns have pushed polio to the brink of eradication, with endemic transmission now limited to just two countries.</p>
+                <a href="polio.html" class="work-link">View Project →</a>
+            </div>
+        </div>
+        <a href="index.html" class="back-link">← Back to home</a>
+    </div>
+</body>
+</html>
