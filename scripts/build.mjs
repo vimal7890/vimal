@@ -102,7 +102,6 @@ const NAV_LINKS = [
     { label: "About Me", href: "/" },
     { label: "My Work", href: "/work" },
     { label: "Song of the Month", href: "/song-archive" },
-    { label: "Contact", href: CONTACT },
 ];
 
 /** File -> menu href, so the menu can mark the current page. */
