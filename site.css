@@ -114,7 +114,6 @@ img {
 .site-nav {
     font-family: var(--font-ui);
     background: var(--card);
-    border-block: 1px solid var(--border);
 }
 
 .site-nav ul {
@@ -136,18 +135,7 @@ img {
     font-weight: 800;
     line-height: 1.4;
     text-decoration: none;
-    text-transform: lowercase;
     white-space: nowrap;
-}
-
-/* Bracket-and-dot dressing, e.g. [home.], after aadi.net.in. The brackets
-   are decorative, so screen readers only hear the link label. */
-.site-nav a::before {
-    content: "[";
-}
-
-.site-nav a::after {
-    content: ".]";
 }
 
 .site-nav a:hover,

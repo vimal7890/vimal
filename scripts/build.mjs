@@ -90,8 +90,7 @@ const PAGES = {
 };
 
 const NAV_LINKS = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/#about" },
+    { label: "About me", href: "/#about" },
     { label: "My work", href: "/#work" },
     { label: "Song of the month", href: "/#music" },
     { label: "Contact", href: CONTACT },
@@ -188,10 +187,9 @@ function seoLines(file, html, meta) {
     return lines;
 }
 
-function navLines(file) {
+function navLines() {
     const items = NAV_LINKS.map((link) => {
-        const current = file === "index.html" && link.href === "/" ? ' aria-current="page"' : "";
-        return `        <li><a href="${link.href}"${current}>${link.label}</a></li>`;
+        return `        <li><a href="${link.href}">${link.label}</a></li>`;
     });
     return [
         `<nav class="site-nav" aria-label="Site navigation">`,
@@ -246,7 +244,7 @@ function main() {
         let next = stamp(html, "seo", seoLines(file, html, meta), headIndent, (h) => h.search(/[ \t]*<\/head>/i));
 
         const bodyIndent = (next.match(/<body[^>]*>\n([ \t]*)\S/) || [, "    "])[1];
-        next = stamp(next, "nav", navLines(file), bodyIndent, (h) => {
+        next = stamp(next, "nav", navLines(), bodyIndent, (h) => {
             const open = h.match(/<body[^>]*>\n?/i);
             return open ? open.index + open[0].length : -1;
         });
