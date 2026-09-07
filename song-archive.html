@@ -10,24 +10,67 @@
         body {
             overflow-x: hidden;
         }
-        .content {
-            background: var(--card);
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            margin: clamp(20px, 4vw, 34px) auto 40px;
-            padding: clamp(26px, 6vw, 50px) clamp(16px, 5vw, 60px);
-            text-align: center;
-            color: var(--soft);
-        }
         .song-item {
-            margin-bottom: clamp(24px, 4vw, 30px);
-            padding-bottom: clamp(24px, 4vw, 30px);
-            border-bottom: 1px solid var(--border);
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
         }
-        .song-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+        .song-current {
+            margin-top: clamp(20px, 4vw, 34px);
+        }
+        .song-description {
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* The older picks, folded away behind the Archive button. */
+        .song-archive {
+            margin: clamp(28px, 5vw, 44px) auto clamp(30px, 6vw, 50px);
+            text-align: center;
+        }
+        .song-archive > summary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 22px;
+            border: 1px solid var(--ink);
+            border-radius: 999px;
+            color: var(--ink);
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 700;
+            list-style: none;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .song-archive > summary::-webkit-details-marker {
+            display: none;
+        }
+        /* Chevron: down when closed, up when open. */
+        .song-archive > summary::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: translateY(-2px) rotate(45deg);
+            transition: transform 0.2s ease;
+        }
+        .song-archive[open] > summary::after {
+            transform: translateY(1px) rotate(-135deg);
+        }
+        .song-archive > summary:hover,
+        .song-archive > summary:focus-visible {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        .song-archive-list {
+            margin-top: clamp(26px, 5vw, 40px);
+        }
+        .song-archive-list .song-item + .song-item {
+            margin-top: clamp(24px, 4vw, 30px);
+            padding-top: clamp(24px, 4vw, 30px);
+            border-top: 1px solid var(--border);
         }
         /* The archive uses slightly narrower, quieter rails than the homepage widget. */
         .song-widget-shell {
@@ -105,46 +148,50 @@
     <div class="container">
         <h1 class="visually-hidden">Song of the Month Archive</h1>
 
-        <div class="content">
-            <div class="song-item song-current">
-                <div class="song-widget-shell">
-                    <canvas id="visualizer-left" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
-                    <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
-                    <canvas id="visualizer-right" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
-                </div>
-                <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
+        <div class="song-item song-current">
+            <div class="song-widget-shell">
+                <canvas id="visualizer-left" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
+                <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
+                <canvas id="visualizer-right" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
             </div>
-            <div class="song-item">
-                <div class="song-widget-shell">
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    <div class="song-embed">
-                        <iframe title="Spotify player: New Bollywood Classic" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                    </div>
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                </div>
-                <p class="song-description">New Bollywood Classic</p>
-            </div>
-            <div class="song-item">
-                <div class="song-widget-shell">
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    <div class="song-embed">
-                        <iframe title="Spotify player: Miracle of Miracles from Fiddler on the Roof" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                    </div>
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                </div>
-                <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
-            </div>
-            <div class="song-item">
-                <div class="song-widget-shell">
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    <div class="song-embed">
-                        <iframe title="Spotify player: Dil Lageya by Veronica featuring Rishi Rich" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                    </div>
-                    <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                </div>
-                <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
-            </div>
+            <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
         </div>
+
+        <details class="song-archive">
+            <summary>Archive</summary>
+            <div class="song-archive-list">
+                <div class="song-item">
+                    <div class="song-widget-shell">
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                        <div class="song-embed">
+                            <iframe title="Spotify player: New Bollywood Classic" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    </div>
+                    <p class="song-description">New Bollywood Classic</p>
+                </div>
+                <div class="song-item">
+                    <div class="song-widget-shell">
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                        <div class="song-embed">
+                            <iframe title="Spotify player: Miracle of Miracles from Fiddler on the Roof" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    </div>
+                    <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
+                </div>
+                <div class="song-item">
+                    <div class="song-widget-shell">
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                        <div class="song-embed">
+                            <iframe title="Spotify player: Dil Lageya by Veronica featuring Rishi Rich" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
+                    </div>
+                    <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
+                </div>
+            </div>
+        </details>
     </div>
     <script>
         (function () {
