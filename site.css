@@ -1,85 +1,337 @@
-/* Shared site styles: design tokens, home button, motion preferences.
-   Load after bagnard.css and before any page-specific <style>. */
+/* vimal.my — shared stylesheet.
+   Design tokens, base styles, the site menu and the components used by more
+   than one page. Page-specific rules stay inline in each page's <style>. */
+
+@font-face {
+    font-family: 'Bagnard';
+    src: url('https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ---- Tokens ------------------------------------------------------------ */
 
 :root {
-    --site-bg: #ffffff;
-    --site-ink: #333;
-    --site-muted: #555;
-    --site-faint: #888;
-    --site-accent: #d93025;
-    --site-accent-soft: rgba(217, 48, 37, 0.55);
-    --site-card-bg: #ffffff;
-    --site-border: #eee;
+    color-scheme: light dark;
+    --font: 'Bagnard', Georgia, 'Times New Roman', serif;
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+    --bg: #ffffff;
+    --ink: #333333;
+    --ink-strong: #1a1a1a;
+    --muted: #555555;
+    --soft: #666666;
+    --faint: #888888;
+    --accent: #d93025;
+    --accent-soft: rgba(217, 48, 37, 0.55);
+    --link: #1e5aa8;
+
+    --card: #ffffff;
+    --card-alt: #f8f8f8;
+    --stripe: #faf8f3;
+    --border: #eeeeee;
+    --rule: #1a1a1a;
+    --table-head-bg: #1a1a1a;
+    --table-head-ink: #f5f1e8;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --site-bg: #15130f;
-        --site-ink: #eee5d8;
-        --site-muted: #b8ada0;
-        --site-faint: #b8ada0;
-        --site-accent: #ff5b4f;
-        --site-accent-soft: rgba(255, 91, 79, 0.55);
-        --site-card-bg: #1f1b16;
-        --site-border: #2e2922;
+        --bg: #15130f;
+        --ink: #eee5d8;
+        --ink-strong: #eee5d8;
+        --muted: #b8ada0;
+        --soft: #b8ada0;
+        --faint: #b8ada0;
+        --accent: #ff5b4f;
+        --accent-soft: rgba(255, 91, 79, 0.55);
+        --link: #5190e8;
+
+        --card: #1f1b16;
+        --card-alt: #26221c;
+        --stripe: #1f1b16;
+        --border: #2e2922;
+        --rule: #eee5d8;
+        --table-head-bg: #26221c;
+        --table-head-ink: #eee5d8;
+        --shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
 }
 
-.home-button {
-    position: fixed;
-    top: clamp(14px, 2vw, 22px);
-    left: clamp(14px, 2vw, 22px);
-    z-index: 1000;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
+/* ---- Base --------------------------------------------------------------- */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
     padding: 0;
-    color: var(--site-ink);
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font);
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Default page frame. */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(14px, 3.8vw, 20px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--ink);
+    font-weight: 500;
     text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    line-height: 1.1;
     transition: color 0.2s ease;
 }
 
-.home-button svg {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
+.back-link:hover,
+.back-link:focus-visible {
+    color: var(--accent);
+    text-decoration: underline;
 }
 
-.home-button:hover,
-.home-button:focus-visible {
-    color: var(--site-accent);
+/* ---- Site menu (horizontal bar in the style of aadi.net.in,
+   stamped by scripts/build.mjs) ------------------------------------------- */
+
+.site-nav {
+    font-family: var(--font-ui);
+    background: var(--card);
+    border-block: 1px solid var(--border);
+}
+
+.site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 6px 22px;
+    max-width: 1200px;
+    min-height: 44px;
+    margin: 0 auto;
+    padding: 8px clamp(14px, 3.8vw, 20px);
+    list-style: none;
+}
+
+.site-nav a {
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.4;
     text-decoration: none;
+    text-transform: lowercase;
+    white-space: nowrap;
 }
 
-.home-button:focus-visible {
-    outline: 2px solid var(--site-accent-soft);
-    outline-offset: 4px;
+/* Bracket-and-dot dressing, e.g. [home.], after aadi.net.in. The brackets
+   are decorative, so screen readers only hear the link label. */
+.site-nav a::before {
+    content: "[";
 }
 
-@media (max-width: 640px) {
-    .home-button {
-        gap: 6px;
-        font-size: 0.9rem;
+.site-nav a::after {
+    content: ".]";
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current] {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.site-nav a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* Homepage: the menu sits just below the Substack / LinkedIn / Email links. */
+.header .site-nav {
+    margin-top: 24px;
+}
+
+@media (max-width: 480px) {
+    .site-nav ul {
+        gap: 4px 14px;
     }
-
-    .home-button svg {
-        width: 14px;
-        height: 14px;
+    .site-nav a {
+        font-size: 13px;
     }
 }
 
-/* Respect users who prefer reduced motion: disable decorative
-   animation and transition effects site-wide. */
+/* ---- Long-form article pages (reports) ---------------------------------- */
+
+.article {
+    color: var(--ink-strong);
+    line-height: 1.75;
+}
+
+.article h1 {
+    font-size: clamp(1.6em, 4vw, 2.2em);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.article h2 {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin: 48px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule);
+}
+
+.article h3 {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin: 28px 0 10px;
+    color: var(--ink);
+}
+
+.article p {
+    margin-bottom: 1.1em;
+}
+
+.article a {
+    color: var(--link);
+}
+
+.article figure {
+    margin: 28px 0;
+}
+
+.article figure img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.article figcaption {
+    font-size: 0.84em;
+    color: var(--soft);
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 28px;
+    font-size: 0.88em;
+}
+
+.data-table th {
+    background: var(--table-head-bg);
+    color: var(--table-head-ink);
+    padding: 10px 14px;
+    text-align: left;
+}
+
+.data-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.data-table tr:nth-child(even) td {
+    background: var(--stripe);
+}
+
+.table-note {
+    font-size: 0.85em;
+    color: var(--soft);
+    margin-top: -16px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+    .data-table { font-size: 0.8em; }
+}
+
+/* ---- Song of the Month widget (homepage + archive) ----------------------- */
+
+.song-widget-shell {
+    position: relative;
+    display: grid;
+    width: min(100%, 860px);
+    margin: 0 auto;
+    grid-template-columns: clamp(14px, 4.4vw, 32px) minmax(0, 1fr) clamp(14px, 4.4vw, 32px);
+    gap: clamp(4px, 1.7vw, 8px);
+    align-items: stretch;
+}
+
+.song-embed {
+    width: 100%;
+    min-width: 0;
+    min-height: 152px;
+}
+
+/* Spotify's iframe API replaces the .song-embed placeholder with the iframe
+   itself, so match the iframe in both positions. */
+.song-embed iframe,
+.song-widget-shell > iframe {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 152px;
+    border: 0;
+    border-radius: 12px;
+}
+
+/* Fixed height on purpose: a percentage would let the canvas bitmap size feed
+   back into the grid row and grow it on every resize. */
+.song-visualizer {
+    display: block;
+    width: 100%;
+    height: 152px;
+    opacity: 0.32;
+    transition: opacity 0.28s ease;
+    pointer-events: none;
+}
+
+.song-visualizer.active {
+    opacity: 0.9;
+}
+
+.song-description {
+    color: var(--soft);
+    margin-top: 15px;
+}
+
+@media (max-width: 420px) {
+    .song-widget-shell {
+        grid-template-columns: 12px minmax(0, 1fr) 12px;
+        gap: 3px;
+    }
+    .song-visualizer { opacity: 0.22; }
+}
+
+/* ---- Motion -------------------------------------------------------------- */
+
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
 }
+

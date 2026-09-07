@@ -5,10 +5,12 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapping the Papacy — Vimal Vivegananda</title>
-    <link rel="stylesheet" href="bagnard.css">
+    <link rel="preload" href="world-map.svg" as="fetch" crossorigin>
     <link rel="stylesheet" href="site.css">
     <style>
-        :root {
+        /* The infographic's own palette. Scoped to .figure (the script reads it
+           from there) so it does not shadow the site tokens used by the chrome. */
+        .figure {
             --cream: #efe6d3;
             --cream-2: #e7dcc3;
             --ink: #2f2a22;
@@ -28,19 +30,12 @@
             --oceania: #8a6d97;
             --africa: #7c4a2b;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Bagnard', serif;
-            background: #ffffff;
-            color: #1a1a1a;
+            color: var(--ink-strong);
             line-height: 1.7;
         }
-
-        .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: clamp(56px, 7vw, 80px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
-        }
+        .container { max-width: 1180px; }
         .lede h1 {
             font-size: clamp(1.7em, 4vw, 2.3em);
             font-weight: 700;
@@ -48,7 +43,7 @@
             margin-bottom: 10px;
         }
         .lede p.stand {
-            color: #555;
+            color: var(--muted);
             font-size: clamp(1em, 2.4vw, 1.12em);
             max-width: 60ch;
             margin-bottom: 6px;
@@ -128,8 +123,6 @@
         .citizenship-note a { color: var(--accent); }
 
         .backlink { margin-top: 34px; }
-        .backlink a { color: #333; text-decoration: none; font-weight: 600; transition: color .2s ease; }
-        .backlink a:hover { color: #d93025; }
 
         @media (max-width: 760px) {
             .top-panel { grid-template-columns: 1fr; }
@@ -137,13 +130,6 @@
         }
 
         @media (prefers-color-scheme: dark) {
-            body { background: #15130f; color: #eee5d8; }
-            .home-button { color: #eee5d8; }
-            .home-button:hover, .home-button:focus-visible { color: #ff5b4f; }
-            .lede p.stand { color: #b8ada0; }
-            .lede p.byline { color: #8a8271; }
-            .backlink a { color: #eee5d8; }
-            .backlink a:hover { color: #ff5b4f; }
             .figure {
                 --cream: #1e1b15;
                 --cream-2: #26221a;
@@ -179,13 +165,17 @@
     <!-- seo:end -->
 </head>
 <body>
-
-<a href="index.html" class="home-button" aria-label="Go to home page">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
-    </svg>
-    <span>Home</span>
-</a>
+<!-- nav:start -->
+<nav class="site-nav" aria-label="Site navigation">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#work">My work</a></li>
+        <li><a href="/#music">Song of the month</a></li>
+        <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+    </ul>
+</nav>
+<!-- nav:end -->
 
 <div class="container">
 
@@ -236,7 +226,7 @@
         <p class="citizenship-note"><strong>Note:</strong> The current pope, Leo XIV, was born in Chicago, United States, and also holds Peruvian citizenship, acquired by naturalisation on 24 August 2015. <a href="https://www.vatican.va/content/leo-xiv/en/biography/documents/biografia_leone-xiv.html" target="_blank" rel="noopener noreferrer">Source: Holy See biography</a>.</p>
     </div>
 
-    <div class="backlink"><a href="index.html">&larr; Back to home</a></div>
+    <div class="backlink"><a href="index.html" class="back-link">&larr; Back to home</a></div>
 
 </div>
 
@@ -497,7 +487,5 @@
     buildChart();
 })();
 </script>
-
-<script src="home-button-loader.js" data-home-href="index.html" defer></script>
 </body>
 </html>

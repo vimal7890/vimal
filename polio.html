@@ -5,30 +5,16 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polio</title>
-    <link rel="stylesheet" href="bagnard.css">
     <link rel="stylesheet" href="site.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Bagnard', serif;
-            line-height: 1.6;
-            color: #333;
-            background: #ffffff;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
         .page-title {
             font-size: 3em;
             font-weight: 700;
-            margin: 24px 0 16px;
+            margin: 0 0 16px;
         }
         .content {
             font-size: 1.1em;
-            color: #555;
+            color: var(--muted);
             margin-bottom: 36px;
         }
         .table-section {
@@ -37,14 +23,13 @@
         .table-title {
             font-size: 1.35em;
             font-weight: 600;
-            color: #333;
             margin-bottom: 18px;
         }
         .table-container {
-            background: #fff;
+            background: var(--card);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow);
             overflow-x: auto;
         }
         table {
@@ -56,107 +41,38 @@
             text-align: left;
             padding: 15px;
             vertical-align: middle;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border);
         }
         th {
-            background: #f8f8f8;
-            color: #333;
+            background: var(--card-alt);
             font-weight: 700;
             text-transform: uppercase;
             font-size: 0.85em;
             letter-spacing: 1px;
             white-space: nowrap;
         }
-        td {
-            color: #444;
-        }
         tbody tr:hover {
-            background-color: #fafafa;
+            background-color: var(--card-alt);
         }
         .country-flag {
             display: inline-block;
         }
-        .status-endemic {
-            color: #d93025;
-            font-weight: 600;
-        }
-        .status-cvdpv {
-            color: #1a4fd6;
-            font-weight: 500;
-        }
+        .status-endemic,
         .type-wpv1 {
-            color: #d93025;
+            color: var(--accent);
             font-weight: 600;
         }
+        .status-cvdpv,
         .type-cvdpv {
-            color: #1a4fd6;
+            color: var(--link);
             font-weight: 500;
         }
         .total-row td {
             font-weight: 700;
-            background: #f4f5f7;
-        }
-        .total-row:hover td {
-            background: #f4f5f7;
+            background: var(--card-alt);
         }
         .back-link {
-            display: inline-block;
             margin-bottom: 20px;
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .back-link:hover,
-        .back-link:focus-visible {
-            color: #d93025;
-            text-decoration: underline;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #15130f;
-                color: #eee5d8;
-            }
-            .page-title,
-            .table-title,
-            .back-link,
-            .home-button {
-                color: #eee5d8;
-            }
-            .content {
-                color: #b8ada0;
-            }
-            .table-container {
-                background: #1f1b16;
-                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
-            }
-            th, td {
-                border-bottom: 1px solid #2e2922;
-            }
-            th {
-                background: #26221c;
-                color: #eee5d8;
-            }
-            td {
-                color: #eee5d8;
-            }
-            tbody tr:hover {
-                background-color: #2c2720;
-            }
-            .status-cvdpv,
-            .type-cvdpv {
-                color: #5190e8;
-            }
-            .total-row td,
-            .total-row:hover td {
-                background: #26221c;
-            }
-            .back-link:hover,
-            .back-link:focus-visible,
-            .home-button:hover,
-            .home-button:focus-visible {
-                color: #ff5b4f;
-            }
         }
     </style>
     <!-- seo:start -->
@@ -179,12 +95,17 @@
     <!-- seo:end -->
 </head>
 <body>
-    <a href="index.html" class="home-button" aria-label="Go to home page">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
-        </svg>
-        <span>Home</span>
-    </a>
+    <!-- nav:start -->
+    <nav class="site-nav" aria-label="Site navigation">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#work">My work</a></li>
+            <li><a href="/#music">Song of the month</a></li>
+            <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- nav:end -->
     <div class="container">
         <h1 class="page-title">Polio</h1>
         <div class="content">
@@ -280,6 +201,5 @@
         </section>
         <a href="index.html" class="back-link">← Back to home</a>
     </div>
-    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
 </body>
 </html>

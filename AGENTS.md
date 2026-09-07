@@ -1,58 +1,60 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+Guidance for Codex and other coding agents working in this repository.
 
-## Project Overview
+## What this is
 
-A personal static website (vimal.github.io) with a focus on a **Religious Leader Tracker** — a database covering 150+ religious denominations worldwide. No build system; all pages are plain HTML/CSS/JavaScript.
+Vimal Vivegananda's personal portfolio site, served by GitHub Pages at
+https://vimal.my (CNAME). Plain HTML, CSS and JavaScript — no framework, no
+bundler, no npm dependencies. Every page is a self-contained HTML file at the
+repository root.
 
 ## Commands
 
-### Validation (also runs in CI)
 ```bash
-node scripts/audit-country-flag-codes.mjs
-```
-Validates country flag emoji codes used across denomination pages. Runs automatically on push/PR to `main` via GitHub Actions (Node 22).
-
-### Home button injection
-```bash
-node scripts/home-button-manager.mjs          # inject once
-node scripts/home-button-manager.mjs --watch  # watch for new HTML files
-```
-VS Code auto-runs the watcher on folder open (`.vscode/tasks.json`).
-
-### Data enrichment (Python)
-```bash
-python scripts/enrich_leader_dates.py                    # parse Wikipedia infoboxes for tenure dates
-python scripts/enrich_denomination_leader_images.py      # fetch leader images from Wikimedia Commons
+node scripts/build.mjs           # stamp the shared menu + SEO head block into every page, regenerate sitemap.xml
+node scripts/build.mjs --check   # exit 1 if any page or sitemap.xml is out of date (runs in CI)
+python3 -m http.server 8123 --bind 127.0.0.1   # local preview (also .claude/launch.json "site")
 ```
 
-## Architecture
+Run the build after adding or renaming a page or editing anything between the
+marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
+(description, og:type, optional Article JSON-LD) or the build fails.
 
-**Static site** — no framework, no bundler. All pages are self-contained HTML files with inline or linked CSS.
+## Layout
 
-### Key pages
-- `index.html` — personal homepage
-- `religious-tracker.html` — main tracker with all 150+ denominations, membership data, and leader info
-- `religious-denominations/[name].html` — ~155 individual denomination pages
-- `polio.html`, `song-archive.html` — standalone tracker pages
+- `index.html` — homepage (about, work grid, Song of the Month)
+- `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
+- `report-*.html` — long-form reports; wrapper is `<div class="container article">`
+- `404.html` — GitHub Pages not-found page (root-relative URLs only)
+- `site.css` — the single shared stylesheet: Bagnard @font-face, design tokens
+  (CSS custom properties with dark-mode values swapped once), reset, `.container`,
+  `.back-link`, the `.site-nav` menu, `.article` typography, `.data-table`, and the
+  Song of the Month widget classes. Page-specific rules stay inline in each page.
+- `song-visualizer.js` — decorative canvas rails beside the Spotify embeds
+  (homepage + archive). Animates only while visible; static under reduced motion.
+- `scripts/build.mjs` — the only tooling. Stamps `<!-- nav:start/end -->` (a
+  horizontal menu bar in the style of aadi.net.in — below the social links in
+  the homepage header, first thing in `<body>` everywhere else) and
+  `<!-- seo:start/end -->` (in `<head>`) and writes `sitemap.xml`.
+- `world-map.svg` — minified world map fetched by `mapping-the-papacy.html`
+- `report-images/*.webp`, `assets/og-card.png`, `favicon.svg`
 
-### Shared JS loaders (loaded via `<script>` tags)
-- `home-button-loader.js` — injects a home navigation button into every page
+## Conventions
 
-### Data files
-- `leaders.csv` — primary leadership database (source of truth for all denomination pages)
-- `leaders-research-log.csv` — audit trail for research decisions
-- `membership-data.json` — denomination membership statistics used in `religious-tracker.html`
+- Colours come from the tokens in `site.css` (`var(--ink)`, `var(--accent)`,
+  `var(--card)`, …). Never duplicate a dark-mode rule that only re-colours;
+  change the token instead.
+- Keep pages dependency-free and fast: no new third-party scripts or fonts, images
+  as `.webp` with explicit `width`/`height` and `loading="lazy"`.
+- Canonical URLs are extensionless (`https://vimal.my/polio`); internal links use
+  `page.html` (root-relative `/page.html` on 404.html).
+- CI (`.github/workflows/site-quality.yml`): build freshness check, offline
+  internal-link check (lychee), non-blocking Lighthouse.
 
-### Styling
-- Shared denomination page styles: `religious-denominations/denomination-page.css`
-- Color palette: cream background `#f5f1e8`, red accent `#d93025`
-- Responsive via CSS `clamp()`, Grid, and Flexbox; no CSS framework
+## Removed project
 
-### Data flow
-1. Research recorded in `leaders.csv`
-2. Python scripts enrich data (Wikipedia/Wikimedia APIs)
-3. Denomination HTML pages are authored/updated manually from the CSV data
-4. JS loader injects navigation at runtime
-5. CI audits flag codes on every push
+The Religious Leader Tracker (150+ denomination pages, `leaders.csv`, related
+scripts and CI) was removed on 2026-09-02. Everything is archived in
+`religious-tracker-archive-2026-09-02.zip` (outside the repo) and in git history
+up to commit `9b54be0`.

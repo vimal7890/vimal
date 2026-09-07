@@ -5,99 +5,63 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song of the Month Archive - Vimal</title>
-    <link rel="stylesheet" href="bagnard.css">
     <link rel="stylesheet" href="site.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Bagnard', serif;
-            line-height: 1.6;
-            color: #333;
-            background: #ffffff;
-            min-height: 100vh;
             overflow-x: hidden;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: clamp(14px, 3.8vw, 20px); }
-        .header { text-align: center; padding: clamp(42px, 8vw, 60px) 0; color: #333; }
-        .header h1 { font-size: clamp(2rem, 8vw, 2.5rem); font-weight: 700; margin-bottom: 10px; }
+        .header {
+            text-align: center;
+            padding: clamp(42px, 8vw, 60px) 0;
+        }
+        .header h1 {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
         .back-link {
-            display: inline-block;
             margin-top: 20px;
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
             transition: color 0.2s ease, transform 0.2s ease;
             transform-origin: left center;
         }
         .back-link:hover,
         .back-link:focus-visible {
-            color: #d93025;
             transform: scale(1.04);
-            text-decoration: underline;
         }
         .content {
-            background: white;
+            background: var(--card);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-lg);
             margin: 0 auto 40px;
             padding: clamp(26px, 6vw, 50px) clamp(16px, 5vw, 60px);
             text-align: center;
-            color: #666;
+            color: var(--soft);
         }
         .song-item {
             margin-bottom: clamp(24px, 4vw, 30px);
             padding-bottom: clamp(24px, 4vw, 30px);
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border);
         }
         .song-item:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
         }
+        /* The archive uses slightly narrower, quieter rails than the homepage widget. */
         .song-widget-shell {
-            display: grid;
             grid-template-columns: clamp(10px, 4vw, 28px) minmax(0, 1fr) clamp(10px, 4vw, 28px);
-            gap: clamp(4px, 1.7vw, 8px);
-            align-items: stretch;
-            max-width: min(100%, 860px);
-            margin: 0 auto;
-        }
-        .song-embed {
-            width: 100%;
-            min-height: 152px;
-            min-width: 0;
-        }
-        .song-widget-shell iframe,
-        .song-embed iframe {
-            display: block;
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            border-radius: 12px;
         }
         .song-visualizer {
-            width: 100%;
-            min-height: 152px;
-            height: 100%;
-            display: block;
-            align-self: stretch;
             opacity: 0.28;
-            transition: opacity 0.28s ease;
-            pointer-events: none;
         }
         .song-item:hover .song-visualizer,
         .song-item:focus-within .song-visualizer {
             opacity: 0.72;
         }
         .song-description {
-            color: #666;
-            margin-top: 15px;
             font-size: clamp(0.95rem, 3.4vw, 1rem);
         }
         @media (max-width: 640px) {
-            .container {
-                padding: 14px;
-            }
             .back-link {
                 margin-top: 16px;
             }
@@ -109,35 +73,6 @@
             }
             .song-visualizer {
                 opacity: 0.2;
-            }
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #15130f;
-                color: #eee5d8;
-            }
-            .header h1,
-            .back-link,
-            .home-button {
-                color: #eee5d8;
-            }
-            .content {
-                background: #1f1b16;
-                color: #b8ada0;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            }
-            .song-item {
-                border-bottom: 1px solid #2e2922;
-            }
-            .song-description {
-                color: #b8ada0;
-            }
-            .back-link:hover,
-            .back-link:focus-visible,
-            .home-button:hover,
-            .home-button:focus-visible {
-                color: #ff5b4f;
             }
         }
     </style>
@@ -161,12 +96,17 @@
     <!-- seo:end -->
 </head>
 <body>
-    <a href="index.html" class="home-button" aria-label="Go to home page">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
-        </svg>
-        <span>Home</span>
-    </a>
+    <!-- nav:start -->
+    <nav class="site-nav" aria-label="Site navigation">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#work">My work</a></li>
+            <li><a href="/#music">Song of the month</a></li>
+            <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- nav:end -->
     <div class="container">
         <div class="header">
             <h1>Song of the Month Archive</h1>
@@ -178,7 +118,7 @@
                 <div class="song-widget-shell">
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                     <div class="song-embed">
-                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <iframe title="Spotify player: New Bollywood Classic" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                 </div>
@@ -188,7 +128,7 @@
                 <div class="song-widget-shell">
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                     <div class="song-embed">
-                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <iframe title="Spotify player: Miracle of Miracles from Fiddler on the Roof" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                 </div>
@@ -198,7 +138,7 @@
                 <div class="song-widget-shell">
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                     <div class="song-embed">
-                        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        <iframe title="Spotify player: Dil Lageya by Veronica featuring Rishi Rich" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
                     <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
                 </div>
@@ -206,146 +146,6 @@
             </div>
         </div>
     </div>
-    <script>
-        const archiveVisualizerItems = Array.from(document.querySelectorAll('.song-widget-shell'))
-            .map((shell, index) => {
-                const canvases = shell.querySelectorAll('.song-visualizer');
-                const embed = shell.querySelector('.song-embed');
-                const iframe = embed ? embed.querySelector('iframe') : null;
-
-                return {
-                    shell,
-                    embed,
-                    iframe,
-                    energy: 0.18,
-                    targetEnergy: 0.18,
-                    phaseOffset: index * 0.9,
-                    rails: Array.from(canvases).map((canvas, canvasIndex) => ({
-                        canvas,
-                        ctx: canvas.getContext('2d'),
-                        direction: canvasIndex === 0 ? -1 : 1,
-                    })),
-                };
-            })
-            .filter((item) => item.embed && item.rails.every((rail) => rail.canvas && rail.ctx));
-
-        function pseudoNoise(seed) {
-            const value = Math.sin(seed * 12.9898) * 43758.5453;
-            return value - Math.floor(value);
-        }
-
-        function queueArchiveVisualizerResize() {
-            window.requestAnimationFrame(resizeArchiveVisualizers);
-        }
-
-        function resizeArchiveVisualizers() {
-            const ratio = window.devicePixelRatio || 1;
-
-            archiveVisualizerItems.forEach((item) => {
-                item.rails.forEach((rail) => {
-                    const width = Math.max(1, Math.floor(rail.canvas.clientWidth || rail.canvas.width));
-                    const height = Math.max(1, Math.floor(rail.canvas.clientHeight || item.embed.clientHeight || 152));
-                    rail.canvas.width = Math.max(1, Math.floor(width * ratio));
-                    rail.canvas.height = Math.max(1, Math.floor(height * ratio));
-                    rail.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-                    rail.ctx.lineCap = 'round';
-                });
-            });
-        }
-
-        function drawArchiveRail(item, rail, t) {
-            const width = rail.canvas.clientWidth;
-            const height = rail.canvas.clientHeight;
-
-            if (!width || !height) {
-                return;
-            }
-
-            rail.ctx.clearRect(0, 0, width, height);
-
-            const laneCount = Math.max(8, Math.round(height / 16));
-            const laneGap = height / laneCount;
-            const innerEdge = rail.direction < 0 ? width - 1 : 1;
-            const maxReach = Math.max(5, width - 4);
-            const baseReach = 1.25;
-            const anchorAlpha = 0.08 + item.energy * 0.12;
-
-            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const strokeColor = isDark ? '240, 84, 79' : '158, 59, 47';
-
-            rail.ctx.beginPath();
-            rail.ctx.strokeStyle = `rgba(${strokeColor}, ${anchorAlpha.toFixed(3)})`;
-            rail.ctx.lineWidth = 1;
-            rail.ctx.moveTo(innerEdge, 0);
-            rail.ctx.lineTo(innerEdge, height);
-            rail.ctx.stroke();
-
-            for (let i = 0; i < laneCount; i += 1) {
-                const laneRatio = i / Math.max(1, laneCount - 1);
-                const wave = 0.5 + 0.5 * Math.sin((t * 3.8) + item.phaseOffset + laneRatio * 8.4);
-                const shimmer = 0.5 + 0.5 * Math.sin((t * 7.1) + item.phaseOffset * 0.7 + laneRatio * 16.5 + rail.direction * 0.8);
-                const grain = pseudoNoise((laneRatio * 40) + (t * 1.8) + item.phaseOffset * 10);
-                const pulse = (wave * 0.44) + (shimmer * 0.34) + (grain * 0.22);
-                const magnitude = baseReach + (maxReach - baseReach) * pulse * item.energy;
-                const alpha = 0.08 + pulse * 0.16 + item.energy * 0.08;
-                const y = i * laneGap + laneGap / 2;
-                const endX = rail.direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
-
-                rail.ctx.beginPath();
-                rail.ctx.strokeStyle = `rgba(${strokeColor}, ${alpha.toFixed(3)})`;
-                rail.ctx.lineWidth = 1.05;
-                rail.ctx.moveTo(innerEdge, y);
-                rail.ctx.lineTo(endX, y);
-                rail.ctx.stroke();
-            }
-        }
-
-        function animateArchiveVisualizers() {
-            const t = performance.now() * 0.001;
-
-            archiveVisualizerItems.forEach((item) => {
-                item.energy += (item.targetEnergy - item.energy) * 0.08;
-                item.rails.forEach((rail) => drawArchiveRail(item, rail, t));
-            });
-
-            requestAnimationFrame(animateArchiveVisualizers);
-        }
-
-        archiveVisualizerItems.forEach((item) => {
-            item.shell.addEventListener('mouseenter', () => {
-                item.targetEnergy = 0.42;
-            });
-            item.shell.addEventListener('mouseleave', () => {
-                item.targetEnergy = 0.18;
-            });
-            item.shell.addEventListener('focusin', () => {
-                item.targetEnergy = 0.42;
-            });
-            item.shell.addEventListener('focusout', () => {
-                item.targetEnergy = 0.18;
-            });
-
-            if (item.iframe) {
-                item.iframe.addEventListener('load', queueArchiveVisualizerResize, { once: true });
-            }
-        });
-
-        resizeArchiveVisualizers();
-        requestAnimationFrame(animateArchiveVisualizers);
-        window.addEventListener('load', queueArchiveVisualizerResize);
-        window.addEventListener('resize', queueArchiveVisualizerResize);
-
-        if (window.ResizeObserver) {
-            const resizeObserver = new ResizeObserver(() => {
-                queueArchiveVisualizerResize();
-            });
-
-            archiveVisualizerItems.forEach((item) => {
-                resizeObserver.observe(item.shell);
-                resizeObserver.observe(item.embed);
-            });
-        }
-    </script>
-    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
+    <script src="song-visualizer.js" defer></script>
 </body>
 </html>

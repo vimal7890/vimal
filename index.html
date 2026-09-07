@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vimal</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="bagnard.css">
     <link rel="stylesheet" href="site.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Bagnard', serif;
-            line-height: 1.6;
-            color: #333;
-            background: #ffffff;
-            min-height: 100vh;
             overflow-x: hidden;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: clamp(14px, 3.8vw, 20px); position: relative; z-index: 1; }
-        .header { text-align: center; padding: clamp(44px, 8vw, 60px) 0; color: #333; }
-        .header h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); font-weight: 700; margin-bottom: 10px; transition: opacity 0.5s ease; }
-        .header h1.fade { opacity: 0; }
-        .header .subtitle { font-size: clamp(1.05rem, 3.8vw, 1.3rem); opacity: 0.9; font-weight: 300; }
+        .container {
+            padding: clamp(14px, 3.8vw, 20px);
+        }
+        .header {
+            text-align: center;
+            padding: clamp(44px, 8vw, 60px) 0;
+        }
+        .header h1 {
+            font-size: clamp(2.5rem, 9vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: opacity 0.5s ease;
+        }
+        .header h1.fade {
+            opacity: 0;
+        }
         .social-links {
             margin-top: 20px;
             display: flex;
@@ -30,13 +34,46 @@
             gap: clamp(10px, 3vw, 18px);
             flex-wrap: wrap;
         }
-        .social-link { display: inline-flex; align-items: center; gap: 8px; color: #ff6600; text-decoration: none; font-size: clamp(0.95rem, 3.4vw, 1rem); font-weight: 500; transition: color 0.3s ease; }
-        .social-link:hover { color: #cc5200; }
-        .social-link svg { width: 20px; height: 20px; }
-        .linkedin-link { color: #0a66c2; }
-        .linkedin-link:hover { color: #004182; }
-        .email-link { color: #555; }
-        .email-link:hover { color: #222; }
+        /* Brand colours (Substack orange, LinkedIn blue). In dark mode every link hovers to the accent. */
+        .social-link {
+            --social: #ff6600;
+            --social-hover: #cc5200;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--social);
+            text-decoration: none;
+            font-size: clamp(0.95rem, 3.4vw, 1rem);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .social-link:hover {
+            color: var(--social-hover);
+        }
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+        }
+        .linkedin-link {
+            --social: #0a66c2;
+            --social-hover: #004182;
+        }
+        .email-link {
+            --social: var(--muted);
+            --social-hover: #222222;
+        }
+        @media (prefers-color-scheme: dark) {
+            .social-link {
+                --social: #ff802b;
+                --social-hover: var(--accent);
+            }
+            .linkedin-link {
+                --social: #4da3ff;
+            }
+            .email-link {
+                --social: var(--muted);
+            }
+        }
         .content {
             margin: 0 auto 40px;
         }
@@ -46,55 +83,59 @@
             transform: translateY(30px);
             animation: fadeInUp 0.8s ease forwards;
         }
-        .section:last-child { }
-        .section:hover { }
         .section h2 {
             font-size: clamp(1.7rem, 6vw, 2.2rem);
             margin-bottom: clamp(18px, 4vw, 30px);
-            color: #333;
             font-weight: 700;
-            text-decoration: none;
         }
-        .bio-content { font-size: clamp(1rem, 3.8vw, 1.1rem); line-height: 1.8; color: #555; }
+        .bio-content {
+            font-size: clamp(1rem, 3.8vw, 1.1rem);
+            line-height: 1.8;
+            color: var(--muted);
+        }
         .blue-underline {
             text-decoration-line: underline;
-            text-decoration-color: #1e5aa8;
+            text-decoration-color: var(--link);
             text-decoration-thickness: 0.2em;
             text-underline-offset: 0.12em;
             text-decoration-skip-ink: none;
         }
-        .interests { margin-top: 30px; }
-        .interest-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
-        .tag {
-            background: #333;
-            color: white; padding: 8px 20px; border-radius: 25px;
-            font-size: 0.9em; font-weight: 500;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: clamp(20px, 4vw, 30px);
+            margin-top: 30px;
         }
-        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(20px, 4vw, 30px); margin-top: 30px; }
         .work-item {
             display: flex;
             flex-direction: column;
             padding: 20px 0;
             min-width: 0;
         }
-        .work-item:hover { }
-        .work-item h3 { margin-bottom: 15px; font-size: 1.3em; font-weight: 700; }
+        .work-item h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        .work-item p {
+            color: var(--soft);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
         .work-title-link {
-            color: #333;
+            color: var(--ink);
             text-decoration: none;
             transition: color 0.2s ease;
         }
         .work-title-link:hover,
         .work-title-link:focus-visible {
-            color: #d93025;
+            color: var(--accent);
         }
-        .work-item p { color: #666; line-height: 1.6; margin-bottom: 15px; }
         .work-link {
             display: inline-flex;
             align-items: center;
             margin-top: auto;
-            color: #333;
+            color: var(--ink);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease, transform 0.2s ease;
@@ -102,67 +143,17 @@
         }
         .work-link:hover,
         .work-link:focus-visible {
-            color: #d93025;
+            color: var(--accent);
             transform: scale(1.04);
-            text-decoration: none;
-        }
-        .resume-section { background: #f8f8f8; }
-        .download-btn {
-            display: inline-block;
-            background: #333;
-            color: white; padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none; font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin: 20px auto 0;
-        }
-        .contact-info { text-align: center; font-size: 1.1em; color: #555; }
-        .song-description { color: #666; margin-top: 15px; font-size: 1em; }
-        .song-widget-shell {
-            position: relative;
-            display: grid;
-            width: min(100%, 860px);
-            margin: 0 auto;
-            grid-template-columns: clamp(14px, 4.4vw, 32px) minmax(0, 1fr) clamp(14px, 4.4vw, 32px);
-            gap: clamp(4px, 1.7vw, 8px);
-            align-items: stretch;
-        }
-        .song-embed {
-            width: 100%;
-            min-height: 152px;
-            min-width: 0;
-        }
-        .song-widget-shell iframe,
-        .song-embed iframe {
-            display: block;
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            border-radius: 12px;
-        }
-        .song-visualizer {
-            width: 100%;
-            min-height: 152px;
-            height: 100%;
-            display: block;
-            align-self: stretch;
-            opacity: 0.32;
-            transition: opacity 0.28s ease;
-            pointer-events: none;
-        }
-        .song-visualizer.active {
-            opacity: 0.9;
         }
         .show-more-section {
             margin-top: 22px;
             padding-top: 18px;
         }
-        .footer { text-align: center; padding: 30px 0; color: #888; font-size: 0.9em; }
-        .footer a { color: #333; text-decoration: none; }
-        .footer a:hover { text-decoration: none; }
-        @media (max-width: 820px) {
-            .header {
-                padding-top: 72px;
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
         @media (max-width: 640px) {
@@ -178,78 +169,6 @@
             }
             .song-description {
                 font-size: 0.96rem;
-            }
-        }
-        @media (max-width: 420px) {
-            .header {
-                padding-top: 62px;
-            }
-            .song-widget-shell {
-                grid-template-columns: 12px minmax(0, 1fr) 12px;
-                gap: 3px;
-            }
-            .song-visualizer {
-                opacity: 0.22;
-            }
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #15130f;
-                color: #eee5d8;
-            }
-            .header,
-            .header h1,
-            .section h2,
-            .work-title-link,
-            .work-link,
-            .home-button,
-            .footer a {
-                color: #eee5d8;
-            }
-            .home-button:hover,
-            .home-button:focus-visible,
-            .work-title-link:hover,
-            .work-title-link:focus-visible,
-            .work-link:hover,
-            .work-link:focus-visible,
-            .social-link:hover {
-                color: #ff5b4f;
-            }
-            .bio-content,
-            .work-item p,
-            .song-description,
-            .contact-info,
-            .footer {
-                color: #b8ada0;
-            }
-            .social-link {
-                color: #ff802b;
-            }
-            .social-link.linkedin-link {
-                color: #4da3ff;
-            }
-            .social-link.email-link {
-                color: #b8ada0;
-            }
-            .blue-underline {
-                text-decoration-color: #5190e8;
-            }
-            .tag {
-                background: #eee5d8;
-                color: #15130f;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            }
-            .resume-section {
-                background: #1f1b16;
-            }
-            .download-btn {
-                background: #eee5d8;
-                color: #15130f;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             }
         }
     </style>
@@ -274,12 +193,6 @@
     <!-- seo:end -->
 </head>
 <body>
-    <a href="index.html" class="home-button" aria-label="Go to home page">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
-        </svg>
-        <span>Home</span>
-    </a>
     <div class="container">
         <div class="header">
             <h1 id="name-title">Vimal</h1>
@@ -299,6 +212,17 @@
                     Email
                 </a>
             </div>
+            <!-- nav:start -->
+            <nav class="site-nav" aria-label="Site navigation">
+                <ul>
+                    <li><a href="/" aria-current="page">Home</a></li>
+                    <li><a href="/#about">About</a></li>
+                    <li><a href="/#work">My work</a></li>
+                    <li><a href="/#music">Song of the month</a></li>
+                    <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+                </ul>
+            </nav>
+            <!-- nav:end -->
         </div>
 
         <div class="content">
@@ -324,14 +248,6 @@
                         <p>Explore the work that I did with Inside Croydon below.</p>
                         <a href="https://insidecroydon.com/?s=Vimal+Vivegananda" class="work-link" target="_blank" rel="noopener noreferrer">View Project →</a>
                     </div>
-
-                    <!-- ARCHIVED: Bureaucracy of Religion — hidden from site, restore when ready
-                    <div class="work-item">
-                        <h3><a href="religious-tracker.html" class="work-title-link">Bureaucracy of Religion</a></h3>
-                        <p>A project tracking the bureaucracy of religion across various religious denominations.</p>
-                        <a href="religious-tracker.html" class="work-link">View Project →</a>
-                    </div>
-                    -->
 
                     <div class="work-item">
                         <h3><a href="report-calgary-cambridge.html" class="work-title-link">Mining Social &amp; Geographic Datasets</a></h3>
@@ -380,237 +296,78 @@
         </div>
     </div>
     <script>
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const names = ['Vimal', 'விமல்'];
-        let currentIndex = 0;
-        const titleEl = document.getElementById('name-title');
-
-        if (!prefersReducedMotion) {
-            setInterval(() => {
-                titleEl.classList.add('fade');
-                setTimeout(() => {
-                    currentIndex = (currentIndex + 1) % names.length;
-                    titleEl.textContent = names[currentIndex];
-                    titleEl.classList.remove('fade');
-                }, 500);
-            }, 2000);
-        }
-
-        const spotifyTrackId = '5m4TzaOXvk1biOR3LdObVt';
-        const spotifyUri = `spotify:track:${spotifyTrackId}`;
-        const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${spotifyTrackId}?utm_source=generator`;
-        const songWidgetShell = document.querySelector('.song-widget-shell');
-        const spotifyContainer = document.getElementById('song-embed');
-        const visualizerTargets = [
-            { canvas: document.getElementById('visualizer-left'), direction: -1 },
-            { canvas: document.getElementById('visualizer-right'), direction: 1 },
-        ]
-            .map((target) => ({
-                ...target,
-                ctx: target.canvas ? target.canvas.getContext('2d') : null,
-            }))
-            .filter((target) => target.canvas && target.ctx);
-
-        const visualizerState = {
-            isPlaying: false,
-            energy: 0.12,
-            targetEnergy: 0.12,
-            progressRatio: 0,
-        };
-
-        function setVisualizerActive(isActive) {
-            visualizerTargets.forEach(({ canvas }) => {
-                canvas.classList.toggle('active', isActive);
-            });
-        }
-
-        function queueVisualizerResize() {
-            window.requestAnimationFrame(resizeVisualizerCanvases);
-        }
-
-        function injectFallbackEmbed() {
-            if (!spotifyContainer || spotifyContainer.querySelector('iframe')) {
-                return;
+        (function () {
+            var title = document.getElementById('name-title');
+            var names = ['Vimal', 'விமல்'];
+            var nameIndex = 0, nameTimer = null;
+            function startNames() {
+                if (nameTimer) return;
+                nameTimer = setInterval(function () {
+                    title.classList.add('fade');
+                    setTimeout(function () {
+                        nameIndex = (nameIndex + 1) % names.length;
+                        title.textContent = names[nameIndex];
+                        title.classList.remove('fade');
+                    }, 500);
+                }, 2000);
+            }
+            if (title && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                startNames();
+                document.addEventListener('visibilitychange', function () {
+                    clearInterval(nameTimer);
+                    nameTimer = null;
+                    if (document.visibilityState === 'visible') startNames();
+                });
             }
 
-            const iframe = document.createElement('iframe');
-            iframe.setAttribute('data-testid', 'embed-iframe');
-            iframe.style.borderRadius = '12px';
-            iframe.src = spotifyEmbedUrl;
-            iframe.width = '100%';
-            iframe.height = '152';
-            iframe.frameBorder = '0';
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-            iframe.loading = 'lazy';
-            iframe.addEventListener('load', queueVisualizerResize, { once: true });
-            spotifyContainer.appendChild(iframe);
-            queueVisualizerResize();
-        }
-
-        function resizeVisualizerCanvases() {
-            const ratio = window.devicePixelRatio || 1;
-
-            visualizerTargets.forEach(({ canvas, ctx }) => {
-                const width = Math.max(1, Math.floor(canvas.clientWidth || canvas.width));
-                const height = Math.max(1, Math.floor(canvas.clientHeight || spotifyContainer.clientHeight || 152));
-                canvas.width = Math.max(1, Math.floor(width * ratio));
-                canvas.height = Math.max(1, Math.floor(height * ratio));
-                ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-                ctx.lineCap = 'round';
-            });
-        }
-
-        function pseudoNoise(seed) {
-            const value = Math.sin(seed * 12.9898) * 43758.5453;
-            return value - Math.floor(value);
-        }
-
-        function drawVisualizerRail(target, t) {
-            const { canvas, ctx, direction } = target;
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-
-            if (!width || !height) {
-                return;
+            // Spotify: request the iframe API only once the section is near; fall back to a plain embed if it errors or stays silent.
+            var TRACK = '5m4TzaOXvk1biOR3LdObVt';
+            var music = document.getElementById('music');
+            var embed = document.getElementById('song-embed');
+            var shell = document.querySelector('.song-widget-shell');
+            var settled = false, fallbackTimer = null;
+            function report(isPlaying, data) {
+                if (window.SongVisualizer) window.SongVisualizer.setPlayback(shell, { isPlaying: isPlaying, position: data && data.position, duration: data && data.duration });
             }
-
-            ctx.clearRect(0, 0, width, height);
-
-            const laneCount = Math.max(14, Math.round(height / 18));
-            const laneGap = height / laneCount;
-            const innerEdge = direction < 0 ? width - 1 : 1;
-            const maxReach = Math.max(6, width - 5);
-            const baseReach = 1.5;
-            const anchorAlpha = visualizerState.isPlaying ? 0.16 : 0.08;
-
-            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const strokeColor = isDark ? '240, 84, 79' : '158, 59, 47';
-
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(${strokeColor}, ${anchorAlpha})`;
-            ctx.lineWidth = 1;
-            ctx.moveTo(innerEdge, 0);
-            ctx.lineTo(innerEdge, height);
-            ctx.stroke();
-
-            for (let i = 0; i < laneCount; i += 1) {
-                const laneRatio = i / Math.max(1, laneCount - 1);
-                const wave = 0.5 + 0.5 * Math.sin((t * 4.6) + laneRatio * 10.5 + visualizerState.progressRatio * 18);
-                const shimmer = 0.5 + 0.5 * Math.sin((t * 8.4) + laneRatio * 19.5 + direction * 0.8);
-                const grain = pseudoNoise((laneRatio * 80) + (t * 2.1) + visualizerState.progressRatio * 160);
-                const pulse = (wave * 0.46) + (shimmer * 0.34) + (grain * 0.2);
-                const energyScale = 0.2 + visualizerState.energy * 0.52;
-                const magnitude = baseReach + (maxReach - baseReach) * pulse * energyScale;
-                const alpha = 0.1 + pulse * (visualizerState.isPlaying ? 0.3 : 0.12);
-                const y = i * laneGap + laneGap / 2;
-                const endX = direction < 0 ? innerEdge - magnitude : innerEdge + magnitude;
-
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(${strokeColor}, ${alpha.toFixed(3)})`;
-                ctx.lineWidth = 1.15;
-                ctx.moveTo(innerEdge, y);
-                ctx.lineTo(endX, y);
-                ctx.stroke();
+            function fallback() {
+                if (settled || !embed || embed.querySelector('iframe')) return;
+                settled = true;
+                embed.insertAdjacentHTML('beforeend', '<iframe src="https://open.spotify.com/embed/track/' + TRACK + '?utm_source=generator" ' +
+                    'title="Song of the Month Spotify player" width="100%" height="152" loading="lazy" ' +
+                    'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>');
             }
-        }
-
-        function drawVisualizers() {
-            const t = performance.now() * 0.001;
-            visualizerState.energy += (visualizerState.targetEnergy - visualizerState.energy) * 0.08;
-            visualizerTargets.forEach((target) => drawVisualizerRail(target, t));
-            if (!prefersReducedMotion) {
-                requestAnimationFrame(drawVisualizers);
-            }
-        }
-
-        function updatePlaybackState(data) {
-            const duration = Number(data && data.duration) || 0;
-            const position = Number(data && data.position) || 0;
-            const isPlaying = Boolean(data) && !data.isPaused && !data.isBuffering;
-
-            if (duration > 0) {
-                visualizerState.progressRatio = Math.max(0, Math.min(1, position / duration));
-            }
-
-            visualizerState.isPlaying = isPlaying;
-            visualizerState.targetEnergy = isPlaying ? 0.98 : 0.12;
-            setVisualizerActive(isPlaying);
-        }
-
-        resizeVisualizerCanvases();
-        requestAnimationFrame(drawVisualizers);
-        window.addEventListener('resize', queueVisualizerResize);
-        window.addEventListener('load', queueVisualizerResize);
-
-        if (window.ResizeObserver) {
-            const resizeObserver = new ResizeObserver(() => {
-                queueVisualizerResize();
-            });
-
-            if (songWidgetShell) {
-                resizeObserver.observe(songWidgetShell);
-            }
-
-            if (spotifyContainer) {
-                resizeObserver.observe(spotifyContainer);
-            }
-        }
-
-        if (window.MutationObserver && spotifyContainer) {
-            const embedObserver = new MutationObserver(() => {
-                const iframe = spotifyContainer.querySelector('iframe');
-                if (iframe) {
-                    iframe.addEventListener('load', queueVisualizerResize, { once: true });
-                }
-                queueVisualizerResize();
-            });
-
-            embedObserver.observe(spotifyContainer, { childList: true, subtree: true });
-        }
-
-        let spotifyControllerReady = false;
-        const fallbackTimer = setTimeout(() => {
-            if (!spotifyControllerReady) {
-                injectFallbackEmbed();
-            }
-        }, 1800);
-
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            if (!spotifyContainer) {
-                return;
-            }
-
-            IFrameAPI.createController(
-                spotifyContainer,
-                {
-                    uri: spotifyUri,
-                    width: 640,
-                    height: 152,
-                },
-                (EmbedController) => {
-                    spotifyControllerReady = true;
-                    clearTimeout(fallbackTimer);
-                    queueVisualizerResize();
-
-                    EmbedController.addListener('playback_started', () => {
-                        visualizerState.targetEnergy = 0.98;
-                        setVisualizerActive(true);
+            window.onSpotifyIframeApiReady = function (api) {
+                if (settled || !embed) return;
+                settled = true;
+                clearTimeout(fallbackTimer);
+                api.createController(embed, { uri: 'spotify:track:' + TRACK, width: '100%', height: 152 }, function (controller) {
+                    controller.addListener('playback_started', function () { report(true, null); });
+                    controller.addListener('playback_update', function (event) {
+                        var data = event && event.data;
+                        report(!!data && !data.isPaused && !data.isBuffering, data);
                     });
-
-                    EmbedController.addListener('playback_update', (event) => {
-                        updatePlaybackState(event && event.data);
-                    });
-                },
-            );
-        };
-
-        const spotifyApiScript = document.createElement('script');
-        spotifyApiScript.src = 'https://open.spotify.com/embed/iframe-api/v1';
-        spotifyApiScript.async = true;
-        spotifyApiScript.onerror = injectFallbackEmbed;
-        document.body.appendChild(spotifyApiScript);
+                });
+            };
+            function loadSpotify() {
+                var script = document.createElement('script');
+                script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+                script.async = true;
+                script.onerror = fallback;
+                document.body.appendChild(script);
+                fallbackTimer = setTimeout(fallback, 1800);
+            }
+            if (embed && music && 'IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+                    observer.disconnect();
+                    loadSpotify();
+                }, { rootMargin: '400px' });
+                observer.observe(music);
+            } else if (embed) {
+                loadSpotify();
+            }
+        })();
     </script>
-    <script src="home-button-loader.js" data-home-href="index.html" defer></script>
+    <script src="song-visualizer.js" defer></script>
 </body>
 </html>

@@ -5,60 +5,12 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Housing Constraints &amp; European Fertility — Vimal Vivegananda</title>
-    <link rel="stylesheet" href="bagnard.css">
     <link rel="stylesheet" href="site.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Bagnard', serif;
-            background: #ffffff;
-            color: #1a1a1a;
-            line-height: 1.75;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: clamp(56px, 7vw, 80px) clamp(14px, 3.8vw, 20px) clamp(30px, 6vw, 60px);
-        }
-        h1 {
-            font-size: clamp(1.6em, 4vw, 2.2em);
-            font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.2;
-        }
-        h2 {
-            font-size: 1.4em;
-            font-weight: 700;
-            margin: 48px 0 14px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #1a1a1a;
-            color: #1a1a1a;
-        }
-        h3 {
-            font-size: 1.1em;
-            font-weight: 700;
-            margin: 28px 0 10px;
-            color: #333;
-        }
-        p { margin-bottom: 1.1em; }
         .page-note {
-            color: #666;
+            color: var(--soft);
             font-size: 0.95em;
             margin-bottom: 2em;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #15130f;
-                color: #eee5d8;
-            }
-            h1, h3 { color: #eee5d8; }
-            h2 {
-                color: #eee5d8;
-                border-bottom-color: #eee5d8;
-            }
-            .page-note { color: #b8ada0; }
-            a { color: #5190e8; }
         }
     </style>
     <!-- seo:start -->
@@ -82,15 +34,19 @@
     <!-- seo:end -->
 </head>
 <body>
+<!-- nav:start -->
+<nav class="site-nav" aria-label="Site navigation">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#work">My work</a></li>
+        <li><a href="/#music">Song of the month</a></li>
+        <li><a href="mailto:vimal134@pm.me">Contact</a></li>
+    </ul>
+</nav>
+<!-- nav:end -->
 
-<a href="index.html" class="home-button" aria-label="Go to home page">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 3.2a1 1 0 0 1 .64.23l8 6.6a1 1 0 0 1 .36.77v9.9a1 1 0 0 1-1 1h-5.5a1 1 0 0 1-1-1v-4h-3v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.9a1 1 0 0 1 .36-.77l8-6.6A1 1 0 0 1 12 3.2z"/>
-    </svg>
-    <span>Home</span>
-</a>
-
-<div class="container">
+<div class="container article">
 
     <h1>Housing Constraints and European Fertility Decline</h1>
     <p class="page-note">This page is a transcript of a video report.</p>
@@ -139,6 +95,5 @@
 
 </div>
 
-<script src="home-button-loader.js" data-home-href="index.html" defer></script>
 </body>
 </html>
