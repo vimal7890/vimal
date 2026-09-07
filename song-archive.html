@@ -22,6 +22,7 @@
             max-width: 640px;
             margin-left: auto;
             margin-right: auto;
+            font-size: clamp(0.95rem, 3.4vw, 1rem);
         }
         /* The older picks, folded away behind the Archive button. */
         .song-archive {
@@ -71,29 +72,6 @@
             margin-top: clamp(24px, 4vw, 30px);
             padding-top: clamp(24px, 4vw, 30px);
             border-top: 1px solid var(--border);
-        }
-        /* The archive uses slightly narrower, quieter rails than the homepage widget. */
-        .song-widget-shell {
-            grid-template-columns: clamp(10px, 4vw, 28px) minmax(0, 1fr) clamp(10px, 4vw, 28px);
-        }
-        .song-visualizer {
-            opacity: 0.28;
-        }
-        .song-item:hover .song-visualizer,
-        .song-item:focus-within .song-visualizer {
-            opacity: 0.72;
-        }
-        .song-description {
-            font-size: clamp(0.95rem, 3.4vw, 1rem);
-        }
-        @media (max-width: 420px) {
-            .song-widget-shell {
-                grid-template-columns: 8px minmax(0, 1fr) 8px;
-                gap: 2px;
-            }
-            .song-visualizer {
-                opacity: 0.2;
-            }
         }
     </style>
     <!-- seo:start -->
@@ -149,11 +127,7 @@
         <h1 class="visually-hidden">Song of the Month Archive</h1>
 
         <div class="song-item song-current">
-            <div class="song-widget-shell">
-                <canvas id="visualizer-left" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
-                <div id="song-embed" class="song-embed" role="region" aria-label="Song of the Month Spotify player"></div>
-                <canvas id="visualizer-right" class="song-visualizer" width="32" height="152" aria-hidden="true"></canvas>
-            </div>
+            <iframe class="song-embed" title="Spotify player: Tereza My Love by Antônio Carlos Jobim" src="https://open.spotify.com/embed/track/5m4TzaOXvk1biOR3LdObVt?utm_source=generator" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
             <p class="song-description">I once overheard someone playing The Girl From Ipanema on the Piano. After having a brief conversation they recommended Stone Flower by Jobim where this record comes from.</p>
         </div>
 
@@ -161,88 +135,19 @@
             <summary>Archive</summary>
             <div class="song-archive-list">
                 <div class="song-item">
-                    <div class="song-widget-shell">
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                        <div class="song-embed">
-                            <iframe title="Spotify player: New Bollywood Classic" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                        </div>
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    </div>
+                    <iframe class="song-embed" title="Spotify player: New Bollywood Classic" src="https://open.spotify.com/embed/track/6TEPHCFsVz4C0giqDPRFmO?utm_source=generator" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
                     <p class="song-description">New Bollywood Classic</p>
                 </div>
                 <div class="song-item">
-                    <div class="song-widget-shell">
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                        <div class="song-embed">
-                            <iframe title="Spotify player: Miracle of Miracles from Fiddler on the Roof" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                        </div>
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    </div>
+                    <iframe class="song-embed" title="Spotify player: Miracle of Miracles from Fiddler on the Roof" src="https://open.spotify.com/embed/track/0IdbV9Iju5YrauWOLrtLbv?utm_source=generator" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
                     <p class="song-description">Miracle of Miracles from Fiddler on the Roof.</p>
                 </div>
                 <div class="song-item">
-                    <div class="song-widget-shell">
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                        <div class="song-embed">
-                            <iframe title="Spotify player: Dil Lageya by Veronica featuring Rishi Rich" data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                        </div>
-                        <canvas class="song-visualizer" width="28" height="152" aria-hidden="true"></canvas>
-                    </div>
+                    <iframe class="song-embed" title="Spotify player: Dil Lageya by Veronica featuring Rishi Rich" src="https://open.spotify.com/embed/track/7eBTI6g6HKaCYGP53YlygC?utm_source=generator" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
                     <p class="song-description">Dil Lageya by Veronica featuring Rishi Rich. Peak Noughties Nostalgia</p>
                 </div>
             </div>
         </details>
     </div>
-    <script>
-        (function () {
-            // Spotify: request the iframe API only once the current pick is near; fall back to a plain embed if it errors or stays silent.
-            var TRACK = '5m4TzaOXvk1biOR3LdObVt';
-            var current = document.querySelector('.song-current');
-            var embed = document.getElementById('song-embed');
-            var shell = current ? current.querySelector('.song-widget-shell') : null;
-            var settled = false, fallbackTimer = null;
-            function report(isPlaying, data) {
-                if (window.SongVisualizer) window.SongVisualizer.setPlayback(shell, { isPlaying: isPlaying, position: data && data.position, duration: data && data.duration });
-            }
-            function fallback() {
-                if (settled || !embed || embed.querySelector('iframe')) return;
-                settled = true;
-                embed.insertAdjacentHTML('beforeend', '<iframe src="https://open.spotify.com/embed/track/' + TRACK + '?utm_source=generator" ' +
-                    'title="Song of the Month Spotify player" width="100%" height="152" loading="lazy" ' +
-                    'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>');
-            }
-            window.onSpotifyIframeApiReady = function (api) {
-                if (settled || !embed) return;
-                settled = true;
-                clearTimeout(fallbackTimer);
-                api.createController(embed, { uri: 'spotify:track:' + TRACK, width: '100%', height: 152 }, function (controller) {
-                    controller.addListener('playback_started', function () { report(true, null); });
-                    controller.addListener('playback_update', function (event) {
-                        var data = event && event.data;
-                        report(!!data && !data.isPaused && !data.isBuffering, data);
-                    });
-                });
-            };
-            function loadSpotify() {
-                var script = document.createElement('script');
-                script.src = 'https://open.spotify.com/embed/iframe-api/v1';
-                script.async = true;
-                script.onerror = fallback;
-                document.body.appendChild(script);
-                fallbackTimer = setTimeout(fallback, 1800);
-            }
-            if (embed && current && 'IntersectionObserver' in window) {
-                var observer = new IntersectionObserver(function (entries) {
-                    if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
-                    observer.disconnect();
-                    loadSpotify();
-                }, { rootMargin: '400px' });
-                observer.observe(current);
-            } else if (embed) {
-                loadSpotify();
-            }
-        })();
-    </script>
-    <script src="song-visualizer.js" defer></script>
 </body>
 </html>

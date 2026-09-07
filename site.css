@@ -363,63 +363,20 @@ a.site-name:focus-visible {
     .data-table { font-size: 0.8em; }
 }
 
-/* ---- Song of the Month widget (song archive page) -------------------------- */
-
-.song-widget-shell {
-    position: relative;
-    display: grid;
-    width: min(100%, 860px);
-    margin: 0 auto;
-    grid-template-columns: clamp(14px, 4.4vw, 32px) minmax(0, 1fr) clamp(14px, 4.4vw, 32px);
-    gap: clamp(4px, 1.7vw, 8px);
-    align-items: stretch;
-}
+/* ---- Song of the Month embeds (song archive page) ----------------------- */
 
 .song-embed {
-    width: 100%;
-    min-width: 0;
-    min-height: 152px;
-}
-
-/* Spotify's iframe API replaces the .song-embed placeholder with the iframe
-   itself, so match the iframe in both positions. */
-.song-embed iframe,
-.song-widget-shell > iframe {
     display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+    width: min(100%, 860px);
     height: 152px;
+    margin: 0 auto;
     border: 0;
     border-radius: 12px;
-}
-
-/* Fixed height on purpose: a percentage would let the canvas bitmap size feed
-   back into the grid row and grow it on every resize. */
-.song-visualizer {
-    display: block;
-    width: 100%;
-    height: 152px;
-    opacity: 0.32;
-    transition: opacity 0.28s ease;
-    pointer-events: none;
-}
-
-.song-visualizer.active {
-    opacity: 0.9;
 }
 
 .song-description {
     color: var(--soft);
     margin-top: 15px;
-}
-
-@media (max-width: 420px) {
-    .song-widget-shell {
-        grid-template-columns: 12px minmax(0, 1fr) 12px;
-        gap: 3px;
-    }
-    .song-visualizer { opacity: 0.22; }
 }
 
 /* ---- Motion -------------------------------------------------------------- */

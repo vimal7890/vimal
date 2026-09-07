@@ -7,8 +7,8 @@
 ## This site
 
 [vimal.my](https://vimal.my) — a hand-written static portfolio: plain HTML, one
-shared stylesheet (`site.css`), one small script for the Song of the Month
-visualizer, and no build dependencies.
+shared stylesheet (`site.css`), one small script for the header name, and no
+build dependencies.
 
 ```bash
 node scripts/build.mjs           # stamp the shared header + SEO metadata, regenerate sitemap.xml

@@ -36,8 +36,6 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
   Page-specific rules stay inline in each page.
 - `site.js` — cross-fades the header name between `Vimal` and `விமல்` on every
   page (stamped `<script src="/site.js" defer>`); static under reduced motion.
-- `song-visualizer.js` — decorative canvas rails beside the Spotify embeds
-  (song archive page). Animates only while visible; static under reduced motion.
 - `scripts/build.mjs` — the only tooling. Stamps `<!-- header:start/end -->` —
   the name, the Substack / LinkedIn / Email links and the menu bar (in the style
   of aadi.net.in), first thing in `<body>` on every page — and
