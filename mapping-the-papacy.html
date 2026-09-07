@@ -48,7 +48,7 @@
             max-width: 60ch;
             margin-bottom: 6px;
         }
-        .lede p.byline { color: #8a8271; font-size: 0.92em; margin-bottom: 2px; }
+        .lede p.byline { color: var(--soft); font-size: 0.92em; margin-bottom: 2px; }
 
         /* The infographic surface */
         .figure {
@@ -146,6 +146,7 @@
         }
     </style>
     <!-- seo:start -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf" as="font" type="font/otf" crossorigin>
     <meta name="description" content="A data visualisation tracing where the last eleven popes were born, and how the papacy's centre of gravity has shifted away from Italy.">
     <link rel="canonical" href="https://vimal.my/mapping-the-papacy">
     <meta property="og:site_name" content="Vimal Vivegananda">
@@ -276,6 +277,8 @@
         svg.removeAttribute('height');
         svg.setAttribute('viewBox', VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h);
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', 'World map marking the birthplaces of the last eleven popes');
 
         // recolour: override the map's own stylesheet
         var style = document.createElementNS(SVGNS, 'style');

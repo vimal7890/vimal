@@ -14,6 +14,7 @@
         }
     </style>
     <!-- seo:start -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf" as="font" type="font/otf" crossorigin>
     <meta name="description" content="Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.">
     <link rel="canonical" href="https://vimal.my/report-calgary-cambridge">
     <meta property="og:site_name" content="Vimal Vivegananda">
@@ -156,11 +157,11 @@
 
     <h3>3. Supervised Learning Model for Review Polarity</h3>
 
-    <h3>3.1 Feature Engineering and Classifier Setup</h3>
+    <h4>3.1 Feature Engineering and Classifier Setup</h4>
     <p>Three progressively richer feature sets were constructed. The <strong>Text-only</strong> configuration used a unigram&ndash;bigram TF-IDF representation (<code>TfidfVectorizer</code> with <code>max_df=0.95</code>, <code>min_df=3</code>, <code>max_features=10,000</code>, <code>stop_words='english'</code>). <strong>Text+Structured</strong> concatenated this sparse matrix with three dense covariates &mdash; <code>log1p(review_count)</code>, <code>useful</code>, and <code>log1p(len(text))</code> &mdash; using <code>scipy.sparse.hstack</code>. <strong>Text+Structured+VADER</strong> augmented this further with a VADER compound sentiment score computed after tokenisation and stop-word removal, testing whether a pre-built lexicon adds complementary signal on top of data-driven TF-IDF weights.</p>
     <p>Each configuration was evaluated under three classifiers &mdash; Multinomial Na&iuml;ve Bayes, Logistic Regression with <code>class_weight='balanced'</code>, and Random Forest with <code>n_estimators=300</code> and <code>class_weight='balanced'</code> &mdash; on a stratified 80/20 split with <code>random_state=1</code>.</p>
 
-    <h3>3.2 Topic Modelling with Latent Dirichlet Allocation</h3>
+    <h4>3.2 Topic Modelling with Latent Dirichlet Allocation</h4>
     <p>LDA was applied to the restaurant corpus using <code>LatentDirichletAllocation</code> (<code>k=8</code>, <code>max_iter=10</code>, <code>learning_method='online'</code>) trained on the CountVectorizer bag-of-words matrix. Several interpretable themes emerge: a fast-food topic dominated by &ldquo;burger&rdquo;, &ldquo;fries&rdquo;, &ldquo;drive&rdquo;; a fine-dining topic anchored by &ldquo;wine&rdquo;, &ldquo;steak&rdquo;, &ldquo;reservation&rdquo;; and a service-quality topic &mdash; &ldquo;staff&rdquo;, &ldquo;rude&rdquo;, &ldquo;manager&rdquo;, &ldquo;wait&rdquo; &mdash; strongly associated with negative reviews, as confirmed by inspecting the mean topic-proportion vector for reviews below versus above the polarity boundary.</p>
 
     <figure>
@@ -168,7 +169,7 @@
         <figcaption>Figure 7. LDA topic model on restaurant reviews (k = 8), showing the top 10 words per topic.</figcaption>
     </figure>
 
-    <h3>3.3 Evaluation</h3>
+    <h4>3.3 Evaluation</h4>
     <p>The best-performing model (Logistic Regression, Text+Structured+VADER) achieves approximately <strong>0.88 accuracy</strong> and <strong>0.86 macro F1</strong> on the held-out set. The near-diagonal confusion-matrix pattern confirms that <code>class_weight='balanced'</code> prevents bias toward the majority positive class. The top 20 positive TF-IDF feature coefficients include &ldquo;amazing&rdquo;, &ldquo;delicious&rdquo;, &ldquo;favourite&rdquo;, and &ldquo;perfect&rdquo;; the top 20 negative include &ldquo;rude&rdquo;, &ldquo;worst&rdquo;, &ldquo;bland&rdquo;, and &ldquo;overpriced&rdquo;.</p>
 
     <figure>

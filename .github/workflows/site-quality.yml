@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 jobs:
-  seo-metadata:
-    name: SEO metadata freshness
+  build-check:
+    name: Menu, SEO metadata and sitemap are up to date
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -25,8 +25,8 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Verify SEO metadata and sitemap are up to date
-        run: node scripts/seo-meta-manager.mjs --check
+      - name: Verify stamped blocks and sitemap
+        run: node scripts/build.mjs --check
 
   internal-links:
     name: Internal link check
@@ -42,7 +42,7 @@ jobs:
             --offline
             --root-dir ${{ github.workspace }}
             --no-progress
-            "./**/*.html"
+            "./*.html"
           fail: true
 
   lighthouse:

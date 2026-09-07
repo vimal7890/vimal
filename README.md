@@ -1,23 +1,19 @@
 ## Hi there 👋
 
-
-- 🌱 I’m currently learning Geographic Data Science
-- 🤔 I’m looking for help with working on AI as a beginner
+- 🌱 I'm currently learning Geographic Data Science
+- 🤔 I'm looking for help with working on AI as a beginner
 - 💬 Ask me about censorship
 
-## Home Button Automation
+## This site
 
-- Every HTML file includes a shared loader script that ensures a Home button is present.
-- Existing HTML files were updated automatically.
-- New HTML files are handled by a VS Code background task that watches the workspace and injects the loader tag.
+[vimal.my](https://vimal.my) — a hand-written static portfolio: plain HTML, one
+shared stylesheet (`site.css`), one small script for the Song of the Month
+visualizer, and no build dependencies.
 
-Manual commands:
+```bash
+node scripts/build.mjs           # stamp the shared header + SEO metadata, regenerate sitemap.xml
+node scripts/build.mjs --check   # CI: fail if anything is out of date
+python3 -m http.server 8123      # preview locally
+```
 
-- Run one-time injection: `node scripts/home-button-manager.mjs`
-- Run watcher manually: `node scripts/home-button-manager.mjs --watch`
-
-## Country Flag Audit
-
-- Run `node scripts/audit-country-flag-codes.mjs` to verify country flag code resolution stays canonical across denomination pages that use `country-flag-utils.js`.
-- The audit also fails if a new page starts using `country-flag-utils.js` without being added to the script scenarios.
-- GitHub Actions runs this audit automatically on pushes and pull requests to `main` via `.github/workflows/country-flag-audit.yml`.
+See `CLAUDE.md` for the layout and conventions.

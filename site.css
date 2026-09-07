@@ -22,9 +22,7 @@
     --ink-strong: #1a1a1a;
     --muted: #555555;
     --soft: #666666;
-    --faint: #888888;
     --accent: #d93025;
-    --accent-soft: rgba(217, 48, 37, 0.55);
     --link: #1e5aa8;
 
     --card: #ffffff;
@@ -45,9 +43,7 @@
         --ink-strong: #eee5d8;
         --muted: #b8ada0;
         --soft: #b8ada0;
-        --faint: #b8ada0;
         --accent: #ff5b4f;
-        --accent-soft: rgba(255, 91, 79, 0.55);
         --link: #5190e8;
 
         --card: #1f1b16;
@@ -297,6 +293,13 @@ a.site-name:focus-visible {
     font-size: 1.1em;
     font-weight: 700;
     margin: 28px 0 10px;
+    color: var(--ink);
+}
+
+.article h4 {
+    font-size: 1em;
+    font-weight: 700;
+    margin: 22px 0 8px;
     color: var(--ink);
 }
 

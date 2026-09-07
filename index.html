@@ -27,6 +27,7 @@
         }
     </style>
     <!-- seo:start -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf" as="font" type="font/otf" crossorigin>
     <meta name="description" content="Vimal Vivegananda — International Politics graduate and MSc Social &amp; Geographic Data Science student at UCL. Data-driven research on censorship, privacy law, and political trends.">
     <link rel="canonical" href="https://vimal.my/">
     <meta property="og:site_name" content="Vimal Vivegananda">
@@ -92,6 +93,7 @@
                     setTimeout(function () {
                         nameIndex = (nameIndex + 1) % names.length;
                         title.textContent = names[nameIndex];
+                        title.lang = nameIndex === 1 ? 'ta' : 'en';
                         title.classList.remove('fade');
                     }, 500);
                 }, 2000);

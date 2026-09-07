@@ -31,6 +31,8 @@ const checkMode = process.argv.includes("--check");
 const ORIGIN = "https://vimal.my";
 const SITE_NAME = "Vimal Vivegananda";
 const OG_IMAGE = `${ORIGIN}/assets/og-card.png`;
+// Same file as the @font-face in site.css; preloading starts the fetch alongside the stylesheet.
+const FONT_URL = "https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf";
 const CONTACT = "mailto:vimal134@pm.me";
 
 const PERSON = {
@@ -203,6 +205,7 @@ function seoLines(file, html, meta) {
         };
     }
     const lines = [
+        `<link rel="preload" href="${FONT_URL}" as="font" type="font/otf" crossorigin>`,
         `<meta name="description" content="${escapeAttr(description)}">`,
         `<link rel="canonical" href="${canonical}">`,
         `<meta property="og:site_name" content="${escapeAttr(SITE_NAME)}">`,
