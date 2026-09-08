@@ -72,6 +72,17 @@ const PAGES = {
         description: "An archive of Vimal's Song of the Month picks, with the story behind each one.",
         ogType: "website",
     },
+    // Placeholders: drop `noindex` once either page has something on it.
+    "blog.html": {
+        description: "Writing by Vimal Vivegananda — coming soon.",
+        ogType: "website",
+        noindex: true,
+    },
+    "resume.html": {
+        description: "Vimal Vivegananda's resume — coming soon.",
+        ogType: "website",
+        noindex: true,
+    },
     "report-calgary-cambridge.html": {
         description:
             "Analysing mobility patterns in Cambridge with street-network routing and stop detection, plus machine-learning sentiment classification of Calgary restaurant reviews.",
@@ -102,6 +113,8 @@ const NAV_LINKS = [
     { label: "About Me", href: "/" },
     { label: "My Work", href: "/work" },
     { label: "Song of the Month", href: "/song-archive" },
+    { label: "Blog", href: "/blog" },
+    { label: "Resume", href: "/resume" },
 ];
 
 /** File -> menu href, so the menu can mark the current page. */
@@ -109,6 +122,8 @@ const NAV_CURRENT = {
     "index.html": "/",
     "work.html": "/work",
     "song-archive.html": "/song-archive",
+    "blog.html": "/blog",
+    "resume.html": "/resume",
 };
 
 /** The social links that sit under the name in the header. */

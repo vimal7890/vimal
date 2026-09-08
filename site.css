@@ -363,6 +363,15 @@ a.site-name:focus-visible {
     .data-table { font-size: 0.8em; }
 }
 
+/* ---- Placeholder pages (Blog, Resume) ---------------------------------- */
+
+.coming-soon {
+    margin: clamp(50px, 12vw, 110px) auto;
+    color: var(--soft);
+    font-size: clamp(1.05rem, 4vw, 1.25rem);
+    text-align: center;
+}
+
 /* ---- Song of the Month embeds (song archive page) ----------------------- */
 
 .song-embed {
