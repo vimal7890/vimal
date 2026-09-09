@@ -112,9 +112,9 @@ const PAGES = {
 const NAV_LINKS = [
     { label: "About Me", href: "/" },
     { label: "My Work", href: "/work" },
-    { label: "Song of the Month", href: "/song-archive" },
-    { label: "Blog", href: "/blog" },
     { label: "Resume", href: "/resume" },
+    { label: "Blog", href: "/blog" },
+    { label: "Song of the Month", href: "/song-archive" },
 ];
 
 /** File -> menu href, so the menu can mark the current page. */

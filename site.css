@@ -216,7 +216,7 @@ a.site-name:focus-visible {
 
 .site-nav {
     font-family: var(--font);
-    background: var(--card);
+    background: var(--bg);
 }
 
 .site-nav ul {
