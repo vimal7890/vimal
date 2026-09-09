@@ -155,8 +155,8 @@ a.site-name:focus-visible {
     margin-top: 20px;
 }
 
-/* Brand colours (Substack orange, LinkedIn blue); email follows the body ink,
-   GitHub the strong ink (its mark is black on light, white on dark). */
+/* Brand colours (Substack orange, LinkedIn blue, GitHub black — white in dark
+   mode); email follows the body ink. */
 .social-link {
     --social: #ff6600;
     --social-hover: #cc5200;
@@ -191,7 +191,7 @@ a.site-name:focus-visible {
 }
 
 .github-link {
-    --social: var(--ink-strong);
+    --social: #181717;
     --social-hover: var(--accent);
 }
 
@@ -206,6 +206,10 @@ a.site-name:focus-visible {
     }
     .email-link {
         --social: var(--muted);
+        --social-hover: var(--accent);
+    }
+    .github-link {
+        --social: #ffffff;
         --social-hover: var(--accent);
     }
 }
