@@ -216,8 +216,11 @@ a.site-name:focus-visible {
 
 @media (max-width: 640px) {
     .social-links {
-        flex-direction: column;
-        gap: 12px;
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        justify-content: center;
+        justify-items: start;
+        gap: 12px clamp(18px, 5vw, 28px);
     }
 }
 
