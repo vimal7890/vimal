@@ -40,7 +40,7 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 - `site.js` — cross-fades the header name between `Vimal` and `விமல்` on every
   page (stamped `<script src="/site.js" defer>`); static under reduced motion.
 - `scripts/build.mjs` — the only tooling. Stamps `<!-- header:start/end -->` —
-  the name, the Substack / LinkedIn / Email links and the menu bar (in the style
+  the name, the Substack / LinkedIn / Email / GitHub links and the menu bar (in the style
   of aadi.net.in), first thing in `<body>` on every page — and
   `<!-- seo:start/end -->` (in `<head>`), and writes `sitemap.xml`. The name is
   the `<h1>` on the homepage and a link home elsewhere; menu labels, hrefs and
