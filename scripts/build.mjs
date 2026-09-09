@@ -72,16 +72,15 @@ const PAGES = {
         description: "An archive of Vimal's Song of the Month picks, with the story behind each one.",
         ogType: "website",
     },
-    // Placeholders: drop `noindex` once either page has something on it.
+    // Placeholder: drop `noindex` once the blog has content.
     "blog.html": {
         description: "Writing by Vimal Vivegananda — coming soon.",
         ogType: "website",
         noindex: true,
     },
     "resume.html": {
-        description: "Vimal Vivegananda's resume — coming soon.",
+        description: "Vimal Vivegananda's education, experience, projects, leadership and technical skills.",
         ogType: "website",
-        noindex: true,
     },
     "report-calgary-cambridge.html": {
         description:

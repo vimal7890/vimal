@@ -6,25 +6,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume - Vimal</title>
     <link rel="stylesheet" href="site.css">
+    <style>
+        .resume-content {
+            max-width: 880px;
+            margin: clamp(10px, 3vw, 24px) auto 0;
+            line-height: 1.75;
+        }
+        .resume-content section + section {
+            margin-top: 2.5rem;
+        }
+        .resume-content h2 {
+            margin-bottom: 1.1rem;
+            color: var(--ink-strong);
+            font-size: 1.35rem;
+            line-height: 1.3;
+        }
+        .resume-entry + .resume-entry {
+            margin-top: 1.5rem;
+        }
+        .resume-entry-heading {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.25rem 1.5rem;
+        }
+        .resume-content h3 {
+            color: var(--ink-strong);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        .resume-date {
+            flex-shrink: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        .resume-role {
+            color: var(--muted);
+            font-style: italic;
+        }
+        .resume-content ul {
+            margin-top: 0.4rem;
+            padding-left: 1.25rem;
+        }
+        .resume-content li + li,
+        .resume-skills p + p {
+            margin-top: 0.35rem;
+        }
+        .resume-content a {
+            color: var(--link);
+            text-underline-offset: 0.15em;
+        }
+        .resume-content a:hover,
+        .resume-content a:focus-visible {
+            color: var(--accent);
+        }
+        @media (max-width: 640px) {
+            .resume-entry-heading {
+                display: block;
+            }
+            .resume-date {
+                margin-top: 0.2rem;
+            }
+        }
+    </style>
     <!-- seo:start -->
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/sebsan/bagnard/Bagnard.otf" as="font" type="font/otf" crossorigin>
-    <meta name="description" content="Vimal Vivegananda's resume — coming soon.">
+    <meta name="description" content="Vimal Vivegananda's education, experience, projects, leadership and technical skills.">
     <link rel="canonical" href="https://vimal.my/resume">
     <meta property="og:site_name" content="Vimal Vivegananda">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Resume - Vimal">
-    <meta property="og:description" content="Vimal Vivegananda's resume — coming soon.">
+    <meta property="og:description" content="Vimal Vivegananda's education, experience, projects, leadership and technical skills.">
     <meta property="og:url" content="https://vimal.my/resume">
     <meta property="og:image" content="https://vimal.my/assets/og-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Resume - Vimal">
-    <meta name="twitter:description" content="Vimal Vivegananda's resume — coming soon.">
+    <meta name="twitter:description" content="Vimal Vivegananda's education, experience, projects, leadership and technical skills.">
     <meta name="twitter:image" content="https://vimal.my/assets/og-card.png">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#15130f" media="(prefers-color-scheme: dark)">
-    <meta name="robots" content="noindex">
     <!-- seo:end -->
 </head>
 <body>
@@ -57,9 +119,172 @@
     </header>
     <script src="/site.js" defer></script>
     <!-- header:end -->
-    <div class="container">
+    <main class="container">
         <h1 class="visually-hidden">Resume</h1>
-        <p class="coming-soon">Coming soon</p>
-    </div>
+        <div class="resume-content">
+            <section aria-labelledby="education">
+                <h2 id="education">Education</h2>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>University College London</h3>
+                        <p class="resume-date">Sept 2025 – Sept 2026</p>
+                    </div>
+                    <p class="resume-role">MSc Social and Geographic Data Science</p>
+                    <ul>
+                        <li><strong>Relevant Coursework:</strong> Foundations of Spatial Data Science (Python, SQL), Introduction to Social Data Science (Python), Principles of Spatial Analysis (R), Mining Social and Geographic Datasets (Python), Advanced Topics in Social and Geographic Data Science (Python).</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>City, University of London</h3>
+                        <p class="resume-date">Sept 2021 – June 2024</p>
+                    </div>
+                    <p class="resume-role">BSc International Politics (Hons), 2:1</p>
+                    <ul>
+                        <li>Quantified partisan framing across hundreds of media sources using a structured coding framework to analyse political reporting.</li>
+                        <li>Developed skills in research design and communicating complex evidence through the study of international politics.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section aria-labelledby="experience">
+                <h2 id="experience">Experience</h2>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Cauldron</h3>
+                        <p class="resume-date">July 2026</p>
+                    </div>
+                    <p class="resume-role">Data &amp; Operations Team</p>
+                    <ul>
+                        <li>Organised 2 interactive events for viewers during the 2026 World Cup.</li>
+                        <li>Cleaned and summarised datasets and maintained accurate operational data to support business decisions.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Millat Asian Housing Association</h3>
+                        <p class="resume-date">May 2026</p>
+                    </div>
+                    <p class="resume-role">Office Administrative Assistant</p>
+                    <ul>
+                        <li>Processed rental documents for 60 properties using the relevant housing software, handling sensitive information accurately.</li>
+                        <li>Maintained records and databases and coordinated with residents, contractors and internal teams.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Inside Croydon</h3>
+                        <p class="resume-date">June – July 2024</p>
+                    </div>
+                    <p class="resume-role">Assistant Editor</p>
+                    <ul>
+                        <li>Interviewed 2 current MPs, including a minister, and candidates from the Liberal Democrats, Labour, the Greens and independents.</li>
+                        <li>Edited political and economic news to tight deadlines and coordinated election coverage with local organisations and candidates.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Clapham Law Solicitors</h3>
+                        <p class="resume-date">Aug – Sept 2022</p>
+                    </div>
+                    <p class="resume-role">Summer Intern</p>
+                    <ul>
+                        <li>Researched UK immigration law and synthesised complex legal and policy material into a report for senior staff.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Thomson Reuters</h3>
+                        <p class="resume-date">Aug 2017</p>
+                    </div>
+                    <p class="resume-role">Work Experience – Financial &amp; Risk</p>
+                    <ul>
+                        <li>Helped the Eikon market-data team diagnose an issue affecting a specific stock on the platform.</li>
+                        <li>Supported troubleshooting of financial data-exchange issues between client organisations.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section aria-labelledby="projects">
+                <h2 id="projects">Projects</h2>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Joplin Arabic Localisation | Open-Source Contribution</h3>
+                        <p class="resume-date">2026</p>
+                    </div>
+                    <ul>
+                        <li>Contributed Arabic localisation to Joplin, helping make the open-source note-taking application accessible to Arabic-speaking users.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Global Social-Media Censorship Tracker | Independent</h3>
+                        <p class="resume-date">2025 – Present</p>
+                    </div>
+                    <ul>
+                        <li>Designed, built and deployed <a href="https://censorship.my">censorship.my</a>, transforming fragmented reporting on platform restrictions into a live public reference resource.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Spatial Deep Learning for London House Prices | UCL</h3>
+                        <p class="resume-date">2026</p>
+                    </div>
+                    <ul>
+                        <li>Built an end-to-end data pipeline joining Land Registry, Census and deprivation data for 4,833 London neighbourhoods; engineered a spatial adjacency graph with 26,552 edges.</li>
+                        <li>Benchmarked four modelling approaches: GraphSAGE achieved R² 0.767 and MAE £88k on held-out data, reducing error by 28% versus a linear baseline and 14% versus a non-spatial neural network.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>NLP Classification of 82,000+ Venue Reviews | UCL</h3>
+                        <p class="resume-date">2026</p>
+                    </div>
+                    <ul>
+                        <li>Engineered TF-IDF, sentiment-lexicon and structured features for 82,182 reviews; balanced logistic regression achieved 0.88 accuracy and 0.86 macro-F1.</li>
+                        <li>Used LDA topic modelling to identify service quality as the dominant driver of negative sentiment and translated findings into a site recommendation.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Urban Mobility and Spatial Statistics | UCL</h3>
+                        <p class="resume-date">2026</p>
+                    </div>
+                    <ul>
+                        <li>Reconstructed movement from 1,871 geolocated check-ins and applied Moran's I hotspot analysis (p &lt; 0.05) to support a park-siting recommendation.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section aria-labelledby="leadership">
+                <h2 id="leadership">Leadership</h2>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>Postgraduate Representative, UCL Hindu Society</h3>
+                        <p class="resume-date">Nov 2025 – Aug 2026</p>
+                    </div>
+                    <ul>
+                        <li>Co-organised Rangeela 2026, a sell-out showcase with 200+ performers; represented postgraduates on the committee.</li>
+                    </ul>
+                </div>
+                <div class="resume-entry">
+                    <div class="resume-entry-heading">
+                        <h3>President, South Asian Society, City</h3>
+                        <p class="resume-date">Sept 2023 – Aug 2024</p>
+                    </div>
+                    <ul>
+                        <li>Co-led the first SU South Asian Fair, coordinating logistics, budgets and external partners from planning to delivery.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="resume-skills" aria-labelledby="technical-skills">
+                <h2 id="technical-skills">Technical Skills</h2>
+                <p><strong>Programming:</strong> Python, R, SQL.</p>
+                <p><strong>Methods and Concepts:</strong> Data pipelines, feature engineering, machine learning, NLP, model validation, statistical and spatial analysis, data visualisation.</p>
+                <p><strong>Languages:</strong> English (native), French (advanced), Tamil (proficient).</p>
+            </section>
+        </div>
+    </main>
 </body>
 </html>

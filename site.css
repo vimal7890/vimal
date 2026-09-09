@@ -363,7 +363,7 @@ a.site-name:focus-visible {
     .data-table { font-size: 0.8em; }
 }
 
-/* ---- Placeholder pages (Blog, Resume) ---------------------------------- */
+/* ---- Placeholder page (Blog) ------------------------------------------- */
 
 .coming-soon {
     margin: clamp(50px, 12vw, 110px) auto;
@@ -398,4 +398,3 @@ a.site-name:focus-visible {
         scroll-behavior: auto !important;
     }
 }
-

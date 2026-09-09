@@ -27,8 +27,9 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 - `work.html` — the My Work page
 - `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
   (song-archive also carries the current Song of the Month pick)
-- `blog.html`, `resume.html` — placeholders; a `.coming-soon` line and nothing
-  else. They are `noindex` in `PAGES`; drop that when they get content.
+- `resume.html` — education, experience, projects, leadership and technical skills.
+- `blog.html` — placeholder; a `.coming-soon` line and nothing else. It is
+  `noindex` in `PAGES`; drop that when it gets content.
 - `report-*.html` — long-form reports; wrapper is `<div class="container article">`
 - `404.html` — GitHub Pages not-found page (root-relative URLs only)
 - `site.css` — the single shared stylesheet: Bagnard @font-face, design tokens
