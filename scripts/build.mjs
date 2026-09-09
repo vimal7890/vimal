@@ -79,7 +79,7 @@ const PAGES = {
         noindex: true,
     },
     "resume.html": {
-        description: "Vimal Vivegananda's education, experience, projects, leadership and technical skills.",
+        description: "Vimal Vivegananda's education, experience, projects, extra-curricular and technical skills.",
         ogType: "website",
     },
     "report-calgary-cambridge.html": {

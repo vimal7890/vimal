@@ -27,7 +27,7 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
 - `work.html` — the My Work page
 - `polio.html`, `mapping-the-papacy.html`, `song-archive.html` — project pages
   (song-archive also carries the current Song of the Month pick)
-- `resume.html` — education, experience, projects, leadership and technical skills.
+- `resume.html` — education, experience, projects, extra-curricular and technical skills.
 - `blog.html` — placeholder; a `.coming-soon` line and nothing else. It is
   `noindex` in `PAGES`; drop that when it gets content.
 - `report-*.html` — long-form reports; wrapper is `<div class="container article">`
