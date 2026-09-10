@@ -133,17 +133,12 @@ img {
     font-weight: 700;
     line-height: 1.2;
     text-decoration: none;
-    transition: color 0.2s ease, opacity 0.5s ease;
+    transition: color 0.2s ease;
 }
 
 a.site-name:hover,
 a.site-name:focus-visible {
     color: var(--accent);
-}
-
-/* site.js cross-fades the name between its Latin and Tamil spellings. */
-.site-name.fade {
-    opacity: 0;
 }
 
 .social-links {

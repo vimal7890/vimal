@@ -36,8 +36,6 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
   `.back-link`, the `.site-header` band (name + `.social-links` + `.site-nav`),
   `.article` typography, `.data-table`, and the Song of the Month widget classes.
   Page-specific rules stay inline in each page.
-- `site.js` — cross-fades the header name between `Vimal` and `விமல்` on every
-  page (stamped `<script src="/site.js" defer>`); static under reduced motion.
 - `scripts/build.mjs` — the only tooling. Stamps `<!-- header:start/end -->` —
   the name, the Substack / LinkedIn / Email / GitHub links and the menu bar (in the style
   of aadi.net.in), first thing in `<body>` on every page — and

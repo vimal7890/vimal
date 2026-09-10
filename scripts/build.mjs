@@ -248,10 +248,9 @@ function seoLines(file, html, meta) {
     return lines;
 }
 
-/** The header block: name, social links, menu — identical on every page, down to
- *  the name's size and its Latin/Tamil cross-fade (site.js). The only difference
- *  is the markup of the name itself: the homepage's <h1>, or a link home so the
- *  other pages keep their own <h1>. */
+/** The header block: name, social links, menu — identical on every page. The
+ *  only difference is the markup of the name itself: the homepage's <h1>, or a
+ *  link home so the other pages keep their own <h1>. */
 function headerLines(file) {
     const home = file === "index.html";
     const name = home
@@ -285,7 +284,6 @@ function headerLines(file) {
         `        </ul>`,
         `    </nav>`,
         `</header>`,
-        `<script src="/site.js" defer></script>`,
     ];
 }
 
