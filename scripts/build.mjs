@@ -42,7 +42,7 @@ const PERSON = {
     url: `${ORIGIN}/`,
     description: "International Politics graduate; MSc Social and Geographic Data Science student at UCL.",
     affiliation: { "@type": "CollegeOrUniversity", name: "University College London" },
-    sameAs: ["https://substack.com/@vimal0", "https://www.linkedin.com/in/vimal-v-5004751ba/", "https://github.com/vimal7890"],
+    sameAs: ["https://substack.com/@vimal0", "https://www.linkedin.com/in/vimalvivegananda/", "https://github.com/vimal7890"],
 };
 
 /** Per-page metadata. Every page in the repo root must be listed here. */
@@ -137,7 +137,7 @@ const SOCIAL_LINKS = [
     },
     {
         label: "LinkedIn",
-        href: "https://www.linkedin.com/in/vimal-v-5004751ba/",
+        href: "https://www.linkedin.com/in/vimalvivegananda/",
         className: "social-link linkedin-link",
         external: true,
         path: "M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.48v6.26ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z",
