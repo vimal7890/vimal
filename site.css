@@ -132,13 +132,6 @@ img {
     font-size: clamp(2.5rem, 9vw, 3.5rem);
     font-weight: 700;
     line-height: 1.2;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-a.site-name:hover,
-a.site-name:focus-visible {
-    color: var(--accent);
 }
 
 .social-links {

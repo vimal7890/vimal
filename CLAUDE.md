@@ -42,8 +42,8 @@ marker comments. New pages must be added to `PAGES` in `scripts/build.mjs`
   the name, the Substack / LinkedIn / Email / GitHub links and the menu bar (in the style
   of aadi.net.in), first thing in `<body>` on every page — and
   `<!-- seo:start/end -->` (in `<head>`), and writes `sitemap.xml`. The name is
-  the `<h1>` on the homepage and a link home elsewhere; menu labels, hrefs and
-  the social links all live in that script.
+  the `<h1>` on the homepage and a plain `<p>` elsewhere (not a link); menu
+  labels, hrefs and the social links all live in that script.
 - `world-map.svg` — minified world map fetched by `mapping-the-papacy.html`
 - `report-images/*.webp`, `assets/og-card.png`, `favicon.svg`
 

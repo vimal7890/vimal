@@ -251,12 +251,13 @@ function seoLines(file, html, meta) {
 
 /** The header block: name, social links, menu — identical on every page. The
  *  only difference is the markup of the name itself: the homepage's <h1>, or a
- *  link home so the other pages keep their own <h1>. */
+ *  plain <p> so the other pages keep their own <h1>. The name is not a link;
+ *  the menu's "About Me" goes home. */
 function headerLines(file) {
     const home = file === "index.html";
     const name = home
         ? `    <h1 class="site-name">Vimal</h1>`
-        : `    <a class="site-name" href="/">Vimal</a>`;
+        : `    <p class="site-name">Vimal</p>`;
 
     const socials = SOCIAL_LINKS.flatMap((link) => {
         const target = link.external ? ` target="_blank" rel="noopener noreferrer"` : "";
